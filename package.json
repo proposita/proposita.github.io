@@ -1,0 +1,18 @@
+{
+  "name": "lilla-p-informe",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Informe interactivo Lilla P — auditoría UX, ampliación con IA y Product Platform.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}

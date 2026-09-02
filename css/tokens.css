@@ -1,0 +1,64 @@
+/*
+  Design tokens — Informe Lilla P
+  Dirección visual: moderno / innovador, sin ser transgresor.
+  Ni minimalista ni recargado: base editorial cálida (no blanco puro),
+  tipografía expresiva para títulos, un acento vivo para energía,
+  y un segundo acento reservado para todo lo relacionado con IA.
+
+  Esto es un punto de partida — pensado para ajustarse fácil una vez
+  que sumemos referencias visuales concretas.
+*/
+
+:root {
+  /* Superficie */
+  --paper: #f5f1e8;         /* ivorie cálido, no blanco puro */
+  --paper-raised: #fffdf8;  /* tarjetas / superficies elevadas */
+  --ink: #14130f;           /* texto principal, casi negro cálido */
+  --ink-soft: #55503f;      /* texto secundario */
+  --ink-faint: #8a8471;     /* texto terciario / labels */
+  --line: rgba(20, 19, 15, 0.12);
+  --line-strong: rgba(20, 19, 15, 0.22);
+
+  /* Acentos */
+  --accent: #ff4d3d;        /* coral vivo — energía, capítulo 1 / general */
+  --accent-ink: #4a0f08;    /* texto sobre acento claro si hiciera falta */
+  --accent-ai: #3d5aff;     /* azul eléctrico — reservado para momentos de IA */
+  --accent-soft: #ffe2dc;   /* fondo suave sobre coral */
+  --accent-ai-soft: #dfe4ff;/* fondo suave sobre azul IA */
+
+  /* Severidad (auditoría) */
+  --sev-alto: #ff4d3d;
+  --sev-medio: #d98a1f;
+  --sev-bajo: #55503f;
+
+  /* Tipografía */
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Escala tipográfica fluida */
+  --fs-display: clamp(2.6rem, 6vw, 5.6rem);
+  --fs-h1: clamp(2rem, 4vw, 3.4rem);
+  --fs-h2: clamp(1.5rem, 2.6vw, 2.2rem);
+  --fs-h3: clamp(1.15rem, 1.6vw, 1.45rem);
+  --fs-body: clamp(1rem, 1.05vw, 1.15rem);
+  --fs-small: 0.85rem;
+  --fs-label: 0.78rem;
+
+  /* Espaciado */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.75rem;
+  --space-4: 2.75rem;
+  --space-5: 4.5rem;
+
+  /* Forma */
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 26px;
+
+  /* Movimiento */
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --dur-s: 0.35s;
+  --dur-m: 0.6s;
+  --dur-l: 0.9s;
+}

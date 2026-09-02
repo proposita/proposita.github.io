@@ -1,0 +1,291 @@
+/* ---------- Home ---------- */
+
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.home__hero {
+  padding: var(--space-5) 0 var(--space-4);
+}
+
+.home__brandbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+}
+
+.brandbar__mark {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+.brandbar__mark span {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.brandbar__meta {
+  font-size: var(--fs-small);
+  color: var(--ink-faint);
+}
+
+.home__title {
+  font-size: var(--fs-display);
+  max-width: 16ch;
+  margin-top: var(--space-3);
+}
+
+.home__title em {
+  color: var(--accent);
+}
+
+.home__lede {
+  margin-top: var(--space-3);
+  max-width: 56ch;
+  font-size: var(--fs-h3);
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.home__cards {
+  flex: 1;
+  padding: var(--space-4) 0 var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .home__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chapter-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 340px;
+  padding: var(--space-3);
+  border-radius: var(--radius-l);
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  text-decoration: none;
+  color: var(--ink);
+  overflow: hidden;
+  transition: transform var(--dur-s) var(--ease), border-color var(--dur-s) var(--ease), box-shadow var(--dur-s) var(--ease);
+}
+
+.chapter-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--line-strong);
+  box-shadow: 0 24px 48px -28px rgba(20, 19, 15, 0.35);
+}
+
+.chapter-card[data-status="upcoming"] {
+  background: transparent;
+  border-style: dashed;
+}
+
+.chapter-card__index {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 3.2rem;
+  color: var(--line-strong);
+  line-height: 1;
+}
+
+.chapter-card__body h3 {
+  font-size: var(--fs-h2);
+  margin-bottom: var(--space-1);
+}
+
+.chapter-card__body p {
+  color: var(--ink-soft);
+}
+
+.chapter-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4em 0.8em;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.status-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink-faint);
+}
+
+.status-pill[data-status="active"] {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+  background: var(--accent-soft);
+}
+.status-pill[data-status="active"]::before {
+  background: var(--accent);
+}
+
+.status-pill[data-status="upcoming"] {
+  color: var(--ink-faint);
+}
+
+.chapter-card__arrow {
+  font-size: 1.4rem;
+  transition: transform var(--dur-s) var(--ease);
+}
+.chapter-card:hover .chapter-card__arrow {
+  transform: translateX(4px);
+}
+
+.home__footer {
+  padding: var(--space-3) 0 var(--space-4);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--ink-faint);
+  font-size: var(--fs-small);
+}
+
+@media (max-width: 640px) {
+  .home__brandbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35em;
+  }
+  .home__footer {
+    flex-direction: column;
+    gap: 0.35em;
+  }
+}
+
+/* ---------- Chapter shell ---------- */
+
+.chapter {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.chapter__section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: var(--space-5) 0;
+}
+
+.chapter__topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  pointer-events: none;
+}
+
+.chapter__topbar > * {
+  pointer-events: auto;
+}
+
+.topbar__home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.55em 1em 0.55em 0.75em;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.topbar__title {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  padding: 0.55em 1em;
+  border-radius: 999px;
+}
+
+.chapter__progress {
+  position: fixed;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+}
+
+.progress__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1.5px solid var(--line-strong);
+  padding: 0;
+  transition: background var(--dur-s) var(--ease), transform var(--dur-s) var(--ease), border-color var(--dur-s) var(--ease);
+}
+
+.progress__dot.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.3);
+}
+
+@media (max-width: 720px) {
+  .chapter__progress { display: none; }
+}
+
+/* Flow element (not absolutely positioned): the section already carries
+   generous top padding (--space-5), which is what keeps this clear of the
+   fixed topbar — no manual offset math needed. */
+.section-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin-bottom: var(--space-3);
+}
+
+.section-label__num {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 720px) {
+  .chapter__topbar { padding: var(--space-2); }
+}
