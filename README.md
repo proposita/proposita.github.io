@@ -1,4 +1,4 @@
-# Informe Lilla P — Evolución de plataforma B2B
+# Informe & Propuesta Lilla P — Evolución de plataforma B2B
 
 Sitio-informe interactivo para presentarle a Lilla P los tres frentes del proyecto:
 
