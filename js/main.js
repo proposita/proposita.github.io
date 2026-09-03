@@ -10,7 +10,7 @@ const app = document.getElementById("app");
 let cleanupChapter = null;
 
 function statusLabel(status) {
-  return status === "active" ? "Disponible" : "Próximamente";
+  return status === "active" ? "Available" : "Coming soon";
 }
 
 function renderHome() {
@@ -36,12 +36,12 @@ function renderHome() {
       <div class="container">
         <div class="home__brandbar">
           <div class="brandbar__mark">Lîlaby <span>×</span> Lilla P</div>
-          <div class="brandbar__meta">Informe de evolución de plataforma B2B</div>
+          <div class="brandbar__meta">B2B Platform Evolution Report</div>
         </div>
         <div class="home__hero" data-reveal>
-          <p class="eyebrow" data-reveal-item>Propuesta de evolución — Plataforma B2B Wholesale</p>
-          <h1 class="home__title" data-reveal-item>Un diagnóstico, una hoja de ruta y una <em>plataforma</em> por construir.</h1>
-          <p class="home__lede" data-reveal-item>Este informe reúne los tres frentes de trabajo propuestos a Lilla P: la auditoría de la experiencia actual, su evolución con inteligencia artificial embebida, y la propuesta de un portal B2B multi-módulo.</p>
+          <p class="eyebrow" data-reveal-item>Evolution Proposal — B2B Wholesale Platform</p>
+          <h1 class="home__title" data-reveal-item>A diagnosis, a roadmap, and a <em>platform</em> to build.</h1>
+          <p class="home__lede" data-reveal-item>This report brings together the three workstreams proposed to Lilla P: an audit of the current experience, its evolution with embedded artificial intelligence, and the proposal for a multi-module B2B portal.</p>
         </div>
       </div>
       <div class="container">
@@ -49,8 +49,8 @@ function renderHome() {
       </div>
       <div class="container">
         <div class="home__footer">
-          <span>Lîlaby — Estudio de diseño y tecnología</span>
-          <span>Documento vivo — se actualiza a medida que avanza el proyecto</span>
+          <span>Lîlaby — Design &amp; Technology Studio</span>
+          <span>Living document — updated as the project progresses</span>
         </div>
       </div>
     </div>
@@ -76,10 +76,10 @@ function renderChapter(index) {
   app.innerHTML = `
     <div class="chapter" style="--accent-current: var(${chapterData.accentVar})" data-chapter="${chapterData.id}">
       <div class="chapter__topbar">
-        <a class="topbar__home" href="#/">← Inicio</a>
+        <a class="topbar__home" href="#/">← Home</a>
         <span class="topbar__title">${String(chapterData.index).padStart(2, "0")} — ${chapterData.shortTitle}</span>
       </div>
-      <nav class="chapter__progress" data-progress-dots aria-label="Progreso del capítulo"></nav>
+      <nav class="chapter__progress" data-progress-dots aria-label="Chapter progress"></nav>
       ${sectionsHtml}
     </div>
   `;
@@ -112,5 +112,5 @@ function route() {
 window.addEventListener("hashchange", route);
 window.addEventListener("DOMContentLoaded", route);
 
-// En caso de que el script se ejecute después de DOMContentLoaded.
+// In case the script runs after DOMContentLoaded already fired.
 if (document.readyState !== "loading") route();

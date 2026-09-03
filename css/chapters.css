@@ -55,6 +55,7 @@
   margin-top: var(--space-3);
   font-size: var(--fs-h3);
   font-weight: 400;
+  font-family: var(--font-text);
   color: var(--ink-soft);
 }
 
@@ -72,12 +73,14 @@
   padding-bottom: var(--space-2);
   border-bottom: 1px solid var(--line);
   color: var(--ink-soft);
+  font-family: var(--font-text);
 }
 
 .s-text__list b {
   color: var(--ink);
   font-weight: 600;
   min-width: 11rem;
+  font-family: var(--font-body);
 }
 
 /* ---------- Section: findings grid ---------- */
@@ -92,86 +95,111 @@
   margin-top: var(--space-1);
 }
 
+/* Findings as a rule-separated list of rows (dossier/spec-sheet style)
+   instead of a grid of boxed cards. A colored left rule carries the
+   severity color; a two-column layout puts the tags on the left and
+   the write-up on the right. */
 .s-findings__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-2);
+  border-top: 1px solid var(--line);
 }
 
-.finding-card {
+.finding-row {
+  --row-accent: var(--sev-high);
   position: relative;
-  padding: var(--space-3);
-  border-radius: var(--radius-m);
-  border: 1px solid var(--line);
-  background: var(--paper-raised);
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) 0 var(--space-3) var(--space-3);
+  border-bottom: 1px solid var(--line);
 }
 
-.finding-card__top {
+.finding-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--space-3);
+  bottom: var(--space-3);
+  width: 3px;
+  background: var(--row-accent);
+}
+
+.finding-row[data-sev="medium"] { --row-accent: var(--sev-medium); }
+.finding-row[data-sev="low"]    { --row-accent: var(--sev-low); }
+
+.finding-row__meta {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-2);
+  flex-direction: column;
+  gap: 0.6em;
 }
 
-.severity-badge {
+.severity-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.4em;
+  gap: 0.55em;
   font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 0.3em 0.7em;
-  border-radius: 999px;
 }
-.severity-badge::before {
+.severity-tag::before {
   content: "";
   width: 7px; height: 7px;
   border-radius: 999px;
   background: currentColor;
 }
-.severity-badge[data-sev="alto"]   { color: var(--sev-alto);  background: var(--accent-soft); }
-.severity-badge[data-sev="medio"]  { color: var(--sev-medio); background: #f7e6c8; }
-.severity-badge[data-sev="bajo"]   { color: var(--sev-bajo);  background: rgba(20,19,15,0.06); }
+.severity-tag[data-sev="high"]   { color: var(--sev-high); }
+.severity-tag[data-sev="medium"] { color: var(--sev-medium); }
+.severity-tag[data-sev="low"]    { color: var(--sev-low); }
 
 .example-tag {
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  font-style: italic;
   color: var(--ink-faint);
-  border: 1px dashed var(--line-strong);
-  padding: 0.25em 0.6em;
-  border-radius: 999px;
 }
 
-.finding-card h4 {
+.finding-row h4 {
   font-size: 1.15rem;
   font-weight: 600;
   font-family: var(--font-body);
   margin-bottom: 0.5em;
 }
 
-.finding-card p {
+.finding-row p {
   color: var(--ink-soft);
   font-size: 0.95rem;
+  font-family: var(--font-text);
 }
 
-.finding-card__rec {
+.finding-row__rec {
   margin-top: var(--space-2);
   padding-top: var(--space-2);
   border-top: 1px solid var(--line);
   font-size: 0.9rem;
 }
 
-.finding-card__rec b {
-  color: var(--ink);
+.finding-row__rec b {
+  color: var(--ink-faint);
   display: block;
   margin-bottom: 0.25em;
   font-size: var(--fs-label);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--ink-faint);
+}
+
+@media (max-width: 640px) {
+  .finding-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+  .finding-row__meta {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: 0.4em;
+  }
 }
 
 /* ---------- Section: matrix (interactive) ---------- */
@@ -204,8 +232,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, minmax(90px, 1fr));
-  border: 1px solid var(--line);
-  border-radius: var(--radius-m);
+  border: 1px solid var(--line-strong);
   overflow: hidden;
   background: var(--paper-raised);
 }
@@ -246,15 +273,13 @@
   transform: translate(-50%, -50%) scale(1.15);
   z-index: 5;
 }
-.matrix-pin[data-sev="medio"] { background: var(--sev-medio); }
-.matrix-pin[data-sev="bajo"]  { background: var(--sev-bajo); }
+.matrix-pin[data-sev="medium"] { background: var(--sev-medium); }
+.matrix-pin[data-sev="low"]    { background: var(--sev-low); }
 
 .matrix-detail {
   margin-top: var(--space-3);
-  padding: var(--space-3);
-  border-radius: var(--radius-m);
-  border: 1px solid var(--line);
-  background: var(--paper-raised);
+  padding-top: var(--space-3);
+  border-top: 2px solid var(--ink);
   display: none;
 }
 .matrix-detail.is-visible {
@@ -268,6 +293,7 @@
 }
 .matrix-detail p {
   color: var(--ink-soft);
+  font-family: var(--font-text);
 }
 .matrix-hint {
   margin-top: var(--space-2);
@@ -293,6 +319,7 @@
   margin-top: var(--space-3);
   font-size: var(--fs-h3);
   font-weight: 400;
+  font-family: var(--font-text);
   color: var(--ink-soft);
 }
 
@@ -303,62 +330,84 @@
   flex-wrap: wrap;
 }
 
+/* Text links, not pill buttons: an underline carries the affordance,
+   a small nudge on hover carries the feedback. */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5em;
-  padding: 0.9em 1.5em;
-  border-radius: 999px;
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
-  border: 1px solid transparent;
-  transition: transform var(--dur-s) var(--ease), background var(--dur-s) var(--ease);
+  padding-bottom: 0.2em;
+  border-bottom: 1.5px solid currentColor;
+  transition: transform var(--dur-s) var(--ease), color var(--dur-s) var(--ease), border-color var(--dur-s) var(--ease);
 }
-.btn:hover { transform: translateY(-2px); }
+.btn:hover { transform: translateX(3px); }
 
 .btn--primary {
-  background: var(--ink);
-  color: var(--paper);
+  color: var(--ink);
+}
+.btn--primary:hover {
+  color: var(--accent);
 }
 .btn--ghost {
-  background: transparent;
-  border-color: var(--line-strong);
+  color: var(--ink-soft);
+  border-bottom-color: var(--line-strong);
+}
+.btn--ghost:hover {
   color: var(--ink);
+  border-bottom-color: var(--ink);
 }
 
-/* teaser (upcoming chapter placeholder content) */
+/* teaser (upcoming chapter placeholder content) — same rule-row
+   language as the findings list, just simpler (no severity rail). */
 .s-teaser__modules {
   margin-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.module-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-2);
+  grid-template-columns: 14rem 1fr;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--line);
 }
 
-.module-chip {
-  padding: var(--space-2);
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-m);
-  color: var(--ink-soft);
-}
-
-.module-chip b {
-  display: block;
+.module-row__title {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
   color: var(--ink);
   font-weight: 600;
-  margin-bottom: 0.3em;
+  font-family: var(--font-body);
+}
+
+.module-row__body {
+  color: var(--ink-soft);
+  font-family: var(--font-text);
 }
 
 .ai-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.4em;
+  gap: 0.45em;
   font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 0.3em 0.7em;
-  border-radius: 999px;
   color: var(--accent-ai);
-  background: var(--accent-ai-soft);
+}
+.ai-tag::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+@media (max-width: 640px) {
+  .module-row {
+    grid-template-columns: 1fr;
+    gap: 0.3em;
+  }
 }

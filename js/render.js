@@ -44,16 +44,18 @@ function renderText(s) {
 
 function findingCard(f) {
   return `
-    <article class="finding-card" data-reveal-item data-finding-id="${f.id}">
-      <div class="finding-card__top">
-        <span class="severity-badge" data-sev="${f.severity}">${f.severity}</span>
-        ${f.example ? `<span class="example-tag">Ejemplo</span>` : ""}
+    <article class="finding-row" data-reveal-item data-finding-id="${f.id}" data-sev="${f.severity}">
+      <div class="finding-row__meta">
+        <span class="severity-tag" data-sev="${f.severity}">${f.severity}</span>
+        ${f.example ? `<span class="example-tag">Example</span>` : ""}
       </div>
-      <h4>${f.title}</h4>
-      <p>${f.description}</p>
-      <div class="finding-card__rec">
-        <b>Recomendación</b>
-        <p>${f.recommendation}</p>
+      <div class="finding-row__content">
+        <h4>${f.title}</h4>
+        <p>${f.description}</p>
+        <div class="finding-row__rec">
+          <b>Recommendation</b>
+          <p>${f.recommendation}</p>
+        </div>
       </div>
     </article>
   `;
@@ -110,7 +112,7 @@ function renderMatrix(s, chapterData) {
       <h4 data-matrix-title></h4>
       <p data-matrix-body></p>
     </div>
-    <p class="matrix-hint">Tocá un punto de la matriz para ver el detalle del hallazgo.</p>
+    <p class="matrix-hint">Tap a point on the matrix to see the finding's detail.</p>
   `;
 }
 
@@ -121,7 +123,7 @@ function renderClosing(s) {
       <p class="s-closing__body" data-reveal-item>${s.body}</p>
       <div class="cta-row" data-reveal-item>
         <a class="btn btn--primary" href="${s.cta.href}">${s.cta.label} →</a>
-        <a class="btn btn--ghost" href="#/">Volver al inicio</a>
+        <a class="btn btn--ghost" href="#/">Back to home</a>
       </div>
     </div>
   `;
@@ -131,9 +133,9 @@ function renderTeaser(s) {
   const modules = (s.modules || [])
     .map(
       (m) => `
-      <div class="module-chip" data-reveal-item>
-        <b>${m.title} ${m.ai ? `<span class="ai-tag">IA</span>` : ""}</b>
-        <span>${m.body}</span>
+      <div class="module-row" data-reveal-item>
+        <div class="module-row__title">${m.title} ${m.ai ? `<span class="ai-tag">AI</span>` : ""}</div>
+        <p class="module-row__body">${m.body}</p>
       </div>`
     )
     .join("");
@@ -171,7 +173,7 @@ export function renderSection(section, ctx, chapterData) {
       inner = renderTeaser(section);
       break;
     default:
-      inner = `<p>Tipo de sección desconocido: ${section.type}</p>`;
+      inner = `<p>Unknown section type: ${section.type}</p>`;
   }
   return sectionShell(inner, ctx);
 }

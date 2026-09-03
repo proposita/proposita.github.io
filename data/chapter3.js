@@ -1,6 +1,6 @@
-// Capítulo 3 — Product Platform
-// Estado: upcoming. Es la propuesta comercial más ambiciosa: convertir
-// la app B2B actual en un portal con múltiples módulos.
+// Chapter 3 — Product Platform
+// Status: upcoming. The most ambitious proposal: turning the current B2B
+// app into a multi-module portal.
 
 export default {
   id: "product-platform",
@@ -8,23 +8,23 @@ export default {
   status: "upcoming",
   title: "Product Platform",
   shortTitle: "Product Platform",
-  summary: "La propuesta más ambiciosa: convertir la app B2B actual en un portal con múltiples módulos — inventario, pagos, order entry y más.",
+  summary: "The most ambitious proposal: turning the current B2B app into a multi-module portal — inventory, payments, order entry, and more.",
   accentVar: "--accent-ai",
 
   sections: [
     {
       type: "teaser",
-      eyebrow: "Capítulo 03 — Próximamente",
-      title: "De app de pedidos a <em>Product Platform</em>",
-      body: "La oferta comercial más ambiciosa del informe: evolucionar la aplicación B2B actual hacia un portal modular, donde la carga de pedidos es una función más dentro de una plataforma más amplia de gestión mayorista.",
+      eyebrow: "Chapter 03 — Coming soon",
+      title: "From order-taking app to <em>Product Platform</em>",
+      body: "The report's most ambitious commercial offer: evolving the current B2B application into a modular portal, where order entry is just one function within a broader wholesale management platform.",
       modules: [
-        { title: "Inventario", body: "Visibilidad de stock en tiempo real, multi-depósito, para compradores y equipo comercial.", ai: false },
-        { title: "Pagos", body: "Gestión de cuenta corriente, medios de pago y estados de cuenta integrados.", ai: false },
-        { title: "Order entry", body: "Evolución del flujo actual de carga de pedidos como módulo dentro del portal.", ai: false },
-        { title: "Analytics para el comprador", body: "Reportes de compra, tendencias y sugerencias de reposición.", ai: true },
-        { title: "Gestión de cuenta y accesos", body: "Roles, múltiples usuarios por cuenta mayorista, permisos por tienda/sucursal.", ai: false },
+        { title: "Inventory", body: "Real-time, multi-warehouse stock visibility for buyers and the sales team.", ai: false },
+        { title: "Payments", body: "Integrated credit account management, payment methods, and statements.", ai: false },
+        { title: "Order entry", body: "Evolution of the current order-entry flow as one module within the portal.", ai: false },
+        { title: "Buyer analytics", body: "Purchase reports, trends, and reorder suggestions.", ai: true },
+        { title: "Account & access management", body: "Roles, multiple users per wholesale account, permissions by store/branch.", ai: false },
       ],
-      cta: { label: "Volver al inicio", href: "#/" },
+      cta: { label: "Back to home", href: "#/" },
     },
   ],
 };

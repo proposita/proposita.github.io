@@ -49,56 +49,58 @@
   font-size: var(--fs-h3);
   color: var(--ink-soft);
   font-weight: 400;
+  font-family: var(--font-text);
 }
 
+/* Chapter index: a stacked, rule-separated list — like a table of
+   contents — instead of boxed cards. Desktop lays each row out as
+   [number | title+summary | status+arrow]; mobile stacks the footer
+   below. No border-radius, no fill, no shadow — the rule and the
+   type do the organizing. */
 .home__cards {
   flex: 1;
   padding: var(--space-4) 0 var(--space-5);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-3);
-}
-
-@media (max-width: 900px) {
-  .home__cards {
-    grid-template-columns: 1fr;
-  }
+  border-top: 1px solid var(--line-strong);
 }
 
 .chapter-card {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: var(--space-4);
-  min-height: 340px;
-  padding: var(--space-3);
-  border-radius: var(--radius-l);
-  border: 1px solid var(--line);
-  background: var(--paper-raised);
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto;
+  grid-template-areas: "index body footer";
+  align-items: center;
+  column-gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--line);
   text-decoration: none;
   color: var(--ink);
-  overflow: hidden;
-  transition: transform var(--dur-s) var(--ease), border-color var(--dur-s) var(--ease), box-shadow var(--dur-s) var(--ease);
-}
-
-.chapter-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--line-strong);
-  box-shadow: 0 24px 48px -28px rgba(20, 19, 15, 0.35);
+  transition: opacity var(--dur-s) var(--ease);
 }
 
 .chapter-card[data-status="upcoming"] {
-  background: transparent;
-  border-style: dashed;
+  border-bottom-style: dashed;
+}
+
+.chapter-card:hover {
+  opacity: 0.72;
 }
 
 .chapter-card__index {
+  grid-area: index;
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 3.2rem;
+  font-size: 2.6rem;
   color: var(--line-strong);
   line-height: 1;
+  transition: color var(--dur-s) var(--ease);
+}
+
+.chapter-card:hover .chapter-card__index {
+  color: var(--accent);
+}
+
+.chapter-card__body {
+  grid-area: body;
 }
 
 .chapter-card__body h3 {
@@ -108,26 +110,29 @@
 
 .chapter-card__body p {
   color: var(--ink-soft);
+  font-family: var(--font-text);
+  max-width: 48ch;
 }
 
 .chapter-card__footer {
+  grid-area: footer;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--space-3);
+  justify-self: end;
+  white-space: nowrap;
 }
 
+/* Status is a colored dot + label, not a filled pill. */
 .status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4em;
+  gap: 0.55em;
   font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.4em 0.8em;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  color: var(--ink-soft);
+  color: var(--ink-faint);
 }
 
 .status-pill::before {
@@ -140,15 +145,9 @@
 
 .status-pill[data-status="active"] {
   color: var(--accent);
-  border-color: var(--accent-soft);
-  background: var(--accent-soft);
 }
 .status-pill[data-status="active"]::before {
   background: var(--accent);
-}
-
-.status-pill[data-status="upcoming"] {
-  color: var(--ink-faint);
 }
 
 .chapter-card__arrow {
@@ -157,6 +156,19 @@
 }
 .chapter-card:hover .chapter-card__arrow {
   transform: translateX(4px);
+}
+
+@media (max-width: 640px) {
+  .chapter-card {
+    grid-template-columns: 3rem 1fr;
+    grid-template-areas:
+      "index body"
+      "footer footer";
+    row-gap: var(--space-2);
+    column-gap: var(--space-2);
+  }
+  .chapter-card__index { font-size: 1.9rem; }
+  .chapter-card__footer { justify-self: start; margin-top: var(--space-1); }
 }
 
 .home__footer {
@@ -219,24 +231,23 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.55em 1em 0.55em 0.75em;
+  padding: 0.4em 0;
   font-size: var(--fs-small);
   font-weight: 600;
   color: var(--ink);
   text-decoration: none;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color var(--dur-s) var(--ease);
+}
+.topbar__home:hover {
+  border-bottom-color: var(--ink);
 }
 
 .topbar__title {
   font-size: var(--fs-small);
   font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--ink-soft);
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  padding: 0.55em 1em;
-  border-radius: 999px;
 }
 
 .chapter__progress {

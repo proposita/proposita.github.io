@@ -7,7 +7,7 @@ export function initChapterNavigation(scrollEl, sections) {
     dotsWrap.innerHTML = sections
       .map(
         (_, i) =>
-          `<button class="progress__dot" data-dot="${i}" aria-label="Ir a sección ${i + 1}"></button>`
+          `<button class="progress__dot" data-dot="${i}" aria-label="Go to section ${i + 1}"></button>`
       )
       .join("");
   }
@@ -100,10 +100,10 @@ export function initMatrixInteraction(root = document) {
           return;
         }
         pin.classList.add("is-open");
-        // Las finding-cards viven en secciones anteriores del capítulo
+        // Las finding-row viven en secciones anteriores del capítulo
         // (no dentro de la sección de la matriz), así que buscamos en
         // todo el root del capítulo, no sólo en esta sección.
-        const card = root.querySelector(`.finding-card[data-finding-id="${pin.dataset.findingId}"]`);
+        const card = root.querySelector(`.finding-row[data-finding-id="${pin.dataset.findingId}"]`);
         if (card && titleEl && bodyEl) {
           titleEl.textContent = card.querySelector("h4")?.textContent ?? "";
           bodyEl.textContent = card.querySelector("p")?.textContent ?? "";

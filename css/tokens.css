@@ -1,41 +1,43 @@
 /*
-  Design tokens — Informe Lilla P
-  Dirección visual: moderno / innovador, sin ser transgresor.
-  Ni minimalista ni recargado: base editorial cálida (no blanco puro),
-  tipografía expresiva para títulos, un acento vivo para energía,
-  y un segundo acento reservado para todo lo relacionado con IA.
+  Design tokens — Lilla P Report
+  Direction: modern / innovative, without being transgressive.
+  Not minimal, not cluttered: a light chalk-white surface, expressive
+  display type for headlines, a proper text serif for reading copy,
+  a vivid accent for energy, and a second accent reserved for anything
+  AI-related.
 
-  Esto es un punto de partida — pensado para ajustarse fácil una vez
-  que sumemos referencias visuales concretas.
+  This is a starting point — easy to retune once we have concrete visual
+  references.
 */
 
 :root {
-  /* Superficie */
-  --paper: #f5f1e8;         /* ivorie cálido, no blanco puro */
-  --paper-raised: #fffdf8;  /* tarjetas / superficies elevadas */
-  --ink: #14130f;           /* texto principal, casi negro cálido */
-  --ink-soft: #55503f;      /* texto secundario */
-  --ink-faint: #8a8471;     /* texto terciario / labels */
+  /* Surface */
+  --paper: #faf9f5;         /* light chalk white, not stark white */
+  --paper-raised: #ffffff;  /* cards / raised surfaces */
+  --ink: #14130f;           /* primary text, near-black */
+  --ink-soft: #55503f;      /* secondary text */
+  --ink-faint: #8a8471;     /* tertiary text / labels */
   --line: rgba(20, 19, 15, 0.12);
   --line-strong: rgba(20, 19, 15, 0.22);
 
-  /* Acentos */
-  --accent: #ff4d3d;        /* coral vivo — energía, capítulo 1 / general */
-  --accent-ink: #4a0f08;    /* texto sobre acento claro si hiciera falta */
-  --accent-ai: #3d5aff;     /* azul eléctrico — reservado para momentos de IA */
-  --accent-soft: #ffe2dc;   /* fondo suave sobre coral */
-  --accent-ai-soft: #dfe4ff;/* fondo suave sobre azul IA */
+  /* Accents */
+  --accent: #ff4d3d;        /* vivid coral — energy, chapter 1 / general */
+  --accent-ink: #4a0f08;    /* text on light accent surfaces if needed */
+  --accent-ai: #3d5aff;     /* electric blue — reserved for AI moments */
+  --accent-soft: #ffe2dc;   /* soft background on coral */
+  --accent-ai-soft: #dfe4ff;/* soft background on AI blue */
 
-  /* Severidad (auditoría) */
-  --sev-alto: #ff4d3d;
-  --sev-medio: #d98a1f;
-  --sev-bajo: #55503f;
+  /* Severity (audit) */
+  --sev-high: #ff4d3d;
+  --sev-medium: #d98a1f;
+  --sev-low: #55503f;
 
-  /* Tipografía */
-  --font-display: "Fraunces", "Iowan Old Style", serif;
-  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  /* Typography */
+  --font-display: "Fraunces", "Iowan Old Style", serif;      /* headlines */
+  --font-text: "Source Serif 4", Georgia, serif;              /* reading copy */
+  --font-body: "Inter", system-ui, -apple-system, sans-serif; /* UI chrome */
 
-  /* Escala tipográfica fluida */
+  /* Fluid type scale */
   --fs-display: clamp(2.6rem, 6vw, 5.6rem);
   --fs-h1: clamp(2rem, 4vw, 3.4rem);
   --fs-h2: clamp(1.5rem, 2.6vw, 2.2rem);
@@ -44,19 +46,19 @@
   --fs-small: 0.85rem;
   --fs-label: 0.78rem;
 
-  /* Espaciado */
+  /* Spacing */
   --space-1: 0.5rem;
   --space-2: 1rem;
   --space-3: 1.75rem;
   --space-4: 2.75rem;
   --space-5: 4.5rem;
 
-  /* Forma */
+  /* Shape */
   --radius-s: 10px;
   --radius-m: 16px;
   --radius-l: 26px;
 
-  /* Movimiento */
+  /* Motion */
   --ease: cubic-bezier(.22, 1, .36, 1);
   --dur-s: 0.35s;
   --dur-m: 0.6s;
