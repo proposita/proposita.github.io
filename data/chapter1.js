@@ -1,9 +1,10 @@
 // Chapter 1 — UX Audit
 //
-// IMPORTANT: the findings in this file are ILLUSTRATIVE EXAMPLES (tagged
-// "Example") meant to exercise the site's mechanics, not real observations
-// about the Lilla P app yet. Replace each finding with a real one once we
-// have screenshots / access / existing research on the current app.
+// This chapter's own sections are the cover, objective, and methodology
+// overview. The methodology's three phases (see the "list" below) link
+// out to /data/phases.js, which holds the aggregated + detailed findings
+// for each phase (the "promoted" version of /ux-audit-log), rendered by
+// js/pages.js instead of this file's section-based flow.
 
 export default {
   id: "ux-audit",
@@ -11,7 +12,7 @@ export default {
   status: "active", // active | upcoming
   title: "UX Audit",
   shortTitle: "UX Audit",
-  summary: "A diagnosis of the current B2B experience: what's working, what's causing friction, and what's worth prioritizing.",
+  summary: "An AI-assisted diagnosis of the current B2B experience: what’s working, what’s causing friction, and what’s worth prioritizing.",
   accentVar: "--accent",
 
   sections: [
@@ -21,7 +22,7 @@ export default {
       title: "<em>UX</em> audit of the current B2B platform",
       meta: [
         { label: "Client", value: "Lilla P — Wholesale" },
-        { label: "Scope", value: "B2B wholesale ordering app (web)" },
+        { label: "Scope", value: "B2B Portal" },
         { label: "Status", value: "In progress" },
       ],
     },
@@ -29,101 +30,43 @@ export default {
       type: "text",
       eyebrow: "Objective",
       title: "Why we're starting here",
-      body: "Before adding artificial intelligence or new modules, we need an honest diagnosis of the current experience: where we're creating friction for wholesale buyers, which tasks cost them more effort than they should, and what's already solid and worth preserving.",
+      body: [
+        "The B2B Portal is already a central part of the daily work of Sales Reps, wholesale buyers, Sales Managers, and admin users. Before introducing new functionality — and eventually building the broader Product Platform — we need a clear understanding of how the current experience performs: where it creates friction, which tasks require unnecessary effort, and what is already working well and should be preserved.",
+        "We are using AI tools, guided by a UX Assessment Lead, to accelerate and simplify this evaluation. AI helps us navigate key flows, compare recurring patterns, capture evidence, and synthesize observations more efficiently and consistently.",
+        "This diagnosis is valuable in its own right. It can help improve the flows users depend on today, regardless of which new capabilities are ultimately built on top of the B2B Portal.",
+      ],
     },
     {
       type: "text",
       eyebrow: "Methodology",
       title: "How we're evaluating the application",
+      body: "We’re proposing a focused methodology carried out in three areas, combining AI-assisted exploration and analysis with the direction of a UX Assessment Lead, who defines the scope, guides each area, and validates the findings, while AI helps accelerate navigation, evidence capture, comparison, and synthesis throughout the assessment.",
       list: [
-        { label: "Heuristic review", body: "Expert evaluation of the key flows (catalog, order entry, checkout, account) against usability heuristics and B2B/wholesale patterns." },
-        { label: "Critical flow walkthroughs", body: "End-to-end simulation of the most frequent tasks a wholesale buyer performs." },
-        { label: "Responsive audit", body: "How the interface behaves across the devices and screen sizes relevant to how buyers actually use it." },
-        { label: "Interviews / research", body: "To be added if the client can provide access to users or existing usage data." },
-      ],
-    },
-    {
-      type: "findings-grid",
-      eyebrow: "Findings",
-      title: "Navigation and information architecture",
-      findings: [
         {
-          id: "f1",
-          severity: "high",
-          effort: 2,
-          example: true,
-          title: "Example — Catalog categorization doesn't match wholesale buying criteria",
-          description: "B2B buyers typically search by season/collection or by SKU code, not the way an end consumer would. If the current taxonomy doesn't reflect that, search becomes slow.",
-          recommendation: "Validate the taxonomy with real buyers and, where relevant, offer alternative filters/sorting geared toward wholesale.",
+          label: "Targeted heuristic evaluation",
+          body: "AI-conducted, UX Assessment Lead-guided review of the key flows using Nielsen’s heuristics as the diagnostic framework. The evaluation focuses on a targeted set of principles — consistency and standards, visibility of system status, error prevention, and error recovery — rather than applying an exhaustive all-heuristics checklist.",
+          href: "#/chapter/1/phase/heuristic-evaluation",
+          // Trying this out for Area 1 only, per Gastón's request — same
+          // category chips as the phase's own Finding Summary table.
+          categoriesNote: "Findings are automatically grouped by AI into these 3 categories:",
+          // Each chip links straight to that category's findings — not
+          // to the phase page above, per Gastón's request.
+          categories: [
+            { id: "design-system", title: "Design System", href: "#/chapter/1/phase/heuristic-evaluation/category/design-system" },
+            { id: "visibility-status", title: "Visibility & Status", href: "#/chapter/1/phase/heuristic-evaluation/category/visibility-status" },
+            { id: "user-control-errors", title: "User Control & Errors", href: "#/chapter/1/phase/heuristic-evaluation/category/user-control-errors" },
+          ],
         },
         {
-          id: "f2",
-          severity: "medium",
-          effort: 1,
-          example: true,
-          title: "Example — Missing breadcrumbs in deep sections",
-          description: "In nested screens (collection > category > product), it may not be clear where the user is or how to go back without losing applied filters.",
-          recommendation: "Add persistent breadcrumbs that preserve filter state when navigating back.",
+          label: "Key journeys and cognitive walkthrough",
+          body: "A compact map of the main buyer journeys (browsing, order entry, cart, account, administration), followed by guided walkthroughs of representative tasks to check whether the next step is always clear, understandable, and recoverable.",
+          href: "#/chapter/1/phase/cognitive-walkthrough",
         },
         {
-          id: "f3",
-          severity: "low",
-          effort: 1,
-          example: true,
-          title: "Example — Uninformative empty states",
-          description: "When a search returns no results, the screen may not guide the user toward next steps (adjusting filters, contacting their rep, etc.).",
-          recommendation: "Design actionable empty states with concrete suggestions.",
+          label: "Responsive and accessibility spot checks",
+          body: "A targeted look at representative screen sizes and high-risk interface patterns — not a full responsive audit or a WCAG conformance assessment, but a check on where the experience breaks down.",
+          href: "#/chapter/1/phase/responsive-accessibility",
         },
-      ],
-    },
-    {
-      type: "findings-grid",
-      eyebrow: "Findings",
-      title: "Order entry and checkout flow",
-      findings: [
-        {
-          id: "f4",
-          severity: "high",
-          effort: 3,
-          example: true,
-          title: "Example — Entering large orders by size/color is slow",
-          description: "When a buyer needs to enter many SKU combinations (size × color) row by row, the process can become tedious compared to a grid-style or bulk-upload flow.",
-          recommendation: "Evaluate a grid/matrix-style entry view, or a spreadsheet import, for high-volume orders.",
-        },
-        {
-          id: "f5",
-          severity: "medium",
-          effort: 2,
-          example: true,
-          title: "Example — Stock and minimums aren't clear before checkout",
-          description: "A buyer may reach the end of checkout without a clear view of real availability, order minimums, or estimated delivery dates per item.",
-          recommendation: "Surface stock, minimums, and ETA at the same point where the purchase decision is made, not only at the end.",
-        },
-        {
-          id: "f6",
-          severity: "medium",
-          effort: 1,
-          example: true,
-          title: "Example — No clear post-order confirmation",
-          description: "The confirmation screen or email may not clearly summarize what was ordered, terms, and next administrative steps.",
-          recommendation: "Redesign the confirmation as an actionable summary (PDF/email) with the full order detail.",
-        },
-      ],
-    },
-    {
-      type: "matrix",
-      eyebrow: "Synthesis",
-      title: "Prioritization matrix",
-      body: "Severity vs. estimated effort to resolve — to decide what to tackle first. Tap any point for detail.",
-      axisX: ["Low effort", "Medium effort", "High effort"],
-      axisY: "Severity ↑",
-      items: [
-        { ref: "f1", x: 2, y: 3 },
-        { ref: "f2", x: 1, y: 2 },
-        { ref: "f3", x: 1, y: 1 },
-        { ref: "f4", x: 3, y: 3 },
-        { ref: "f5", x: 2, y: 2 },
-        { ref: "f6", x: 1, y: 2 },
       ],
     },
     {

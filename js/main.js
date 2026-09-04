@@ -1,7 +1,9 @@
 import chapter1 from "../data/chapter1.js";
 import chapter2 from "../data/chapter2.js";
 import chapter3 from "../data/chapter3.js";
+import phases from "../data/phases.js";
 import { renderSection } from "./render.js";
+import { renderPhasePage, renderCategoryPage, renderFindingPage } from "./pages.js";
 import { initReveal, revealNow } from "./animations.js";
 import { initChapterNavigation, initMatrixInteraction } from "./navigation.js";
 
@@ -41,7 +43,7 @@ function renderHome() {
         <div class="home__hero" data-reveal>
           <p class="eyebrow" data-reveal-item>Evolution Proposal — B2B Wholesale Platform</p>
           <h1 class="home__title" data-reveal-item>A diagnosis, a roadmap, and a <em>platform</em> to build.</h1>
-          <p class="home__lede" data-reveal-item>This report brings together the three workstreams proposed to Lilla P: an audit of the current experience, its evolution with embedded artificial intelligence, and the proposal for a multi-module B2B portal.</p>
+          <p class="home__lede" data-reveal-item>This report brings together the three workstreams proposed for Lilla P: an assessment of the current experience, the evolution and expansion of the existing application, and the definition of a broader B2B Product Platform. Together, they provide a structured path from understanding today’s experience to identifying what should improve, what should grow, and what should be built next — with AI tools playing an important role throughout the roadmap.</p>
         </div>
       </div>
       <div class="container">
@@ -92,6 +94,43 @@ function renderChapter(index) {
   cleanupChapter = initChapterNavigation(scrollEl, chapterData.sections);
 }
 
+function findPhase(chapterIndex, phaseId) {
+  return phases.find((p) => p.chapterIndex === chapterIndex && p.id === phaseId);
+}
+
+function renderPhase(chapterIndex, phaseId) {
+  const phase = findPhase(chapterIndex, phaseId);
+  if (!phase) {
+    location.hash = `#/chapter/${chapterIndex}`;
+    return;
+  }
+  app.innerHTML = renderPhasePage(phase);
+  initReveal(app);
+}
+
+function renderCategory(chapterIndex, phaseId, categoryId) {
+  const phase = findPhase(chapterIndex, phaseId);
+  const category = phase && phase.categories && phase.categories.find((c) => c.id === categoryId);
+  if (!phase || !category) {
+    location.hash = `#/chapter/${chapterIndex}/phase/${phaseId}`;
+    return;
+  }
+  app.innerHTML = renderCategoryPage(phase, category);
+  initReveal(app);
+}
+
+function renderFinding(chapterIndex, phaseId, findingId, categoryId) {
+  const phase = findPhase(chapterIndex, phaseId);
+  const finding = phase && phase.findings.find((f) => f.id === findingId);
+  const category = categoryId && phase && phase.categories && phase.categories.find((c) => c.id === categoryId);
+  if (!phase || !finding) {
+    location.hash = `#/chapter/${chapterIndex}/phase/${phaseId}`;
+    return;
+  }
+  app.innerHTML = renderFindingPage(phase, finding, category || undefined);
+  initReveal(app);
+}
+
 function route() {
   if (cleanupChapter) {
     cleanupChapter();
@@ -99,9 +138,28 @@ function route() {
   }
 
   const hash = location.hash || "#/";
+  const findingInCategoryMatch = hash.match(
+    /^#\/chapter\/(\d+)\/phase\/([\w-]+)\/category\/([\w-]+)\/finding\/([\w-]+)/
+  );
+  const findingMatch = hash.match(/^#\/chapter\/(\d+)\/phase\/([\w-]+)\/finding\/([\w-]+)/);
+  const categoryMatch = hash.match(/^#\/chapter\/(\d+)\/phase\/([\w-]+)\/category\/([\w-]+)/);
+  const phaseMatch = hash.match(/^#\/chapter\/(\d+)\/phase\/([\w-]+)/);
   const chapterMatch = hash.match(/^#\/chapter\/(\d+)/);
 
-  if (chapterMatch) {
+  if (findingInCategoryMatch) {
+    renderFinding(
+      Number(findingInCategoryMatch[1]),
+      findingInCategoryMatch[2],
+      findingInCategoryMatch[4],
+      findingInCategoryMatch[3]
+    );
+  } else if (findingMatch) {
+    renderFinding(Number(findingMatch[1]), findingMatch[2], findingMatch[3]);
+  } else if (categoryMatch) {
+    renderCategory(Number(categoryMatch[1]), categoryMatch[2], categoryMatch[3]);
+  } else if (phaseMatch) {
+    renderPhase(Number(phaseMatch[1]), phaseMatch[2]);
+  } else if (chapterMatch) {
     renderChapter(Number(chapterMatch[1]));
   } else {
     renderHome();

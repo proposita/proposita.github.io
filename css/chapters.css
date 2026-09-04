@@ -83,6 +83,108 @@
   font-family: var(--font-body);
 }
 
+/* List items that link to a phase detail page: same row language as the
+   Home chapter-index (chapter-card) — same arrow icon, color, and
+   position, same opacity-on-hover feedback. */
+.s-text__list a.s-text__list-link {
+  display: flex;
+  align-items: baseline;
+  gap: 1em;
+  width: 100%;
+  text-decoration: none;
+  color: var(--ink);
+  transition: opacity var(--dur-s) var(--ease);
+}
+.s-text__list a.s-text__list-link:hover {
+  opacity: 0.72;
+}
+.s-text__list a.s-text__list-link .s-text__list-arrow {
+  margin-left: auto;
+  font-size: 1.4rem;
+  color: var(--ink);
+  transition: transform var(--dur-s) var(--ease);
+}
+.s-text__list a.s-text__list-link:hover .s-text__list-arrow {
+  transform: translateX(4px);
+}
+
+/* Nav variant: a list where every row links out (e.g. Chapter 1's
+   Methodology phases). Breaks out of .s-text's narrow reading width to
+   span the full container, like Home's chapter-index rows, so the
+   separator rules read as full-width, not clipped to a text column. */
+.s-text__list--nav {
+  max-width: none;
+  border-top: 1px solid var(--line-strong);
+}
+.s-text__list--nav > li {
+  padding: var(--space-3) 0;
+}
+
+/* Every row is a 2-column grid, same "label | content" shape as
+   .finding-row / .category-row elsewhere: the label in column 1, and
+   column 2 a small flex column holding the description-with-arrow link
+   on top and the categories block (when the row has one) below it, in
+   the same column.
+
+   Column 1 is a FIXED width (14rem, matching .category-row's own label
+   column), not content-sized — each <li> is its own independent grid, so
+   a content-based width (max-content, or the old flex layout's
+   min-width) sizes column 1 to THAT row's own label text, and the three
+   labels are different lengths. That's exactly what caused the
+   description column to land at a different x per row. A shared fixed
+   width is the only way to guarantee it lines up; longer labels (like
+   "Responsive and accessibility spot checks") wrap to two lines here,
+   which is expected for a fixed-width table column.
+
+   A row with category chips can't use one wrapping <a> — an <a> can't
+   contain another <a>, and each chip is its own link — so instead of
+   trying to make one element cover the whole row (an invisible overlay
+   turned out fragile in practice), the label and the description are
+   each their own small .s-text__list-link (same class the plain rows
+   used, so they get the same hover/arrow behavior with no extra rules
+   needed). Every row uses this same two-link shape now, whether or not
+   it has categories, so column 1 is sized identically everywhere. */
+.s-text__list li.s-text__list-row {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: 1em;
+}
+.s-text__list-row__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+
+/* Note + category chips: same chip palette as the phase page's category
+   table, at a smaller size, on their own line below the note. Plain
+   elements (not overlaid by anything) — the chips just work as their own
+   links. */
+.s-text__list-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.s-text__list-categories__note {
+  color: var(--ink-soft);
+  font-size: 0.93em;
+}
+.s-text__list-categories__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+}
+.s-text__list-categories__chips .category-chip {
+  font-size: 0.78em;
+}
+
+@media (max-width: 640px) {
+  .s-text__list li.s-text__list-row {
+    grid-template-columns: 1fr;
+    gap: 0.5em;
+  }
+}
+
 /* ---------- Section: findings grid ---------- */
 
 .s-findings__header {
@@ -409,5 +511,494 @@
   .module-row {
     grid-template-columns: 1fr;
     gap: 0.3em;
+  }
+}
+
+/* ---------- Phase & finding detail pages ----------
+   These are standalone pages (reached by drilling into a methodology
+   phase, then into one of its findings), not part of a chapter's
+   snap-scrolling section flow — so they use normal document scroll
+   instead of .chapter/.chapter__section. They reuse .chapter__topbar
+   for the fixed back-navigation bar. */
+
+.page {
+  min-height: 100vh;
+  padding: calc(var(--space-5) + var(--space-2)) 0 var(--space-5);
+}
+
+.page__header {
+  max-width: 50rem;
+  margin-bottom: var(--space-4);
+}
+
+.page__eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.page__title {
+  font-size: var(--fs-h1);
+}
+
+.page__intro {
+  margin-top: var(--space-3);
+  font-size: var(--fs-h3);
+  font-weight: 400;
+  font-family: var(--font-text);
+  color: var(--ink-soft);
+  max-width: 44rem;
+}
+
+/* Status tag: reused across the phase's finding list and the finding
+   detail page itself. Color is driven by data-kind, not by severity. */
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.status-tag::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+}
+.status-tag[data-kind="pass"]        { color: var(--status-ok); }
+.status-tag[data-kind="issue"]       { color: var(--status-issue); }
+.status-tag[data-kind="issue-high"]  { color: var(--status-issue-high); }
+.status-tag[data-kind="pending"]     { color: var(--status-pending); }
+
+/* Phase page: list of findings belonging to that phase, each a clickable
+   row into the finding's detail page. Same dossier-row language as
+   .finding-row, keyed by status instead of severity. */
+.phase-findings {
+  border-top: 1px solid var(--line);
+}
+
+.phase-finding-row {
+  --row-accent: var(--status-issue);
+  position: relative;
+  display: grid;
+  grid-template-columns: 11rem 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-2) var(--space-3) var(--space-3);
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  transition: opacity var(--dur-s) var(--ease);
+}
+.phase-finding-row:hover {
+  opacity: 0.72;
+}
+.phase-finding-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--space-3);
+  bottom: var(--space-3);
+  width: 3px;
+  background: var(--row-accent);
+}
+.phase-finding-row[data-kind="pass"]       { --row-accent: var(--status-ok); }
+.phase-finding-row[data-kind="issue-high"] { --row-accent: var(--status-issue-high); }
+.phase-finding-row[data-kind="pending"]    { --row-accent: var(--status-pending); }
+
+.phase-finding-row__body h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  margin-bottom: 0.4em;
+}
+.phase-finding-row__body p {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  font-family: var(--font-text);
+}
+
+.phase-finding-row__arrow {
+  font-size: 1.3rem;
+  color: var(--ink-faint);
+  transition: transform var(--dur-s) var(--ease);
+}
+.phase-finding-row:hover .phase-finding-row__arrow {
+  transform: translateX(4px);
+  color: var(--ink);
+}
+
+.phase-empty {
+  padding: var(--space-4) 0;
+  color: var(--ink-faint);
+  font-family: var(--font-text);
+  font-size: var(--fs-h3);
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 640px) {
+  .phase-finding-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+  .phase-finding-row__arrow { display: none; }
+}
+
+/* Finding detail page */
+
+.finding-detail {
+  max-width: 50rem;
+}
+
+.finding-detail__scope {
+  margin-top: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  padding: var(--space-3) 0;
+}
+
+.finding-detail__scope dt {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin-bottom: 0.35em;
+}
+.finding-detail__scope dd {
+  margin: 0 0 var(--space-2);
+  color: var(--ink-soft);
+  font-family: var(--font-text);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .finding-detail__scope { grid-template-columns: 1fr; }
+}
+
+.evidence-block {
+  margin-top: var(--space-4);
+}
+
+.evidence-block__heading {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: var(--space-2);
+}
+
+.evidence-block p {
+  color: var(--ink-soft);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  margin-bottom: 0.9em;
+}
+
+/* Steps: numbered, each optionally followed by a captured screenshot. */
+.evidence-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: step;
+}
+.evidence-steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 2.4em;
+  margin-bottom: var(--space-3);
+}
+.evidence-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 999px;
+  border: 1.5px solid var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  color: var(--ink-faint);
+}
+.evidence-steps > li p {
+  color: var(--ink-soft);
+  font-family: var(--font-text);
+}
+.evidence-step__img {
+  margin-top: var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-s);
+  overflow: hidden;
+  background: var(--paper-raised);
+}
+.evidence-step__img img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.evidence-step__caption {
+  margin-top: 0.5em;
+  font-size: var(--fs-small);
+  color: var(--ink-faint);
+  font-family: var(--font-body);
+}
+
+/* Meta pairs inside a richtext block (e.g. Heuristic relevance / Suggested direction) */
+.evidence-meta {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--space-2);
+}
+.evidence-meta b {
+  display: block;
+  color: var(--ink-faint);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25em;
+  font-family: var(--font-body);
+}
+.evidence-meta p { margin: 0; }
+
+.evidence-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.7em;
+}
+.evidence-list li {
+  padding-left: 1.4em;
+  position: relative;
+  color: var(--ink-soft);
+  font-family: var(--font-text);
+}
+.evidence-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink-faint);
+}
+
+/* Ordered variant (e.g. the Rationale's numbered questions): a plain
+   numeral instead of a bullet dot. */
+.evidence-list--ordered {
+  counter-reset: elist;
+}
+.evidence-list--ordered li {
+  padding-left: 1.7em;
+}
+.evidence-list--ordered li::before {
+  counter-increment: elist;
+  content: counter(elist) ".";
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  color: var(--ink-faint);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.9em;
+  top: 0;
+}
+
+.evidence-table-wrap {
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.evidence-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+}
+.evidence-table th, .evidence-table td {
+  border: 1px solid var(--line-strong);
+  padding: 0.5em 0.8em;
+  text-align: left;
+}
+.evidence-table th {
+  background: var(--paper-raised);
+  color: var(--ink-faint);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.page__back-crumb {
+  margin-top: var(--space-5);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Phase summary: explainer + category sections ----------
+   The explainer (Rationale / What to inspect / AI contribution, from
+   ux-assessment.md) reuses the same evidence-block renderers as a
+   finding's detail page. The categories that follow are plain
+   rule-separated sections — no boxed/rounded cards — in the same
+   dossier-row language as .finding-row / .module-row elsewhere. */
+
+.phase-explainer {
+  margin-top: var(--space-4);
+  max-width: 46rem;
+}
+
+/* Short heading + framing line introducing the category table below. */
+.category-list-intro {
+  margin-top: var(--space-4);
+  max-width: 46rem;
+}
+.category-list-intro__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+.category-list-intro__body {
+  margin-top: 0.6em;
+  color: var(--ink-soft);
+  font-family: var(--font-text);
+}
+
+.category-list {
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--line-strong);
+}
+
+.category-row {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.category-row__title h3 {
+  margin: 0 0 0.6em;
+}
+
+/* Category chip: pill badge for the category name, one color per
+   category — an experiment requested by Gastón to try alongside the
+   plain rule-separated row layout. */
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35em 0.95em;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.category-chip[data-cat="design-system"] {
+  background: var(--cat-design-system-soft);
+  color: var(--cat-design-system);
+}
+.category-chip[data-cat="visibility-status"] {
+  background: var(--cat-visibility-status-soft);
+  color: var(--cat-visibility-status);
+}
+.category-chip[data-cat="user-control-errors"] {
+  background: var(--cat-user-control-errors-soft);
+  color: var(--cat-user-control-errors);
+}
+
+/* When a chip is a real link (e.g. the Methodology row, where each chip
+   jumps straight to that category's findings instead of the phase page
+   the rest of the row links to): drop the underline, add the same hover
+   feedback as the site's other text links. */
+a.category-chip {
+  text-decoration: none;
+  transition: opacity var(--dur-s) var(--ease);
+}
+a.category-chip:hover {
+  opacity: 0.72;
+}
+
+.category-row__count {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+.category-row__body p {
+  color: var(--ink-soft);
+  font-family: var(--font-text);
+  margin-bottom: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .category-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}
+
+/* Closing highlight for a phase's priority finding (Area 1: the missing
+   Design System). A tinted, left-accented callout — distinct from the
+   plain rule-separated category rows above, since this is meant to stand
+   out as a single emphasized takeaway rather than another list item.
+   Color follows the matching category via data-cat, same palette as the
+   chips. */
+.priority-callout {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  max-width: 46rem;
+  border-left: 4px solid var(--ink-faint);
+  background: var(--paper-raised);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+}
+.priority-callout .eyebrow {
+  display: block;
+  margin-bottom: 0.5em;
+}
+.priority-callout__title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin: 0 0 0.6em;
+}
+.priority-callout__body {
+  color: var(--ink-soft);
+  font-family: var(--font-text);
+}
+.priority-callout__cta {
+  margin-top: var(--space-3);
+}
+
+.priority-callout[data-cat="design-system"] {
+  border-left-color: var(--cat-design-system);
+  background: var(--cat-design-system-soft);
+}
+.priority-callout[data-cat="design-system"] .eyebrow { color: var(--cat-design-system); }
+
+.priority-callout[data-cat="visibility-status"] {
+  border-left-color: var(--cat-visibility-status);
+  background: var(--cat-visibility-status-soft);
+}
+.priority-callout[data-cat="visibility-status"] .eyebrow { color: var(--cat-visibility-status); }
+
+.priority-callout[data-cat="user-control-errors"] {
+  border-left-color: var(--cat-user-control-errors);
+  background: var(--cat-user-control-errors-soft);
+}
+.priority-callout[data-cat="user-control-errors"] .eyebrow { color: var(--cat-user-control-errors); }
+
+@media (max-width: 640px) {
+  .priority-callout {
+    padding: var(--space-3);
   }
 }

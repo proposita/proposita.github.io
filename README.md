@@ -4,7 +4,7 @@ Interactive report site for presenting Lilla P with the three fronts of the proj
 
 1. **UX Audit** of the current B2B application (Chapter 1 — in progress)
 2. **Feature expansion + embedded AI** (Chapter 2 — coming soon)
-3. **Product Platform**: evolution into a multi-module portal — inventory, payments, order entry (Chapter 3 — coming soon)
+3. **Product Platform** — inventory, payments, order entry, and more (Chapter 3 — coming soon)
 
 **Vite + npm** project: plain JS (no framework), with GSAP as a real
 dependency (not a CDN) and a build that compiles everything to static

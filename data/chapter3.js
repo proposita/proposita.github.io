@@ -1,6 +1,6 @@
 // Chapter 3 — Product Platform
 // Status: upcoming. The most ambitious proposal: turning the current B2B
-// app into a multi-module portal.
+// app into a Product Platform.
 
 export default {
   id: "product-platform",
@@ -8,7 +8,7 @@ export default {
   status: "upcoming",
   title: "Product Platform",
   shortTitle: "Product Platform",
-  summary: "The most ambitious proposal: turning the current B2B app into a multi-module portal — inventory, payments, order entry, and more.",
+  summary: "The most ambitious proposal: turning the current B2B app into a Product Platform — inventory, payments, order entry, and more.",
   accentVar: "--accent-ai",
 
   sections: [
@@ -16,7 +16,7 @@ export default {
       type: "teaser",
       eyebrow: "Chapter 03 — Coming soon",
       title: "From order-taking app to <em>Product Platform</em>",
-      body: "The report's most ambitious commercial offer: evolving the current B2B application into a modular portal, where order entry is just one function within a broader wholesale management platform.",
+      body: "The report's most ambitious commercial offer: evolving the current B2B application into a Product Platform, where order entry is just one function within a broader wholesale management platform.",
       modules: [
         { title: "Inventory", body: "Real-time, multi-warehouse stock visibility for buyers and the sales team.", ai: false },
         { title: "Payments", body: "Integrated credit account management, payment methods, and statements.", ai: false },

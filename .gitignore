@@ -1,5 +1,8 @@
 .DS_Store
 Thumbs.db
+documents/
+ux-audit-log/
+ux-audit-log/
 node_modules/
 dist/
 .vscode/

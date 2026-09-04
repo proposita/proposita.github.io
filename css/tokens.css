@@ -32,6 +32,21 @@
   --sev-medium: #d98a1f;
   --sev-low: #55503f;
 
+  /* Finding status (evidence model — case-level outcome, not severity) */
+  --status-ok: #2f7d4f;     /* Pass */
+  --status-issue: #d98a1f;  /* Issue found */
+  --status-issue-high: #ff4d3d; /* Issue found — high severity */
+  --status-pending: #8a8471;    /* Review pending / incomplete */
+
+  /* Category chips (Area 1 findings, grouped by heuristic category) —
+     experimental, distinct from severity/status colors above. */
+  --cat-design-system: #6a4fd0;
+  --cat-design-system-soft: #ece7fb;
+  --cat-visibility-status: #1f8a7a;
+  --cat-visibility-status-soft: #dcf3ef;
+  --cat-user-control-errors: #b23a6b;
+  --cat-user-control-errors-soft: #fbe4ee;
+
   /* Typography */
   --font-display: "Fraunces", "Iowan Old Style", serif;      /* headlines */
   --font-text: "Source Serif 4", Georgia, serif;              /* reading copy */

@@ -26,13 +26,101 @@ function renderCover(s) {
   `;
 }
 
+// Note + category chips shown under a nav-list item's description
+// (currently just the "Targeted heuristic evaluation" row): a short note
+// (e.g. "Findings are automatically grouped by AI into these N
+// categories:") on its own line, followed by that same phase's category
+// chips on the line below it. Each chip with an `href` is its own link —
+// straight to that category's findings, not the phase link the rest of
+// the row points to. Reuses .category-chip / data-cat so the palette
+// stays in one place (css/tokens.css + chapters.css); the smaller sizing
+// here is scoped to this context only (see .s-text__list-categories in
+// chapters.css), not a change to the chip elsewhere.
+function renderListItemCategories(li) {
+  if (!li.categories || !li.categories.length) return "";
+  const chips = li.categories
+    .map((c) =>
+      c.href
+        ? `<a class="category-chip" data-cat="${c.id}" href="${c.href}">${c.title}</a>`
+        : `<span class="category-chip" data-cat="${c.id}">${c.title}</span>`
+    )
+    .join("");
+  return `
+    <span class="s-text__list-categories">
+      ${li.categoriesNote ? `<span class="s-text__list-categories__note">${li.categoriesNote}</span>` : ""}
+      <span class="s-text__list-categories__chips">${chips}</span>
+    </span>
+  `;
+}
+
+// A nav-list item that links out to a phase page. Every such row —
+// whether or not it has category chips — uses the same 2-column grid
+// structure (see .s-text__list li.s-text__list-row in chapters.css), so
+// the label/description columns line up consistently across all rows
+// instead of each one being sized to its own content independently.
+//
+// A row with category chips can't use a single wrapping <a> — an <a>
+// can't contain another <a>, and each chip is its own link — so instead
+// of trying to make one element cover the whole row (an invisible
+// overlay turned out fragile in practice), each visible piece gets its
+// own small link to the same phase page: the label, and the
+// description-with-arrow. Both reuse .s-text__list-link so they pick up
+// the same hover/arrow behavior with no extra rules needed. Rows without
+// categories use the exact same two-link shape, just with nothing
+// rendered in the categories slot. Blank space in the row (the gap
+// between the two links, or below the chips) isn't clickable —
+// acceptable per Gastón.
+function renderNavListItem(li) {
+  return `
+    <li class="s-text__list-row" data-reveal-item>
+      <a class="s-text__list-link" href="${li.href}"><b>${li.label}</b></a>
+      <div class="s-text__list-row__main">
+        <a class="s-text__list-link" href="${li.href}">
+          <span>${li.body}</span>
+          <span class="s-text__list-arrow">→</span>
+        </a>
+        ${renderListItemCategories(li)}
+      </div>
+    </li>
+  `;
+}
+
 function renderText(s) {
-  const list = s.list
-    ? `<ul class="s-text__list">${s.list
-        .map((li) => `<li data-reveal-item><b>${li.label}</b><span>${li.body}</span></li>`)
-        .join("")}</ul>`
+  // A list where every item links out (a phase-navigation table, e.g.
+  // Chapter 1's Methodology section) breaks out of the section's normal
+  // reading width and reuses the Home chapter-index's row language
+  // (arrow icon/color/position, full-width separator rules) instead of
+  // the plain narrow bullet list.
+  const isNavList = s.list && s.list.length > 0 && s.list.every((li) => li.href);
+
+  const listItemsHtml = s.list
+    ? s.list
+        .map((li) =>
+          li.href
+            ? renderNavListItem(li)
+            : `<li data-reveal-item><b>${li.label}</b><span>${li.body}</span></li>`
+        )
+        .join("")
     : "";
-  const body = s.body ? `<p class="s-text__body" data-reveal-item>${s.body}</p>` : "";
+
+  // s.body can be a single string (one paragraph) or an array of strings
+  // (one <p> per paragraph), so longer text blocks can break cleanly.
+  const bodies = Array.isArray(s.body) ? s.body : s.body ? [s.body] : [];
+  const body = bodies
+    .map((p) => `<p class="s-text__body" data-reveal-item>${p}</p>`)
+    .join("");
+
+  if (isNavList) {
+    return `
+      <div class="s-text">
+        <h2 class="s-text__title" data-reveal-item>${s.title}</h2>
+        ${body}
+      </div>
+      <ul class="s-text__list s-text__list--nav">${listItemsHtml}</ul>
+    `;
+  }
+
+  const list = s.list ? `<ul class="s-text__list">${listItemsHtml}</ul>` : "";
   return `
     <div class="s-text">
       <h2 class="s-text__title" data-reveal-item>${s.title}</h2>
