@@ -43,7 +43,7 @@
 /* ---------- Section: text ---------- */
 
 .s-text {
-  max-width: 46rem;
+  max-width: 56rem;
 }
 
 .s-text__title {
@@ -527,7 +527,7 @@
 }
 
 .page__header {
-  max-width: 50rem;
+  max-width: 56rem;
   margin-bottom: var(--space-4);
 }
 
@@ -548,7 +548,7 @@
   font-weight: 400;
   font-family: var(--font-text);
   color: var(--ink-soft);
-  max-width: 44rem;
+  max-width: 50rem;
 }
 
 /* Status tag: reused across the phase's finding list and the finding
@@ -773,7 +773,7 @@
 .evidence-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 1rem 0;
   display: grid;
   gap: 0.7em;
 }
@@ -782,6 +782,7 @@
   position: relative;
   color: var(--ink-soft);
   font-family: var(--font-text);
+  font-size: 1rem;
 }
 .evidence-list li::before {
   content: "";
@@ -860,7 +861,7 @@
 /* Short heading + framing line introducing the category table below. */
 .category-list-intro {
   margin-top: var(--space-4);
-  max-width: 46rem;
+  max-width: 56rem;
 }
 .category-list-intro__title {
   font-family: var(--font-body);

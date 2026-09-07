@@ -65,10 +65,15 @@ function renderListBlock(block) {
   const items = (block.items || []).map((i) => `<li>${i}</li>`).join("");
   const tag = block.ordered ? "ol" : "ul";
   const cls = block.ordered ? "evidence-list evidence-list--ordered" : "evidence-list";
+  // Optional paragraphs after the list itself — same shape as a richtext
+  // block's `paragraphs`, so a list can be followed by a bit of prose
+  // without needing a separate richtext block right after it.
+  const paras = (block.paragraphs || []).map((p) => `<p>${p}</p>`).join("");
   return `
     <div class="evidence-block" data-reveal-item>
       ${block.heading ? `<h3 class="evidence-block__heading">${block.heading}</h3>` : ""}
       <${tag} class="${cls}">${items}</${tag}>
+      ${paras}
     </div>
   `;
 }

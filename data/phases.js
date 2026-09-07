@@ -552,24 +552,8 @@ export default [
         type: "richtext",
         heading: "Rationale",
         paragraphs: [
-          "This assessment uses Nielsen's heuristics as its diagnostic framework, with AI carrying out the hands-on inspection under the UX Assessment Lead's direction. A heuristic evaluation is an expert inspection method in which evaluators — AI, in this case — review an interface against recognized usability principles. Nielsen's ten heuristics are general principles rather than detailed interface requirements, which makes them useful as a diagnostic framework rather than a rigid checklist.",
-          "The complete set includes principles such as visibility of system status, user control and freedom, consistency and standards, error prevention, and helping users recognize, diagnose, and recover from errors. For this assessment, we deliberately focus on the principles most relevant to the current product:",
-        ],
-      },
-      {
-        type: "list",
-        items: [
-          "Consistency and standards",
-          "Visibility of system status",
-          "Error prevention",
-          "Recognition, diagnosis, and recovery from errors",
-          "User control and freedom, where recovery or cancellation is relevant",
-        ],
-      },
-      {
-        type: "richtext",
-        paragraphs: [
-          "This is a targeted heuristic evaluation, not a claim that all ten heuristics have been exhaustively reviewed across the entire application.",
+          "This assessment uses Nielsen's heuristics as its diagnostic framework, with AI carrying out the hands-on inspection under the UX Assessment Lead's direction. A heuristic evaluation is an expert inspection method in which evaluators — AI, in this case — review an interface against recognized usability principles.",
+          "The complete set includes principles such as visibility of system status, user control and freedom, consistency and standards, error prevention, and helping users recognize, diagnose, and recover from errors.",
         ],
       },
       {
@@ -587,20 +571,13 @@ export default [
           "repeated responsive patterns",
           "visual patterns that affect comprehension or confidence",
         ],
-      },
-      {
-        type: "richtext",
         paragraphs: [
           "The absence of a formal Design System or component library makes this a particularly relevant focus. The assessment should prioritize recurring patterns and meaningful inconsistencies rather than produce a complete visual inventory.",
         ],
       },
       {
-        type: "richtext",
-        heading: "What to inspect — Error prevention, feedback, and recovery",
-        paragraphs: ["For each relevant interaction, ask:"],
-      },
-      {
         type: "list",
+        heading: "What to inspect — Error prevention, feedback, and recovery",
         ordered: true,
         items: [
           "Does the system prevent the error where possible?",
@@ -609,20 +586,13 @@ export default [
           "Does it offer an obvious next action?",
           "Does the visible state match the actual system state?",
         ],
-      },
-      {
-        type: "richtext",
         paragraphs: [
           "Inspect silent failures, contradictory messages, stale or empty states, unexpected redirects, duplicate or zero-quantity records, lost input, unclear disabled actions, generic errors, and recovery after checkout or payment problems.",
         ],
       },
       {
-        type: "richtext",
-        heading: "AI contribution",
-        paragraphs: ["AI's role in this area is to:"],
-      },
-      {
         type: "list",
+        heading: "AI contribution",
         items: [
           "inspect repeated patterns across screens",
           "compare labels, states, and component behavior",

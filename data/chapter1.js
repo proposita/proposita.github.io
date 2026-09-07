@@ -32,8 +32,7 @@ export default {
       title: "Why we're starting here",
       body: [
         "The B2B Portal is already a central part of the daily work of Sales Reps, wholesale buyers, Sales Managers, and admin users. Before introducing new functionality — and eventually building the broader Product Platform — we need a clear understanding of how the current experience performs: where it creates friction, which tasks require unnecessary effort, and what is already working well and should be preserved.",
-        "We are using AI tools, guided by a UX Assessment Lead, to accelerate and simplify this evaluation. AI helps us navigate key flows, compare recurring patterns, capture evidence, and synthesize observations more efficiently and consistently.",
-        "This diagnosis is valuable in its own right. It can help improve the flows users depend on today, regardless of which new capabilities are ultimately built on top of the B2B Portal.",
+        "We are using AI tools (ChatGTP & Claude), guided by a UX Assessment Lead, to accelerate and simplify this evaluation. AI helps us navigate key flows, compare recurring patterns, capture evidence, and synthesize observations more efficiently and consistently.",
       ],
     },
     {

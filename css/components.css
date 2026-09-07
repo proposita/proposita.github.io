@@ -45,7 +45,7 @@
 
 .home__lede {
   margin-top: var(--space-3);
-  max-width: 56ch;
+  max-width: 56rem;
   font-size: var(--fs-h3);
   color: var(--ink-soft);
   font-weight: 400;
