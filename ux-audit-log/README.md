@@ -36,6 +36,22 @@ Reviewed the left navigation panel (present on every authenticated screen) and t
 
 [Full detail →](cases/03-navigation-structure.md)
 
+### Case 04 — Administration: Manage Users (list & row Actions)
+
+**Status:** Issues found — an ambiguous checkbox rendering state inside the row-level Actions modal, an "Actions" icon that doesn't match its counterpart on Manage Reports, two table columns that are defined but never populated in this dataset, and no responsive/mobile treatment at all.
+
+Reviewed ADMINISTRATION → Manage Users as a matched pair with Case 05 (Manage Reports), checking the list itself (scrolling, search) and the per-row "Actions" control, with an explicit eye on cross-screen consistency — icons, typography, colors, line/border styles — as requested by the UX Assessment Lead. The list itself holds up well: the Email search filters live and correctly (by local-part, by domain, or by company-name fragment), the several-hundred-row table scrolls as one continuous, un-paginated list with no stutter, and USER TYPE correctly shows Customer, Employee, and Sales Rep accounts side by side in the same list — directly answering an open question from Case 03 about whether internal accounts appear here (they do). The Actions modal ("ACCOUNT SETTINGS") opens the same consistent edit form regardless of account type, and CANCEL correctly discards unsaved changes. But its "Order Entry Access" checkbox, when checked, renders as a plain solid gray-filled square with no checkmark — confirmed genuine (not a stuck or broken state) by toggling it and watching it switch to a normal empty box — and the exact same rendering reproduces independently on Case 05's Price Audit and Sharing Options checkboxes, pointing to one shared, inconsistently-styled checkbox component. Separately, Manage Users' "Actions" icon (a single edit glyph) doesn't match Manage Reports' "Actions" icon (a multi-item kebab menu) despite both columns sharing the same header label; two table columns, COMPANY and a handful of blank USER TYPE values, never show data across the accounts checked; and, per the UX Assessment Lead, this screen was never built with a tablet or mobile layout at all — a known, deliberate gap on this internal admin tool, recorded here as a low-priority finding rather than tested for.
+
+[Full detail →](cases/04-manage-users.md)
+
+### Case 05 — Administration: Manage Reports (list & row Actions)
+
+**Status:** Issues found — the same checkbox-rendering ambiguity and Actions-icon mismatch found in Case 04, two more table columns that are defined but never populated, one report whose USER count looks suspicious given how heavily it's actually used, and no responsive/mobile treatment at all.
+
+Reviewed ADMINISTRATION → Manage Reports as the matched pair to Case 04, covering the same ground: the list (a short, complete 15-row table needing no pagination) and its per-row "Actions" control, which here is a three-item kebab menu — Check images, Check prices, Share via Email — rather than Manage Users' single direct-edit icon. All three actions are genuinely well-built: Check images ran a real audit against the live "Fall 2026" report (58 styles / 221 colors checked, 0 issues) behind a properly labeled inline loading state; Check prices correctly lists every real currency/price-level combination configured in the system; and Share via Email opens a complete, sensible sharing-options modal. The issue is the same checkbox styling bug found independently in Case 04: Check prices opened with all 23 available combinations pre-selected, yet none of the 23 checkboxes showed a checkmark, and the same gray-fill-with-no-checkmark rendering reproduced again on the sharing modal's own "Link expires" checkbox — confirmed genuine via Clear all / Select all comparisons. Two more table columns (TYPE, and USERS specifically for the heavily-used "Fall 2026" report) show either no data at all or a suspicious 0, both flagged for validation with the dev team rather than treated as confirmed bugs; and, like Case 04, this screen was never built with a tablet or mobile layout, recorded here as a low-priority finding rather than tested for.
+
+[Full detail →](cases/05-manage-reports.md)
+
 ## Testing notes
 
 - All testing is done directly on the live test instance.
