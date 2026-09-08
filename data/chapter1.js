@@ -57,14 +57,33 @@ export default {
           ],
         },
         {
-          label: "Key journeys and cognitive walkthrough",
-          body: "A compact map of the main buyer journeys (browsing, order entry, cart, account, administration), followed by guided walkthroughs of representative tasks to check whether the next step is always clear, understandable, and recoverable.",
+          label: "Key journeys",
+          body: "A compact experience map of this area's key journeys, grouped by who performs them. Each journey captures a goal, entry point, key steps, and risk points — kept intentionally high-level, not a full spec — and the map itself guides which cases we test next.",
           href: "#/chapter/1/phase/cognitive-walkthrough",
+          // Same chip treatment as Area 1's row, per Gastón's request —
+          // own palette (tokens.css), so the two rows' chips read as
+          // distinct sets. Each chip links straight to that category's
+          // journeys, not the phase page above.
+          categoriesNote: "Key journeys are grouped into these 4 categories, based on who performs them:",
+          categories: [
+            { id: "common-journeys", title: "Common Journeys", href: "#/chapter/1/phase/cognitive-walkthrough/category/common-journeys" },
+            { id: "buyer-journeys", title: "Buyer Journeys", href: "#/chapter/1/phase/cognitive-walkthrough/category/buyer-journeys" },
+            { id: "sales-rep-journeys", title: "Sales Rep Journeys", href: "#/chapter/1/phase/cognitive-walkthrough/category/sales-rep-journeys" },
+            { id: "admin-journeys", title: "Admin Journeys", href: "#/chapter/1/phase/cognitive-walkthrough/category/admin-journeys" },
+          ],
         },
         {
           label: "Responsive and accessibility spot checks",
           body: "A targeted look at representative screen sizes and high-risk interface patterns — not a full responsive audit or a WCAG conformance assessment, but a check on where the experience breaks down.",
           href: "#/chapter/1/phase/responsive-accessibility",
+          // Same chip treatment as Areas 1 and 2's rows — own palette
+          // (tokens.css). Each chip links straight to that category's
+          // findings, not the phase page above.
+          categoriesNote: "This area's checks are grouped into these 2 categories:",
+          categories: [
+            { id: "responsive", title: "Responsive", href: "#/chapter/1/phase/responsive-accessibility/category/responsive" },
+            { id: "accessibility", title: "Accessibility", href: "#/chapter/1/phase/responsive-accessibility/category/accessibility" },
+          ],
         },
       ],
     },

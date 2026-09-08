@@ -47,6 +47,25 @@
   --cat-user-control-errors: #b23a6b;
   --cat-user-control-errors-soft: #fbe4ee;
 
+  /* Category chips (Area 2 journeys, grouped by who performs them) — a
+     separate palette from Area 1's above, so the two areas' chips read
+     as distinct sets at a glance. */
+  --cat-common-journeys: #2f6f94;
+  --cat-common-journeys-soft: #dcedf3;
+  --cat-buyer-journeys: #a6791f;
+  --cat-buyer-journeys-soft: #f5ecd2;
+  --cat-sales-rep-journeys: #8a3f8f;
+  --cat-sales-rep-journeys-soft: #f2e0f2;
+  --cat-admin-journeys: #5a5f6b;
+  --cat-admin-journeys-soft: #e6e8ec;
+
+  /* Category chips (Area 3 spot checks) — its own palette, distinct from
+     Area 1's and Area 2's above. */
+  --cat-responsive: #6b7a2f;
+  --cat-responsive-soft: #e9edd9;
+  --cat-accessibility: #8a2f3f;
+  --cat-accessibility-soft: #f2dde1;
+
   /* Typography */
   --font-display: "Fraunces", "Iowan Old Style", serif;      /* headlines */
   --font-text: "Source Serif 4", Georgia, serif;              /* reading copy */

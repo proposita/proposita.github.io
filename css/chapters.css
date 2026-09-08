@@ -824,7 +824,7 @@
 .evidence-table {
   border-collapse: collapse;
   width: 100%;
-  font-family: var(--font-body);
+  font-family: var(--font-text);
   font-size: 0.92rem;
 }
 .evidence-table th, .evidence-table td {
@@ -835,9 +835,37 @@
 .evidence-table th {
   background: var(--paper-raised);
   color: var(--ink-faint);
+  font-family: var(--font-body);
   font-size: var(--fs-label);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Compact variant (`grouped: true`, see js/pages.js renderTableBlock):
+   no header row, no vertical borders — only a horizontal rule between
+   row-groups (e.g. the Area 2 experience map's journeys, grouped by
+   category). A plain (non-grouped) evidence-table is unaffected. */
+.evidence-table--grouped {
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+.evidence-table--grouped th,
+.evidence-table--grouped td {
+  border: none;
+  padding: 0.45em 0.4em;
+}
+.evidence-table--grouped tr.evidence-table__group-start:not(:first-child) td {
+  border-top: 1px solid var(--line-strong);
+}
+.evidence-table--grouped td:first-child {
+  white-space: nowrap;
+  padding-right: var(--space-2);
+}
+
+.evidence-table__footnote {
+  margin-top: 0.6em;
+  font-size: var(--fs-label);
+  color: var(--ink-faint);
 }
 
 .page__back-crumb {
@@ -915,6 +943,34 @@
 .category-chip[data-cat="user-control-errors"] {
   background: var(--cat-user-control-errors-soft);
   color: var(--cat-user-control-errors);
+}
+/* Area 2 (journeys, grouped by who performs them) — separate palette
+   from Area 1's above, see tokens.css. */
+.category-chip[data-cat="common-journeys"] {
+  background: var(--cat-common-journeys-soft);
+  color: var(--cat-common-journeys);
+}
+.category-chip[data-cat="buyer-journeys"] {
+  background: var(--cat-buyer-journeys-soft);
+  color: var(--cat-buyer-journeys);
+}
+.category-chip[data-cat="sales-rep-journeys"] {
+  background: var(--cat-sales-rep-journeys-soft);
+  color: var(--cat-sales-rep-journeys);
+}
+.category-chip[data-cat="admin-journeys"] {
+  background: var(--cat-admin-journeys-soft);
+  color: var(--cat-admin-journeys);
+}
+/* Area 3 (responsive / accessibility spot checks) — separate palette
+   from Area 1's and Area 2's above, see tokens.css. */
+.category-chip[data-cat="responsive"] {
+  background: var(--cat-responsive-soft);
+  color: var(--cat-responsive);
+}
+.category-chip[data-cat="accessibility"] {
+  background: var(--cat-accessibility-soft);
+  color: var(--cat-accessibility);
 }
 
 /* When a chip is a real link (e.g. the Methodology row, where each chip

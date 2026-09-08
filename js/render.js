@@ -27,7 +27,8 @@ function renderCover(s) {
 }
 
 // Note + category chips shown under a nav-list item's description
-// (currently just the "Targeted heuristic evaluation" row): a short note
+// (currently the "Targeted heuristic evaluation" and "Key journeys and
+// cognitive walkthrough" rows): a short note
 // (e.g. "Findings are automatically grouped by AI into these N
 // categories:") on its own line, followed by that same phase's category
 // chips on the line below it. Each chip with an `href` is its own link —
