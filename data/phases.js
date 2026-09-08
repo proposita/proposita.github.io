@@ -42,7 +42,7 @@
 // coverage, not findings.) A separate table listing every case's overall
 // Pass/No-Pass status may be added later; not part of this file yet.
 //
-// This currently covers the two cases completed so far in this audit
+// This currently covers the three cases completed so far in this audit
 // round (see /ux-audit-log/cases). Earlier cases from the previous
 // round (`ux-audit-log-v1/`) are not part of this file.
 
@@ -54,6 +54,17 @@ import c02img01 from "../assets/ux-audit/landing-page-default-report/01-report-r
 import c02img02 from "../assets/ux-audit/landing-page-default-report/02-report-clean-state-item-hover.jpg";
 import c02img03 from "../assets/ux-audit/landing-page-default-report/03-nonsense-search-no-results-state.jpg";
 import c02img04 from "../assets/ux-audit/landing-page-default-report/04-tie-search-phantom-no-results-bug.jpg";
+
+import c03img01 from "../assets/ux-audit/navigation-structure/01-left-nav-panel-default-state.jpg";
+import c03img02 from "../assets/ux-audit/navigation-structure/02-user-menu-recent-customers-populated.jpg";
+import c03img03 from "../assets/ux-audit/navigation-structure/03-select-customer-modal-on-my-account.jpg";
+import c03img04 from "../assets/ux-audit/navigation-structure/04-my-account-sales-orders-for-selected-customer.jpg";
+import c03img05 from "../assets/ux-audit/navigation-structure/05-administration-manage-users.jpg";
+import c03img06 from "../assets/ux-audit/navigation-structure/06-user-menu-open-generic-avatar-icon.jpg";
+import c03img07 from "../assets/ux-audit/navigation-structure/07-user-menu-closed-alan-jalife-text-desktop.jpg";
+import c03img08 from "../assets/ux-audit/navigation-structure/08-recent-customers-loading-spinner.jpg";
+import c03img09 from "../assets/ux-audit/navigation-structure/09-my-account-stale-customer-data-after-switch.jpg";
+import c03img10 from "../assets/ux-audit/navigation-structure/10-my-account-correct-data-after-reload.jpg";
 
 const case01 = {
   id: "case-01",
@@ -168,23 +179,26 @@ const case02 = {
   id: "case-02",
   caseNumber: "02",
   title: "Application landing page / Default report (Fall 2026)",
-  status: "Issues found — a reproducible search defect, plus an icon-vocabulary consistency issue.",
+  status: "Issues found — a reproducible search defect, an icon-vocabulary consistency issue, plus two smaller viewport-specific issues found in a tablet/mobile follow-up.",
   statusKind: "issue-high",
   // Finding 1 (phantom "no results" message) is a visibility-of-status
   // gap; Finding 2 (icon reuse) is a consistency-and-standards gap.
-  categories: ["visibility-status", "design-system"],
+  // Findings 3 and 4 (tablet/mobile follow-up) are responsive gaps.
+  categories: ["visibility-status", "design-system", "responsive"],
   // See case01's categorySummaries above for why this exists: each entry
   // covers only the finding(s) that belong to that specific category.
   categorySummaries: {
     "visibility-status": "A “No results found” message renders unconditionally after every search, even directly beneath genuine matches, on the app's highest-traffic screen.",
     "design-system": "The same icon glyph is reused for different, conflicting actions across the screen — a star means both “favorite” and “select all”, and an X means both “unselect all” and “collapse this panel” — pointing to a missing icon vocabulary.",
+    "responsive": "Tablet (768px) matches desktop almost exactly, but the three “View” buttons stop producing any visible difference. Mobile (375px) adapts its layout sensibly, but the header's “…” menu shows a duplicated “Show Favorites” toggle.",
   },
   summary: "A “No results found” message renders unconditionally after every search, even beneath genuine matches, on the first screen every sales rep or buyer sees after logging in.",
   scope: [
     { label: "Area", value: "Cognitive walkthrough of the post-login landing flow, plus a targeted heuristic evaluation of the search, header, and left-navigation panel controls on that same screen." },
     { label: "Screen", value: "/reports/linesheets?report_id=3771&utm_report_name=fall-2026 — the Fall 2026 linesheet report, which auto-executes and lands the user here immediately after login, with “Fall 2026” pre-selected in the left navigation's LINESHEETS list." },
-    { label: "Interaction boundary", value: "Tested using the user's own real, already-authenticated Chrome session — no test credentials were needed for this case. Covered: a full page refresh; scrolling the full report end to end; a three-part search test; the header; the elements above the report grid; the left navigation panel's collapse/reopen; and the three “View” buttons. The header “Select All” / “Unselect All” confirmation dialog was seen but cancelled without confirming, to avoid applying a real bulk action. No product was added to a cart and no order was submitted. Desktop only — tablet and mobile are a follow-up." },
-    { label: "Session", value: "Second case of this audit round." },
+    { label: "Interaction boundary", value: "Desktop pass tested using the user's own real, already-authenticated Chrome session — no test credentials were needed for this case. Covered: a full page refresh; scrolling the full report end to end; a three-part search test; the header; the elements above the report grid; the left navigation panel's collapse/reopen; and the three “View” buttons. The header “Select All” / “Unselect All” confirmation dialog was seen but cancelled without confirming, to avoid applying a real bulk action. No product was added to a cart and no order was submitted." },
+    { label: "Viewports", value: "Desktop (this session), plus tablet (768×1024) and mobile (375×812), both added in a later follow-up session using Claude's built-in browser with viewport emulation, in the same authenticated test environment. See Steps and Notes below for how the mobile pass was run." },
+    { label: "Session", value: "Second case of this audit round; the tablet/mobile follow-up was a later session." },
   ],
   blocks: [
     {
@@ -224,6 +238,52 @@ const case02 = {
       ],
     },
     {
+      type: "steps",
+      heading: "Steps — tablet follow-up (768×1024)",
+      items: [
+        { text: "Refreshed the Fall 2026 report at tablet width: same clean loading state as desktop, and the layout renders with no clipping as the page is scrolled end to end — the breadcrumb keeps tracking scroll position live." },
+        { text: "Hovering a product card still reveals its favorite and expand icons, since 768px keeps mouse-style hover rather than switching to touch." },
+        { text: "Repeated the nonsense-string, “Tie”, and “Knit” searches: the correct no-results state, and the same phantom “No results found in this report.” block beneath real matches, both reproduce identically to desktop — confirming Finding 1 isn't tied to a specific viewport." },
+        { text: "Opened the header's “Select All” confirmation dialog (cancelled without confirming) and collapsed/reopened the left navigation panel — both work correctly; collapsing the panel also reflows the report from one column to two, making use of the freed width." },
+        { text: "Switched between the three “View” buttons and found no visible difference between them at this width (see Finding 3)." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — mobile follow-up (375×812)",
+      items: [
+        { text: "Repeated the same pass at mobile width jointly with the UX Assessment Lead (see Notes): the report loads cleanly, the breadcrumb abbreviates to “FL26”, and each product card's favorite/expand icons show persistently instead of only on hover — expected for a touch interface." },
+        { text: "At this width the header's Show Favorites / Select All / Unselect All controls collapse into a “…” overflow menu. Opening it surfaced a display issue of its own (see Finding 4)." },
+        { text: "Searched “Tie” and “Knit”: the phantom “No results found in this report.” block reproduces exactly as at desktop and tablet, with no clipping in the message itself." },
+        { text: "The “Select All” confirmation dialog opens cleanly and was cancelled without confirming. The hamburger menu opens a full-screen navigation drawer with no clipping, correctly highlighting the active report." },
+        { text: "The “…” menu also surfaced an “Edit this report” option (Save / Save as / Delete / Publish Report, plus a remove control on every row) not previously noted in this case. Out of scope here — not tested, to avoid modifying real report data (see Notes)." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 3 — At tablet width, the three “View” buttons no longer look different",
+      paragraphs: [
+        "On desktop, the “View” toggle switches between three genuinely different layouts: a photo grid, a grid with an inline inventory table, and a full-width list. At tablet width (768px), switching between all three buttons produces the exact same layout: a single-column card per product, with color/size quantities only available by tapping that card's own expand caret.",
+        "None of the three is broken on its own — the single-column layout with an expandable inventory table is clean and usable — but the control itself stops doing anything, which is confusing for a Sales Rep who deliberately picks “Extended list view” expecting to see every item's inventory at once, the way it works on desktop, without needing to expand each card individually.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Visibility of system status; consistency and standards (a control that produces no visible effect makes the interface's own state hard to trust)." },
+        { label: "Suggested direction", value: "Either give “View” its own responsive treatment at tablet width (e.g. “Extended list view” could pre-expand every card's inventory table), or hide/disable the toggle at widths where it has no effect, so the control doesn't imply choices that aren't really available." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 4 — The mobile “…” menu shows “Show Favorites” twice",
+      paragraphs: [
+        "At mobile width, the header's Show Favorites toggle, Select All, and Unselect All controls move into a “…” overflow menu, reached by tapping the icon next to the breadcrumb. Opening it shows two separate “Show Favorites” toggle rows, one directly below the other, before Select all / Unselect all / Edit this report.",
+        "Both toggles do control the same thing — the UX Assessment Lead confirmed either one turns favorites-only view on and off — so this isn't a broken control, just a duplicated one. A likely cause: the app renders both a mobile and a desktop version of this menu's contents into the same overflow panel at this width, instead of showing only the one that applies.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Consistency and standards; aesthetic and minimalist design (redundant, identical controls in the same menu read as a mistake, not a deliberate choice)." },
+        { label: "Suggested direction", value: "Remove the duplicate row — only one “Show Favorites” toggle should render inside the “…” menu at this width." },
+      ],
+    },
+    {
       type: "list",
       heading: "Positive observations",
       items: [
@@ -232,17 +292,203 @@ const case02 = {
         "Search itself works correctly at the data level: a nonsense string correctly returns a report with no real matches; “Tie” and “Knit” both correctly filter to the right matching products; and clearing the search box correctly and fully restores the original, unfiltered report. Finding 1 is a display defect layered on top of search, not a defect in the search/filter logic itself.",
         "The header's account-name menu is a well-built, purposeful “Select your customer” panel for sales reps switching between buyer accounts — not a generic/broken account menu, as its label might suggest at first glance.",
         "The “Show Favorites” toggle works correctly in both directions and has a good, clear empty state when no favorites are set.",
-        "All three “View” buttons work correctly with no bugs: the default photo grid, the grid-with-inventory-table, and the full-width list view all render their expected content correctly when switched between.",
+        "All three “View” buttons work correctly with no bugs on desktop: the default photo grid, the grid-with-inventory-table, and the full-width list view all render their expected content correctly when switched between (see Finding 3 for how this changes at tablet width).",
         "Left navigation panel collapse and reopen both work correctly in either direction, via the X/hamburger control in the top-left corner before the logo (see Finding 2 for a note on that control's icon choice).",
+        "Tablet (768×1024) matches desktop almost exactly: the report loads cleanly, scrolls with no clipping, hover still reveals per-item icons, and collapsing the left navigation panel correctly reflows the report from one column to two.",
+        "Mobile (375×812) adapts sensibly: the breadcrumb abbreviates to fit (“FL26” for “Fall 26”), per-item icons show persistently instead of needing hover, the hamburger menu opens a clean full-screen navigation drawer, and the “Select All” confirmation dialog renders correctly with no clipping.",
       ],
     },
     {
       type: "richtext",
       heading: "Notes / follow-up needed",
       paragraphs: [
-        "This case was scoped to desktop only — tablet (768px) and mobile (375px) behavior for this same screen and its search/panel controls have not been tested yet and should get their own follow-up pass, the same way Case 01 was closed out.",
-        "The header “Select All” / “Unselect All” dialog was seen but deliberately cancelled without confirming, to avoid applying a real bulk action to the report during testing. What “Select All” is actually for and whether it behaves correctly when confirmed is untested.",
+        "This case is now closed across all three target viewports: desktop (this session), tablet, and mobile (both added in a later follow-up session). Findings 1 and 2 reproduce identically at every width tested; Findings 3 and 4 are specific to tablet and mobile respectively.",
+        "The mobile pass was run jointly with the UX Assessment Lead: a tooling limitation prevented Claude from tapping controls directly at 375px width in this session's browser (clicks reliably timed out under touch emulation, independent of the app itself), so the UX Assessment Lead performed each tap in Claude's built-in browser and shared the result for Claude to inspect and document.",
+        "The header “Select All” / “Unselect All” dialog was again seen but deliberately cancelled without confirming, at every width, to avoid applying a real bulk action to the report during testing. What “Select All” is actually for and whether it behaves correctly when confirmed remains untested.",
+        "The mobile “…” menu also surfaced an “Edit this report” screen (Save / Save as / Delete / Publish Report, plus a remove control on every row) that hadn't been noticed in the original desktop pass. It wasn't tested, to avoid modifying real report data, and its scope lines up with the “Create and share custom linesheets/reports” Sales Rep journey noted in the Area 2 experience map — worth a dedicated case of its own later, rather than folding it into this one.",
         "Worth checking later: does the same phantom “No results found” block appear on other reports (a past season, Custom Linesheets), or is it specific to this report/template?",
+      ],
+    },
+  ],
+};
+
+const case03 = {
+  id: "case-03",
+  caseNumber: "03",
+  title: "Navigation structure: left panel & user menu",
+  status: "Issues found — a misleading section label, a data-accuracy bug on the customer-account screen, and three lower-priority consistency issues. Confirmed consistent across desktop, tablet, and mobile.",
+  statusKind: "issue-high",
+  // Finding 1 (MY ACCOUNT mislabeling) and Finding 4 (avatar/icon identity
+  // change) are consistency-and-standards gaps; Finding 2 (stale customer
+  // data after a switch) and Finding 3 (Recent customers spinner) are
+  // visibility-of-status gaps; Finding 5 (drawer close control) is both a
+  // consistency gap and a user-control-and-freedom gap (no toggle-to-close,
+  // though a working backdrop fallback exists). Also carries Area 2's Sales
+  // Rep Journeys AND Buyer Journeys — this case's search-box test covers
+  // "Select a customer", and is where Finding 2 (the customer-switch bug)
+  // was actually found. That journey isn't Sales-Rep-exclusive: per the UX
+  // Assessment Lead, a Buyer's app account belongs to a NetSuite contact,
+  // not a customer directly, and a contact tied to more than one customer
+  // must select which one to act on too — see the Key Journeys table's own
+  // footnote below. Area 3's tablet/mobile follow-up found no
+  // viewport-specific issues, so per the summary-page rule this case isn't
+  // tagged with "responsive" or "accessibility" here.
+  categories: ["design-system", "visibility-status", "user-control-errors", "sales-rep-journeys", "buyer-journeys"],
+  categorySummaries: {
+    "design-system": "“MY ACCOUNT” in the left panel is actually the selected customer's account, not the Sales Rep's own, and the top-right user control changes its own visual identity between its open and closed states.",
+    "visibility-status": "Switching the selected customer can leave the MY ACCOUNT screen showing the previous customer's real address and orders under the new customer's name — the “Recent customers” list also loads behind a loading spinner that's easy to miss.",
+    "user-control-errors": "The user drawer's own close control sits at the opposite corner from where the drawer was opened, and re-clicking the trigger doesn't close it — though clicking the dimmed backdrop does, so a working fallback exists.",
+    "sales-rep-journeys": "Covers “Select a customer”: picking a customer via the search box works correctly and searches the full customer base, but switching customers can leave the MY ACCOUNT screen showing the previous customer's real data under the new customer's name until the page is reloaded.",
+    "buyer-journeys": "Covers “Select a customer” for a Buyer contact linked to more than one customer: the same search-box selection was tested here, and works correctly, but switching customers can leave the MY ACCOUNT screen showing the previous customer's real data under the newly selected one's name until the page is reloaded.",
+  },
+  summary: "“MY ACCOUNT” opens the selected customer's account, not the Sales Rep's own, and switching customers can leave that same screen showing the previous customer's real address and orders under the new customer's name.",
+  scope: [
+    { label: "Area", value: "Targeted heuristic evaluation of the left navigation panel (present app-wide) and the top-right user menu: structure, grouping, label clarity, and customer-switching behavior, both expanded and collapsed, across desktop, tablet, and mobile." },
+    { label: "Screen", value: "App-wide — the left navigation panel and the “Alan Jalife” user menu are present on every authenticated screen; evaluated from the Fall 2026 report and the Administration and MY ACCOUNT pages it links to." },
+    { label: "Interaction boundary", value: "Desktop pass tested using the user's own real, already-authenticated Chrome session. Expanded every left-panel section and opened every sub-item that was safe to open read-only, including selecting test customers (starting with “A Line (CA)”) to confirm what “MY ACCOUNT” actually shows. A later follow-up retested customer selection via the search box specifically (not just “Recent customers”), and repeatedly switched between customers to check whether MY ACCOUNT's content refreshed correctly. No user was created, edited, or deleted in Manage users; no report or asset was modified in Manage reports / Manage assets; no order or payment was placed. Every customer selected during testing was deselected afterward." },
+    { label: "Session", value: "Third case of this audit round. Tablet (768×1024) via Claude's built-in browser with viewport emulation, and mobile (375×812) jointly with the UX Assessment Lead due to a known click-timeout limitation, both closed out the same session; the customer-search and data-refresh follow-up was a later session, back on desktop." },
+  ],
+  blocks: [
+    {
+      type: "steps",
+      heading: "Steps",
+      items: [
+        { text: "Opened the left navigation panel's seven sections one at a time (LINESHEETS, CUSTOM LINESHEETS, REPORTS, SAVE/SHARE/PRINT, MY ACCOUNT, SETTINGS, ADMINISTRATION) and recorded every sub-item. Confirmed it's a single-open accordion: expanding one section collapses whichever was open before.", image: c03img01, caption: "Left navigation panel, default state" },
+        { text: "Recorded REPORTS' 10 report types (Backorder, Booking, Final Sale, In Transit, Offprice, On Hand, Preorder, Sale, Warehouse Sale, Web Reserve) and CUSTOM LINESHEETS' single “View all” entry, plus SAVE/SHARE/PRINT (Export as PDF, Export as CSV) and SETTINGS (Hide details, Price level, Currency pricing, Mask quantities — report-display toggles, not account settings)." },
+        { text: "Clicked MY ACCOUNT's “Open orders” with no customer selected: a “SELECT CUSTOMER — Customer must be selected for this action” modal appeared, confirming the whole section is scoped to a customer, not to the logged-in Sales Rep.", image: c03img03, caption: "“SELECT CUSTOMER” modal on MY ACCOUNT" },
+        { text: "Selected a customer (“A Line (CA)”) via that modal and reopened “Open orders”: it loaded “SALES ORDERS” for “A Line Boutique” at /my-account/orders?orderType=open — confirming the section shows the selected customer's data under a “my-account” label and URL. Deselected the customer afterward.", image: c03img04, caption: "MY ACCOUNT sales orders for the selected customer" },
+        { text: "Recorded ADMINISTRATION's three items and opened each: Manage users is a searchable table of customer-side logins; Manage reports is a back-office registry of every report/linesheet definition; Manage assets is a style-image upload tool. All three cover the whole customer base, distinct in scope from MY ACCOUNT's single-customer view.", image: c03img05, caption: "ADMINISTRATION → Manage users" },
+        { text: "Opened the top-right user menu (“Alan Jalife”): a right-side drawer with “Select your customer” (search box), a “Recent customers” list, and “Log out”.", image: c03img02, caption: "User menu, “Recent customers” populated" },
+        { text: "Collapsed the left panel via its X/hamburger control: the whole panel (icons and labels) disappears rather than collapsing to an icon-only rail, so none of its labels remain visible or reachable via tooltip while collapsed." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — tablet follow-up (768×1024)",
+      items: [
+        { text: "Retested via Claude's built-in browser with real viewport emulation, on the same already-authenticated session. Reloaded at 768×1024: the left panel renders exactly as on desktop — same seven sections, same single-open accordion, no collapse-to-icon-rail or drawer treatment at this width." },
+        { text: "Expanded MY ACCOUNT and clicked “Open orders”: the same “SELECT CUSTOMER” modal appeared, with working CANCEL and SELECT buttons. (One earlier attempt in this same session saw the modal's CANCEL/X/Escape all silently fail to close it — a stale in-page state fixed instantly by a page reload, not a genuine width-specific bug; see Notes.)" },
+        { text: "Expanded ADMINISTRATION: same three items, same order as desktop." },
+        { text: "Opened the top-right user menu: same right-side drawer layout as desktop. “Recent customers” populated with the same nine accounts after a short delay — see Finding 3 for what that delay actually looks like." },
+        { text: "Collapsed the left panel via its top-left control: the whole panel disappears (not an icon rail) and the report reflows to a 2-column grid — matching Case 02's tablet finding for the same control. Reopened cleanly via the hamburger icon." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — mobile follow-up (375×812)",
+      items: [
+        { text: "Attempted first with Claude's built-in browser alone: tapping the hamburger icon to open the left panel timed out after 30 seconds with no effect, the same click-timeout limitation documented in Case 01 and Case 02. Switched to the same joint method used for Case 02's mobile pass: the UX Assessment Lead performs each tap directly in the same emulated session and reports it; Claude inspects the resulting state." },
+        { text: "UX Assessment Lead tapped the hamburger icon: the left panel opened as a full-screen overlay (not a sidebar, unlike desktop/tablet) — same seven sections, same order." },
+        { text: "UX Assessment Lead expanded MY ACCOUNT and tapped “Open orders”: the same “SELECT CUSTOMER” modal appeared as a centered dialog over the dimmed panel. Tapped CANCEL, which closed it correctly." },
+        { text: "UX Assessment Lead expanded ADMINISTRATION (same three items), then closed the panel and tapped the “AJ” avatar to open the user menu: same drawer content as desktop/tablet. This time, watching live, the UX Assessment Lead caught something Claude's own desktop/tablet passes had missed — see Finding 3." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — customer search & data-refresh check (desktop, Claude in Chrome)",
+      items: [
+        { text: "Two things were still open after the tablet/mobile follow-up: whether “SELECT CUSTOMER” also worked when picking a customer through the search box rather than “Recent customers”, and a UX Assessment Lead question about the drawer's close control (see Finding 5). Both were checked back on desktop, in the same real, already-authenticated Chrome session." },
+        { text: "Opened the user menu and typed “line” into “Search by name”: results updated to a broader set than the nine Recent Customers — “A Line Boutique”, “A Line (CA)”, “Ameline Shoppe”, “Canterbury of Crestline”, “Caroline Boutique”, “Caroline Rice”, and more below the fold — each with its own city/state, confirming this genuinely searches the full customer base (matching substrings inside names, not just the start) rather than filtering the Recent list." },
+        { text: "Selected “Ameline Shoppe” from those search results: the drawer closed, the top-right chip updated to “Ameline Shoppe”, and pricing on the report updated to that customer's own price level — the search-based selection path works correctly." },
+        { text: "Opened MY ACCOUNT → Open orders for the newly selected “Ameline Shoppe”: the page briefly showed the previous customer's address and order list under “Ameline Shoppe”'s own name and heading, before settling a couple of seconds later on the correct data. This first read as a loading-transition flash — until it was retested and didn't always self-correct (see Finding 2)." },
+        { text: "Repeated the customer switch three times in a row (via both Recent Customers and search), checking Open Orders each time: the previous customer's address carried over as stale content in all three attempts, and in one of those the previous customer's actual order numbers, dates, and dollar totals carried over too, incorrectly labeled under the new customer's name.", image: c03img09, caption: "MY ACCOUNT: “Ameline Shoppe” heading, but the previous customer's stale address and orders" },
+        { text: "Confirmed a fresh page reload (not just re-selecting the customer) reliably shows the correct data for whichever customer is currently selected — used as the “ground truth” to compare each stale-state capture against. Deselected the test customer afterward.", image: c03img10, caption: "Same account, correct, immediately after a reload" },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 1 — “MY ACCOUNT” is misleadingly named: it's the selected customer's account, not the Sales Rep's own",
+      paragraphs: [
+        "Every item under “MY ACCOUNT” — Open orders, Shipped orders, Make payment, Payment methods, Payment history, Carts list, Activity history — requires a customer to be selected first, and once one is, all seven show that customer's data, not anything belonging to the logged-in Sales Rep. Clicking “Open orders” with no customer selected surfaces a “Customer must be selected for this action” modal; after selecting “A Line (CA)”, the same link loads “A Line Boutique”'s sales orders at a URL that literally reads /my-account/orders.",
+        "For a Sales Rep acting on behalf of dozens of buyer accounts, a section labeled “MY ACCOUNT” reads as “my own account” — the natural first guess — when it's actually “the account of whichever customer I currently have selected”. That's a real mismatch between the label and what it opens, not just a wording nitpick: a rep could reasonably expect it to hold their own login details or preferences.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Match between system and the real world; consistency and standards (a section's label should describe what's inside it)." },
+        { label: "Suggested direction", value: "Rename the section to something that names the customer, not the rep — e.g. “Customer Account” or “Client Orders & Payments” — or, if a customer is selected, show that customer's name in the section header the way the top-right chip already does." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 2 — Switching customers can leave MY ACCOUNT showing the previous customer's address and orders under the new customer's name",
+      paragraphs: [
+        "After a customer is already selected, switching to a different one — via either “Recent customers” or the search box — does not reliably refresh the content on MY ACCOUNT screens like Open Orders. The page heading and the top-right chip both update immediately to the newly selected customer's name, but the address and order list underneath can keep showing the previous customer's real data for longer, in some cases indefinitely without a manual page reload.",
+        "This was reproduced three times in a row, switching between “Ameline Shoppe,” “Wildflower Boutique (IN),” and “Buka”: every time, the street address shown stayed on the previous customer's real address for at least a couple of seconds, and twice it never corrected on its own within several seconds and needed a manual reload to fix. Once, the order list itself carried over: after selecting “Wildflower Boutique (IN),” the screen showed that name as the heading, but “Ameline Shoppe”'s real street address and its three real orders (SOLP217000–217002, with their real dates and dollar totals) underneath — none of which belong to Wildflower Boutique. A subsequent reload confirmed Wildflower Boutique's actual, correct state: its own address, and zero open orders.",
+        "A fresh page reload after selecting a customer reliably shows that customer's own correct data every time — the underlying data and the URL routing are both correct. The bug is specifically that switching customers without a reload does not consistently trigger the address and order list to refetch, while the page's own heading and the global “selected customer” chip do refresh immediately, so the two parts of the screen can disagree about whose data is actually showing.",
+        "This is a more serious variant of the same underlying gap as Finding 3 below (a loading/refresh state that's invisible or inconsistent): here, though, the risk isn't just a missed loading cue — it's a Sales Rep potentially reading a wrong customer's real order numbers, dates, and dollar amounts as if they belonged to the customer they just selected, with no visual indication anything is stale.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Visibility of system status; match between system and the real world (the visible state must match the actual data)." },
+        { label: "Suggested direction", value: "Make the customer switch a single atomic operation from the user's point of view — don't update the heading/chip until the address and order data for the new customer have actually loaded, and show an explicit loading state on the MY ACCOUNT content itself in the meantime, rather than leaving stale content visible under a new label." },
+        { label: "Priority note", value: "High — unlike this case's other findings, this one can show a Sales Rep incorrect, specific business data (a real order number, date, and dollar total) mislabeled as belonging to the wrong customer, with nothing on screen to flag it as stale." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 3 — “Recent customers” does show a loading spinner, but it's positioned and styled in a way that makes it easy to miss",
+      paragraphs: [
+        "Opening the top-right user menu shows “Select your customer” with a search box and a “Recent customers” label right away, but the list itself can take a few seconds to populate. Claude's own desktop and tablet passes first read this window as showing no loading indicator at all — the section just looked empty, then populated a few seconds later with nine recent accounts.",
+        "During the mobile follow-up, watching the same interaction live, the UX Assessment Lead caught what Claude's screenshots had missed: there is a loading spinner (concentric circles, no text) on all three viewports, but it renders centered in the full page viewport — not inside or near the “Recent customers” list itself — and directly over the dark overlay that dims the rest of the page while the drawer is open. Since the spinner is a dark gray, roughly the same tone as that overlay, it blends into the background rather than reading as an active loading state. It was later caught on camera too, while investigating Finding 2 above: opening the user menu again right after switching customers landed a screenshot mid-load, showing the spinner exactly where and how the UX Assessment Lead described it.",
+        "This changes the finding's root cause but not its practical effect: a buyer or rep opening this menu still has no usable signal, in practice, that the list is loading rather than empty.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Visibility of system status." },
+        { label: "Suggested direction", value: "Move the loading indicator into the “Recent customers” list area itself (inline spinner or skeleton rows) instead of the center of the viewport, and give it enough contrast against the dimmed overlay to actually be seen." },
+        { label: "Priority note", value: "Low, per the UX Assessment Lead — a loading indicator does exist, the delay it covers is short, and nothing about it is broken, only easy to miss. Worth fixing but not urgent." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 4 — The account/user control changes its own visual identity between closed and open states",
+      paragraphs: [
+        "Flagged by the UX Assessment Lead while reviewing the tablet and mobile screenshots above, then confirmed at real desktop width too: the top-right control for the current user renders as three different things depending on state and viewport, rather than one consistent element that simply opens a panel. Desktop, panel closed: plain text, “Alan Jalife”, with a dropdown chevron — no icon or avatar at all. Tablet/mobile, panel closed: a circular avatar showing initials, “AJ”. All three viewports, panel open: the text or initials disappear entirely, replaced by a generic person-silhouette icon in a plain circle — the same icon at every width, unrelated to either the name or the initials shown a moment before.",
+        "Since this is the same control before and after the same click, a user has no visual thread connecting the two states — the thing they just clicked seems to change identity rather than simply opening. It's a small effect on any single click, but it sits right next to Finding 1 as a second instance of this case's underlying theme: this area of the app doesn't yet have one consistent way of representing “the current user.” Separately, the open-state icon button also has no accessible name in the page's accessibility tree — worth a mention here since it's the same element, though a full accessibility pass is Area 3's job, not this case's.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Consistency and standards (the same control should look and read the same way across its own states)." },
+        { label: "Suggested direction", value: "Pick one representation for the current user — the avatar-with-initials pattern already used at tablet/mobile is the more scalable choice — and use it consistently whether the panel is open or closed, and at every viewport. Add an accessible label to the open-state button regardless of which icon is kept." },
+        { label: "Priority note", value: "Low. Nothing here blocks or misleads a user about what to do next — it's a minor visual inconsistency on a control most people glance at rather than study." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 5 — The user drawer's close control sits at the opposite corner from where it was opened, and doesn't double as a toggle",
+      paragraphs: [
+        "Raised as a question by the UX Assessment Lead: is the “X” that closes the user drawer, and its position, actually right? Checked directly: the drawer opens from the top-right of the screen (that's where the avatar/name trigger lives, both open and closed), but its own “X” close control sits at the drawer's opposite, inner edge — the top-left corner of the drawer itself, away from the viewport's outer edge and away from the trigger that opened it.",
+        "This breaks symmetry with the app's other slide-out panel: the left navigation panel's own collapse control sits at its outer edge (the viewport's top-left, where that panel visually lives), so closing it happens right where you'd reach for it. The user drawer instead puts its close control at its inner edge, on the opposite side of the screen from its own trigger.",
+        "Two related behaviors, checked directly: clicking the avatar/trigger a second time while the drawer is already open does not close it — it has no effect, so the button that opens the drawer can't be used as a toggle to close it again, unlike a common, expected pattern for this kind of control. Clicking anywhere on the dimmed backdrop does close the drawer correctly, so there's a working, discoverable fallback — this isn't a dead end, just a less direct path than a close control positioned exactly where you'd expect it.",
+        "This is also the third distinct place in the app using an “X” glyph (Case 02's Finding 2 already flagged the header “Unselect All” X next to the left-nav collapse X) — here, at least, the meaning (“close this panel”) is consistent with the nav panel's own X, so this reads as a positioning/predictability issue rather than another instance of the glyph itself carrying conflicting meanings.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Consistency and standards (this app's two slide-out panels close themselves via different corners); user control and freedom (a natural “click here again to undo” path is missing, though a working alternative exists)." },
+        { label: "Suggested direction", value: "Move the drawer's close control to its own outer edge (top-right of the viewport, near or replacing the avatar/name trigger) to mirror the left nav panel's convention, and/or make the trigger itself toggle the drawer closed on a second click." },
+        { label: "Priority note", value: "Low. The backdrop-click fallback means no one gets stuck; this is a minor efficiency and consistency gap, not a blocker." },
+      ],
+    },
+    {
+      type: "list",
+      heading: "Positive observations",
+      items: [
+        "The left panel's seven sections are a clean, predictable single-open accordion — expanding one collapses whichever was open before, with no stuck or double-open states.",
+        "Reporting is grouped clearly and predictably: REPORTS (10 report types), CUSTOM LINESHEETS, and SAVE/SHARE/PRINT (PDF/CSV export) sit together and cover generation, browsing, and output without overlap.",
+        "SETTINGS correctly scopes itself to report-display preferences rather than mixing in account-level settings, which keeps its contents predictable once you know what the section is for.",
+        "ADMINISTRATION cleanly separates Lilla P's own back-office functions from any single customer's data — Manage users lists customer-side logins, Manage reports is a full registry of every report/linesheet, and Manage assets handles style-image uploads. None of the three leak into MY ACCOUNT or vice versa.",
+        "There's no self-service “edit my profile” screen for the logged-in Sales Rep, but this is expected rather than a gap: user records are provisioned through a NetSuite integration, and an administrator manages accounts directly via ADMINISTRATION → Manage users — correctly placed there rather than duplicated elsewhere.",
+        "The “Search by name” box in the user menu works correctly and searches the full customer base, not just the nine-item Recent Customers list — it matches substrings anywhere in a name (e.g. “line” also matches “Ameline Shoppe” and “Canterbury of Crestline”, not only names starting with “Line”), and shows each result's city/state to help disambiguate similarly named accounts. Selecting a customer from search results works the same as selecting one from Recent Customers.",
+        "The underlying customer data itself is correct in every case checked — a fresh page reload after selecting any customer always shows that customer's own correct address and orders. Finding 2's bug is specifically about the screen not refreshing reliably on a plain customer switch, not about wrong data being stored anywhere.",
+        "Tablet (768×1024), fully verified: the left panel, the MY ACCOUNT customer-select modal, ADMINISTRATION, and the user menu all reproduce desktop's behavior exactly, with no tablet-specific regressions. Panel collapse/reopen behaves the same as Case 02 found for this same control (whole panel disappears, report reflows to 2 columns).",
+        "Mobile (375×812), fully verified via joint testing: the left panel opens as a full-screen overlay instead of a sidebar — a sensible, deliberate adaptation for the width, not a bug — but still surfaces the same seven sections in the same order. The MY ACCOUNT modal and ADMINISTRATION both reproduce cleanly.",
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Notes / follow-up needed",
+      paragraphs: [
+        "Findings 4 and 5 both came from questions the UX Assessment Lead raised after reviewing this case's own screenshots and steps — the avatar/icon swap and the drawer's close-control position were both things Claude's own passes had walked past without registering as inconsistencies. Finding 2 (the stale-data bug) was found the same way, while specifically checking the search-based customer selection the UX Assessment Lead asked to have tested.",
+        "Finding 2 was reproduced 3 times in the same session and appears highly reliable, but the exact trigger condition (why it sometimes takes ~2 seconds to self-correct and sometimes doesn't correct at all without a reload) wasn't isolated — worth a developer's read on the actual refetch logic behind a customer switch, rather than more manual reproduction from the UI alone.",
+        "Correction from the UX Assessment Lead, incorporated above: an earlier draft of this case treated the missing “edit my own profile” screen as a navigation gap. It isn't — self-service profile editing isn't part of this app's scope in this version, since user data comes from NetSuite and administrators manage accounts via Manage users.",
+        "During the tablet pass, one early attempt to close the MY ACCOUNT customer-select modal (via CANCEL, the X, and Escape) silently failed to do anything, despite each click reporting success. A page reload immediately resolved it, and the same modal opened and closed normally on every other attempt at every width tested — this reads as a one-off stale-state glitch in the same testing session, not a reproducible tablet-width bug, but it's noted here in case it recurs in a future case.",
+        "While re-capturing evidence for Finding 1 on desktop, selecting “A Line (CA)” from the customer picker triggered an “IN PROGRESS CART” dialog reading “A Line Boutique has an in-progress Fall 2026 cart” — i.e. picking one named account surfaced cart state under a different customer name, echoing the same “MY ACCOUNT” naming inconsistency from a different angle. Neither this dialog nor the “OUTDATED CART” dialog that followed it was part of this case's original test plan, and neither was investigated further — worth its own case later.",
+        "Worth checking later: does Manage users (ADMINISTRATION) also list internal/Sales Rep accounts like Alan Jalife's own, or only customer-side logins? The page viewed here showed only rows with USER TYPE “Customer” before pagination was explored further.",
       ],
     },
   ],
@@ -356,13 +602,13 @@ export default [
       body: "Establishing a shared design system would provide the foundation for a more consistent, scalable, and maintainable B2B experience. It would align visual decisions across navigation, forms, tables, dialogs, states, and responsive behaviors, while giving design and development teams a common source of truth. Beyond improving coherence for users, a design system would reduce duplicated decisions, accelerate future delivery, support accessibility, and make it easier to evolve the application as new modules are introduced.",
       categoryId: "design-system",
     },
-    findings: [case01, case02],
+    findings: [case01, case02, case03],
   },
   {
     id: "cognitive-walkthrough",
     chapterIndex: 1,
     eyebrow: "Area 2",
-    title: "Key journeys and cognitive walkthrough",
+    title: "Key journeys",
     intro: "A compact experience map of this area's key journeys, grouped by who performs them.",
     explainer: [
       {
@@ -403,19 +649,20 @@ export default [
         rows: [
           ["<b>Common Journeys</b>", "Log in to the app"],
           ["", "Register for the app"],
-          ["<b>Buyer Journeys</b>", "Linesheet / catalog browsing"],
+          ["<b>Buyer Journeys</b>", "Select a customer (2)"],
+          ["", "Linesheet / catalog browsing"],
           ["", "Adding items to the cart"],
           ["", "Placing an order"],
           ["", "Order tracking"],
           ["", "Payments"],
           ["", "Account preferences"],
-          ["<b>Sales Rep Journeys (*)</b>", "Select a customer"],
+          ["<b>Sales Rep Journeys (1)</b>", "Select a customer"],
           ["", "Create and share custom linesheets/reports"],
           ["<b>Admin Journeys</b>", "Manage users"],
           ["", "Manage reports"],
           ["", "Activity audit"],
         ],
-        footnote: "(*) Every Buyer journey above also applies to Sales Reps, performed on behalf of the selected customer.",
+        footnote: "(1) Every Buyer journey above also applies to Sales Reps, performed on behalf of the selected customer. (2) In Lilla P's underlying NetSuite customer model, a Buyer's app account belongs to a contact, not a customer directly — a contact tied to a single customer (the common case) has that customer selected automatically, but a contact tied to more than one customer (e.g. a buyer who works across multiple brands) must choose which one to act on, the same selection flow a Sales Rep uses on a customer's behalf.",
       },
       {
         type: "list",
@@ -468,7 +715,7 @@ export default [
         description: "Journeys specific to admin users managing accounts, reports, and platform configuration.",
       },
     ],
-    findings: [case01, case02],
+    findings: [case01, case02, case03],
   },
   {
     id: "responsive-accessibility",
@@ -524,6 +771,6 @@ export default [
         description: "Targeted accessibility checks against high-risk patterns — not an exhaustive review against the WCAG guidelines.",
       },
     ],
-    findings: [case01],
+    findings: [case01, case02, case03],
   },
 ];
