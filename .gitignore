@@ -2,7 +2,6 @@
 Thumbs.db
 documents/
 ux-audit-log-v1/
-ux-audit-log/
 node_modules/
 dist/
 .vscode/
