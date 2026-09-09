@@ -66,6 +66,17 @@
   --cat-accessibility: #8a2f3f;
   --cat-accessibility-soft: #f2dde1;
 
+  /* Viewport chips (Chapter 1 closing slide's cases table — js/render.js
+     renderViewportChips): which widths a case was tested at. A fourth,
+     unrelated palette — picked to sit clear of every --cat-* hue above,
+     not reused from severity/status either. */
+  --viewport-desktop: #1f7a82;
+  --viewport-desktop-soft: #dcf0f1;
+  --viewport-tablet: #8a5a2b;
+  --viewport-tablet-soft: #f3e6d6;
+  --viewport-mobile: #4f7a2f;
+  --viewport-mobile-soft: #e4edd8;
+
   /* Typography */
   --font-display: "Fraunces", "Iowan Old Style", serif;      /* headlines */
   --font-text: "Source Serif 4", Georgia, serif;              /* reading copy */

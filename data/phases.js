@@ -42,7 +42,7 @@
 // coverage, not findings.) A separate table listing every case's overall
 // Pass/No-Pass status may be added later; not part of this file yet.
 //
-// This currently covers the three cases completed so far in this audit
+// This currently covers the seven cases completed so far in this audit
 // round (see /ux-audit-log/cases). Earlier cases from the previous
 // round (`ux-audit-log-v1/`) are not part of this file.
 
@@ -79,12 +79,36 @@ import c05img05 from "../assets/ux-audit/manage-reports/05-manage-reports-price-
 import c05img06 from "../assets/ux-audit/manage-reports/06-manage-reports-price-audit-single-checkbox-state.jpg";
 import c05img07 from "../assets/ux-audit/manage-reports/07-manage-reports-sharing-options-modal.jpg";
 
+import c06img01 from "../assets/ux-audit/style-cards/01-style-cards-standard-view-default.jpg";
+import c06img02 from "../assets/ux-audit/style-cards/02-style-cards-gallery-view-icons-no-change.png";
+import c06img03 from "../assets/ux-audit/style-cards/03-style-cards-icon-opens-drawer-correct-color.jpg";
+import c06img04 from "../assets/ux-audit/style-cards/04-style-cards-image-lightbox-single-photo.jpg";
+import c06img05 from "../assets/ux-audit/style-cards/05-style-cards-standard-inline-expand-table.jpg";
+import c06img06 from "../assets/ux-audit/style-cards/06-style-cards-extended-view-table.jpg";
+import c06img07 from "../assets/ux-audit/style-cards/07-style-cards-standard-view-after-extended-all-expanded.jpg";
+
+import c07img01 from "../assets/ux-audit/add-to-cart/01-drawer-black-quantity-exceeds-availability-error.jpg";
+import c07img02 from "../assets/ux-audit/add-to-cart/02-drawer-black-valid-distinct-quantities-per-size.jpg";
+import c07img03 from "../assets/ux-audit/add-to-cart/03-drawer-dark-navy-valid-distinct-quantities-per-size.jpg";
+import c07img04 from "../assets/ux-audit/add-to-cart/04-cart-verification-both-colors-match-drawer.jpg";
+import c07img05 from "../assets/ux-audit/add-to-cart/05-bulk-stepper-clamps-at-max-available-no-error.jpg";
+import c07img06 from "../assets/ux-audit/add-to-cart/06-drawer-close-button-visible-focus-ring.png";
+import c07img07 from "../assets/ux-audit/add-to-cart/07-add-to-cart-button-no-visible-focus-indicator.png";
+import c07img08 from "../assets/ux-audit/add-to-cart/08-color-swatches-plain-divs-not-focusable.png";
+
 const case01 = {
   id: "case-01",
   caseNumber: "01",
   title: "Login screen: cross-area review",
   status: "Issues found — no blocker on the primary path.",
   statusKind: "issue",
+  // Which viewports this case's evidence actually covers — read by the
+  // Chapter 1 closing slide's cases table (js/render.js,
+  // renderCasesTable). Every case covers all three unless it's one of
+  // the two admin-journeys cases (04, 05), which were never built with
+  // a responsive/mobile treatment and so were only ever tested at
+  // desktop width, by design (see each case's own Session note).
+  viewports: ["desktop", "tablet", "mobile"],
   // Area 1 categories this case's findings belong to (see file header):
   // Finding 1 and 2 are error-prevention gaps, Finding 3 is a visibility-
   // of-system-status gap. Also carries Area 2's Common Journeys — this
@@ -131,6 +155,7 @@ const case01 = {
       meta: [
         { label: "Heuristic relevance", value: "Error prevention; visibility of system status." },
         { label: "Suggested direction", value: "Either disable “Continue” until the field has a plausible value, or show an inline “Enter your email to continue” message on click." },
+        { label: "Priority note", value: "Medium — a silent dead end on the very first interaction available on this screen; it doesn't block a user who enters a valid email, but a user who clicks too early is given nothing to act on." },
       ],
     },
     {
@@ -143,6 +168,7 @@ const case01 = {
       meta: [
         { label: "Heuristic relevance", value: "Error prevention; recognition, diagnosis, and recovery from errors." },
         { label: "Suggested direction", value: "Validate email format client-side before submitting, with an inline message, before ever reaching the “not found” / registration-request path." },
+        { label: "Priority note", value: "Medium-High — a simple typo is carried, unvalidated and uncorrectable, straight into a registration-request flow, which both strands the user and risks generating junk signup requests with malformed emails baked in." },
       ],
     },
     {
@@ -154,6 +180,7 @@ const case01 = {
       meta: [
         { label: "Heuristic relevance", value: "Visibility of system status." },
         { label: "Suggested direction", value: "A short status label alongside the spinner would close this gap cheaply." },
+        { label: "Priority note", value: "Low — the wait is short and always resolves correctly on its own; this is a missing status cue, not a stuck or broken state." },
       ],
     },
     {
@@ -194,6 +221,7 @@ const case02 = {
   title: "Application landing page / Default report (Fall 2026)",
   status: "Issues found — a reproducible search defect, an icon-vocabulary consistency issue, plus two smaller viewport-specific issues found in a tablet/mobile follow-up.",
   statusKind: "issue-high",
+  viewports: ["desktop", "tablet", "mobile"],
   // Finding 1 (phantom "no results" message) is a visibility-of-status
   // gap; Finding 2 (icon reuse) is a consistency-and-standards gap.
   // Findings 3 and 4 (tablet/mobile follow-up) are responsive gaps.
@@ -236,6 +264,7 @@ const case02 = {
       meta: [
         { label: "Heuristic relevance", value: "Visibility of system status; error prevention (a false negative status message here is arguably worse than no message, since it actively misleads)." },
         { label: "Suggested direction", value: "The “No results found in this report.” block should only render when the results list is actually empty — this reads as a conditional check that's missing or inverted somewhere in the search-results rendering logic, not a design decision." },
+        { label: "Priority note", value: "High — a reproducible, self-contradicting message on the app's single highest-traffic screen, on its single most common action (search), directly undermining trust in a genuine result the user is looking straight at." },
       ],
     },
     {
@@ -248,6 +277,7 @@ const case02 = {
       meta: [
         { label: "Heuristic relevance", value: "Consistency and standards; match between system and the real world (icon meaning should map predictably to its action, and not be reused for unrelated ones)." },
         { label: "Suggested direction", value: "Define a small, consistent icon vocabulary for this app: reserve the star exclusively for favoriting, use a distinct glyph (a checkbox or grid-select icon) for bulk selection, and use a chevron or arrow — not X/hamburger — for a persistent panel's collapse/expand control." },
+        { label: "Priority note", value: "Medium — each control behaves correctly and predictably once its meaning is known, but the same star and X glyphs mapping to different (in the star's case, bulk vs. per-item) actions on one screen risks a misclick on an action that affects every visible item at once." },
       ],
     },
     {
@@ -282,6 +312,7 @@ const case02 = {
       meta: [
         { label: "Heuristic relevance", value: "Visibility of system status; consistency and standards (a control that produces no visible effect makes the interface's own state hard to trust)." },
         { label: "Suggested direction", value: "Either give “View” its own responsive treatment at tablet width (e.g. “Extended list view” could pre-expand every card's inventory table), or hide/disable the toggle at widths where it has no effect, so the control doesn't imply choices that aren't really available." },
+        { label: "Priority note", value: "Medium — the underlying content is still fully reachable (via each card's own expand caret), but a control that visibly does nothing at this width is more confusing than one that's hidden or disabled, and undermines trust in the other controls around it." },
       ],
     },
     {
@@ -294,6 +325,7 @@ const case02 = {
       meta: [
         { label: "Heuristic relevance", value: "Consistency and standards; aesthetic and minimalist design (redundant, identical controls in the same menu read as a mistake, not a deliberate choice)." },
         { label: "Suggested direction", value: "Remove the duplicate row — only one “Show Favorites” toggle should render inside the “…” menu at this width." },
+        { label: "Priority note", value: "Low — both rows stay in sync and the feature works correctly either way; this is a markup/visual cleanup, not a functional defect (the same pattern recurs, and is rated the same way, on Case 06)." },
       ],
     },
     {
@@ -331,6 +363,7 @@ const case03 = {
   title: "Navigation structure: left panel & user menu",
   status: "Issues found — a misleading section label, a data-accuracy bug on the customer-account screen, and three lower-priority consistency issues. Confirmed consistent across desktop, tablet, and mobile.",
   statusKind: "issue-high",
+  viewports: ["desktop", "tablet", "mobile"],
   // Finding 1 (MY ACCOUNT mislabeling) and Finding 4 (avatar/icon identity
   // change) are consistency-and-standards gaps; Finding 2 (stale customer
   // data after a switch) and Finding 3 (Recent customers spinner) are
@@ -418,6 +451,7 @@ const case03 = {
       meta: [
         { label: "Heuristic relevance", value: "Match between system and the real world; consistency and standards (a section's label should describe what's inside it)." },
         { label: "Suggested direction", value: "Rename the section to something that names the customer, not the rep — e.g. “Customer Account” or “Client Orders & Payments” — or, if a customer is selected, show that customer's name in the section header the way the top-right chip already does." },
+        { label: "Priority note", value: "Medium — unlike Finding 2 below, no data is ever wrong here, but a section name that reads as “my own account” when it's actually whichever customer is currently selected is a real mismatch for a Sales Rep managing dozens of accounts, not just a wording nitpick." },
       ],
     },
     {
@@ -513,6 +547,10 @@ const case04 = {
   title: "Administration: Manage Users (list & row Actions)",
   status: "Issues found — an ambiguous checkbox rendering state inside the row-level Actions modal, an \"Actions\" icon that doesn't match its counterpart on Manage Reports, two table columns that are defined but never populated, and no responsive/mobile treatment at all.",
   statusKind: "issue",
+  // Desktop only, by design — this admin screen was never built with a
+  // responsive/mobile treatment (see Finding 5 and this case's own
+  // Session note).
+  viewports: ["desktop"],
   // Finding 1 (checkbox rendering) is both a visibility-of-status and a
   // consistency-and-standards gap; Finding 2 (Actions icon mismatch) is a
   // consistency-and-standards gap, another data point in the design-system
@@ -660,6 +698,9 @@ const case05 = {
   title: "Administration: Manage Reports (list & row Actions)",
   status: "Issues found — the same checkbox-rendering ambiguity and Actions-icon mismatch found in Case 04, two more table columns that are defined but never populated, one report whose USER count looks suspicious given how heavily it's actually used, and no responsive/mobile treatment at all.",
   statusKind: "issue",
+  // Desktop only, by design — same known gap as Case 04 (see Finding 6
+  // and this case's own Session note).
+  viewports: ["desktop"],
   // Finding 1 (Actions icon mismatch) is the same consistency-and-standards
   // gap as Case 04 Finding 2, evidenced from this screen's own side.
   // Finding 2 (checkbox rendering) is both a visibility-of-status and a
@@ -797,6 +838,422 @@ const case05 = {
   ],
 };
 
+const case06 = {
+  id: "case-06",
+  caseNumber: "06",
+  title: "Style cards: view formats, color browsing, and icon consistency",
+  status: "Issues found — minor gaps only: color swatches don't track or jump to the browsed photo, tablet needs one extra click to browse colors, mobile lists “Show Favorites” twice, and two icons sit outside the app's real icon system. Everything else — the three View formats, and color/size/price data — works correctly and agrees exactly across desktop, tablet, and mobile.",
+  statusKind: "issue",
+  viewports: ["desktop", "tablet", "mobile"],
+  // Findings 2 (swatch click doesn't jump to a color) and 5 (drawer-entry
+  // and mobile "..." icons sit outside the app's real icon system) are
+  // consistency-and-standards / match-with-the-real-world gaps. Finding 1
+  // (swatches don't track the browsed color) is a visibility-of-status
+  // gap. Findings 3 (tablet: no hover arrows, gallery needed) and 4
+  // (mobile: duplicated "Show Favorites") are Area 3's "responsive"
+  // category, the second per the UX Assessment Lead's own request. Also
+  // carries Area 2's Buyer Journeys — this case covers "Linesheet /
+  // catalog browsing" — since every buyer-facing journey applies to
+  // Sales Reps acting on a customer's behalf too (see the Key Journeys
+  // table's own footnote). No accessibility-specific issue was found, so
+  // that category isn't listed here.
+  categories: ["design-system", "visibility-status", "responsive", "buyer-journeys"],
+  categorySummaries: {
+    "design-system": "Clicking a color swatch doesn't jump to that color's photo the way it visually implies, and two icons — the card's drawer-entry icon and mobile's “...” menu icon — turn out to be static images outside the app's real icon system, with a measurable color mismatch and, across the wider product, three unrelated “more options” glyphs rather than one shared standard.",
+    "visibility-status": "The color-swatch row never reflects which color is currently showing as a card's photos are paged through with the hover arrows or the lightbox.",
+    "responsive": "At 768px, browsing between colors from the grid takes one extra click (opening the image gallery) since the card's hover arrows don't appear at this width; at 375px, the “...” menu lists “Show Favorites” twice, though both stay correctly in sync.",
+    "buyer-journeys": "Covers “Linesheet / catalog browsing”: all three View formats, and a style's full color/size/price data, work correctly and agree exactly across desktop, tablet, and mobile — the gaps found are all small efficiency or consistency issues, not blockers.",
+  },
+  summary: "All three View formats, and a style's full color range, work correctly and agree exactly across desktop, tablet, and mobile — but color swatches don't track or jump to the color being browsed, tablet needs one extra click to browse colors, and two of the card's icons turn out to sit outside the app's real icon system.",
+  scope: [
+    { label: "Area", value: "Card-level testing of style cards on a linesheet report: the three advertised View formats (Gallery, Standard, Extended), whether color/size/availability/price data agrees across formats and widths, whether a style's photos can be browsed and enlarged for each of its available colors, and how a card hands off into the right-side detail drawer. The detail drawer's own content and behavior are explicitly out of scope here — that's Case 07. A closing icon-consistency check, added at the UX Assessment Lead's request before closing the case, is also included." },
+    { label: "Screen", value: "/reports/3771 (the Fall 2026 linesheet report), the same style-card grid tested in Case 02, this time focused on the cards themselves rather than the report's search/header controls." },
+    { label: "Interaction boundary", value: "Desktop tested using the user's own real, already-authenticated Chrome session; the tablet (768×1024) and mobile (375×812) follow-ups both used Claude's built-in browser with true viewport emulation, also on an already-authenticated session. Purely read-only aside from a few deliberate, reverted checks: a style was favorited (once per width) to confirm the star control and the “Show Favorites” filter work together, then un-favorited immediately after each time. A “SELECT ALL” confirmation dialog was triggered once by mistake during the tablet pass and cancelled without confirming. No quantities were entered and no cart or order action was taken. The detail drawer was opened only to confirm its two entry points land on the right product and color." },
+    { label: "Session", value: "Sixth case of this audit round, covering desktop, tablet (768px), and mobile (375px). An initial desktop pass and a separate initial tablet pass each misread part of this case's behavior; both were corrected after the UX Assessment Lead flagged them, and the corrected, verified behavior is what's documented below (see Notes). The mobile follow-up used the assessment methodology's standard collaborative approach for this browser's sub-768px click limitation." },
+  ],
+  blocks: [
+    {
+      type: "steps",
+      heading: "Steps — the three View formats (desktop)",
+      items: [
+        { text: "Confirmed via the page's own accessibility labels that the three icons next to “View” are, in order: “Gallery view”, “Standard card view”, and “Extended list view”. On a fresh page load, Gallery view is the active, default format: a photo-forward card per style, with a color-swatch row, name, SKU, and price beneath it, several cards per row at this width.", image: c06img02, caption: "The three View icons: Gallery, Standard, and Extended" },
+        { text: "Switched to Extended list view: one row per style, full-width, one card per line — the color name appears as its own text label per row, price is repeated on every row, and per-size quantities plus an EXPCT. (expected date) column are shown for every color.", image: c06img06, caption: "Extended list view — one full-width row per style, with the complete inline table" },
+        { text: "Switched to Standard card view: each card shows its own inline per-color size/availability breakdown beneath the photo, more compact than Extended — no color-name text label per row (just the swatch color chip), and the price shown once at the top of the card rather than repeated per row.", image: c06img01, caption: "Standard card view — swatch row, chevron, and price shown per card" },
+        { text: "Switched back to Gallery view from Standard: correctly returned to the collapsed, photo-forward layout, confirming Gallery does work as a real, distinct format — it simply produces no visible change when clicked while already active (the case on a fresh page load), which is what first read as broken. Re-verified the active-state highlight moves correctly between all three icons as each is clicked." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — image browsing, swatches, and entry points (desktop)",
+      items: [
+        { text: "Hovering a card's photo (in both Gallery and Standard view) revealed a fullscreen/expand icon top-left, a favorite star top-right, and left/right navigation arrows — available before any click." },
+        { text: "On the “3/4 Sleeve Boatneck” (PA1136) card, defaulting to Black, clicked the right arrow repeatedly while hovering: image 2/12 showed a back view still in Black, but image 3/12 switched the garment to Dark Navy (a front view), and image 4/12 showed Dark Navy from the back — confirming the arrows page through multiple angles per color and then continue into the next available color's own photos, all within one sequential set." },
+        { text: "Checked the color-swatch row while the card was showing Dark Navy (via the arrows): none of the swatch chips showed any highlight or selected state reflecting Dark Navy — the swatch row looks identical regardless of which color the arrows have navigated to (see Finding 1)." },
+        { text: "Clicked directly on a color swatch chip (e.g. Rope, on a card already showing Black): this did not jump the photo to Rope — it only toggled the same inline size/availability table that the chevron opens, leaving the currently-displayed photo unchanged (see Finding 2)." },
+        { text: "Opened the lightbox by clicking a card's photo directly: same content as the hover-arrow browsing, in a larger overlay, with its own left/right arrows, page counter, and favorite star — paging through it confirmed it also crosses from one color into the next, matching the card-level hover behavior.", image: c06img04, caption: "Full-screen image lightbox — its own arrows, page counter, and favorite star" },
+        { text: "Clicked the small icon to the right of the price at the bottom of the “Short Sleeve Crew” card: opened the right-side detail drawer, correctly showing “Short Sleeve Crew / PA1142” with “Dark Navy” pre-selected — matching the color the card was displaying at the time. The drawer's own contents were not evaluated further here (Case 07).", image: c06img03, caption: "Card icon opens the detail drawer, correctly pre-scoped to Dark Navy" },
+        { text: "Hovering a card and clicking its favorite star toggled it on (confirmed via a close-up check that the star filled solid); toggling the page's “Show Favorites” control at top right correctly filtered the grid down to only that one favorited style, and its own label changed to “Show All” while active. Reverted both afterward to leave the report as found." },
+        { text: "Compared Standard view's inline per-color table against Extended view's full table for two styles: every color, every per-size quantity, every EXPCT. date, and every price matched exactly, including both views correctly showing two separate rows for a color with two incoming inventory batches (Black arriving both “In Stock” and again on a later “Aug 01” date).", image: c06img05, caption: "Standard view's inline table — a color with two incoming batches shown as two distinct rows, matching Extended exactly" },
+        { text: "Re-checked the same comparison across all six styles on the row at once: Standard's inline tables (once expanded) and Extended's own table agreed on every figure, style by style.", image: c06img07, caption: "Standard view, six cards with inline tables expanded — matches Extended view's numbers exactly" },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 1 — The color swatches don't indicate which color is currently being shown via the arrow-browsed photos",
+      paragraphs: [
+        "Paging through a card's photos with the hover arrows (or the lightbox) does cross from one available color into the next, but nothing in the swatch row reflects that: the swatches look the same — no highlight, border, or other selected-state change — no matter which color the visible photo has moved to. A user relying on the swatch row as a quick reference for “what color am I looking at” has to instead read that from the photo itself.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Visibility of system status (the interface has this information — it knows which color is showing — but doesn't surface it in the one place a user would naturally look)." },
+        { label: "Suggested direction", value: "Highlight or otherwise mark whichever swatch corresponds to the color currently shown by the arrows/lightbox, and update it live as the user pages through." },
+        { label: "Priority note", value: "Low — this doesn't block anything, since the photo itself always shows the true current color; it's a missed opportunity for a clearer status cue, not an error." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 2 — Clicking a color swatch doesn't jump to that color's photo directly",
+      paragraphs: [
+        "The swatches look like they should let you pick a color and see it immediately, but clicking one only opens or closes the inline size/availability table — it has no effect on which photo is displayed. To actually see a specific color's photo, the only path found on desktop was paging through the hover arrows (or the lightbox) sequentially from wherever the card currently is, which could mean several clicks for a color photographed later in the sequence.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Match between system and the real world (a row of clickable-looking color swatches implies clicking one shows that color); flexibility and efficiency of use." },
+        { label: "Suggested direction", value: "Consider wiring a swatch click to jump the photo (and, ideally, the arrow position) directly to that color's first photo, rather than requiring sequential paging to reach it — mobile's own swatch behavior, see Positive observations, already does something close to this." },
+        { label: "Priority note", value: "Low — full color browsing is confirmed possible via the arrows, so nothing is actually inaccessible; this is an efficiency gap, not a blocker." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — tablet follow-up (768×1024)",
+      items: [
+        { text: "Resized the viewport to 768px and confirmed the report loads with the same left panel, header, and grid structure as desktop, just narrower." },
+        { text: "Checked the three View icons' accessibility labels at this width: “Gallery view”, “One column list view”, and “Extended list view” — the same three buttons as desktop, but the middle one's identity changes from “Standard card view” to “One column list view”. A first pass at this test wrongly concluded the three buttons all render the same layout at 768px; that didn't survive a careful retest and is retracted below (see Notes)." },
+        { text: "Retested each button individually, confirming the underlying view actually changed each time (not just re-clicking a button already active) before screenshotting. The three views are genuinely distinct at 768px, adapted to the narrower width: Gallery shows two collapsed cards per row; One column list shows the same collapsed card content as Gallery but one to a row at full width; Extended shows one row per style with the full inline table next to the photo, matching desktop's Extended content exactly." },
+        { text: "Hovered a card's photo in both Gallery and One column list view: a fullscreen icon and a favorite star appeared, same as desktop — but not the left/right color-browsing arrows that appear on desktop card hover. Hovering Extended view's photo shows neither icon, but the photo remains directly clickable." },
+        { text: "Clicking a card's photo (or its fullscreen icon, where present) opens the same full-screen image gallery in all three views — a distinct overlay from the detail drawer, per the UX Assessment Lead's clarification, with its own page counter and left/right arrows. Paging it forward crossed from Black into Dark Navy on the “3/4 Sleeve Boatneck” card, confirming full color-to-color browsing still works at this width — just reached through this gallery rather than through hover-arrows on the card itself." },
+        { text: "Also found, on a closer look at this gallery: it has its own favorite star, clearly visible and functional — clicking it filled solid immediately. This contradicts an earlier, wrong reading of this same control as invisible/unreachable at tablet width (see Notes); it's genuinely visible, just positioned in a way a first pass mistook as hidden." },
+        { text: "Clicked the small icon next to the price at the bottom of a Gallery-view card, and separately the style's name text: both opened the right-side detail drawer correctly, scoped to the right product and color, in both Gallery and One column list view." },
+        { text: "Tested “Show Favorites”: clicking the header star by mistake first triggered a “SELECT ALL” confirmation dialog (favorite everything) — cancelled without confirming, the same header icon-reuse pattern already flagged in Case 02. Favorited a style instead via the card's own hover-revealed star, then confirmed “Show Favorites” (label swapping to “Show All”) filtered the grid down to just that card. Reverted both afterward." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 3 — At 768px, hovering a card's photo shows the fullscreen icon and favorite star but not the color-browsing arrows; browsing colors from the grid means opening the image gallery first",
+      paragraphs: [
+        "On desktop, hovering a card's photo reveals a fullscreen icon, a favorite star, and left/right arrows that page directly through every available color's photos. At 768px, the same hover still reveals the fullscreen icon and the star, but not the arrows — the only way to page from one color's photo to the next is to first open the full-screen image gallery (via the fullscreen icon, or by clicking the photo directly), which does have working arrows and correctly crosses between colors. So the capability itself is fully intact at this width; what's missing is the quick, no-extra-click preview that hovering gives on desktop.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Consistency across breakpoints; efficiency of use (an extra step — opening the gallery — is required at 768px for something desktop does in place)." },
+        { label: "Suggested direction", value: "Low-effort option: no change needed, since the gallery is one click away and clearly discoverable. If more parity with desktop is wanted, consider showing simplified arrows directly on the card at this width too, sized for a narrower layout." },
+        { label: "Priority note", value: "Low — nothing is hidden or broken; a user can still reach every color's photo in one extra click via the gallery, and that gallery is easy to find." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — mobile follow-up (375×812)",
+      items: [
+        { text: "Resized the viewport to 375px and confirmed the report loads adapted the same way Case 03 already documented for this width: the left navigation collapses behind a hamburger icon, and the header's favorite/star/X controls collapse behind a “...” (more options) icon." },
+        { text: "Hit the same click-timeout tooling limitation already documented in the assessment methodology for any emulated width under 768px: every direct tap via the automated click action reliably timed out, while scrolling, typing, and screenshots kept working normally. Per the established collaborative method, the UX Assessment Lead performed the first tap (opening the “...” menu) directly; for the remainder of this pass, dispatching the equivalent click event through the page's own script console proved a reliable stand-in for a manual tap, so the rest of the pass — view switching, swatches, the image gallery, favoriting, and both drawer entry points — was completed without further manual taps." },
+        { text: "The UX Assessment Lead tapped the “...” (more options) icon and found “Show Favorites” listed twice, both doing the same thing. Confirmed via the page's own markup: the dropdown genuinely renders two separate “Show Favorites” toggle rows, both sharing the same (invalid, duplicated) HTML id, both wired to the same underlying state — toggling either one toggles both together, in sync, and correctly filters the grid (see Finding 4)." },
+        { text: "Found the three View buttons live inside the hamburger's slide-out panel at this width, not in the main content header. Opening that panel shows only two of the three: Gallery (the active default) and Extended — One column list isn't shown at all here. This lines up with Gallery already rendering exactly one full-width card per row by default at 375px — the same thing One column list exists to force at wider widths — so hiding it reads as a sensible, deliberate simplification rather than a bug." },
+        { text: "Switched to Extended view: confirmed it renders the same full inline table seen on desktop and tablet, adapted to a single narrow column. Switched back to Gallery afterward." },
+        { text: "Checked a Gallery card's photo without any hover step (touch has no hover state): the fullscreen icon and the favorite star are shown directly, by default, with no interaction needed — notably better than tablet's hover-only reveal of these same two icons." },
+        { text: "Tapped a card's photo to open the full-screen image gallery: opened correctly as a complete overlay (unlike tablet, where the left nav panel remained partly visible behind it), with a visible page counter, left/right arrows, and its own favorite star. Paging forward crossed from Black to Dark Navy on the “3/4 Sleeve Boatneck” card, confirming full color-to-color browsing works the same as desktop and tablet." },
+        { text: "Expanded the chevron on a Gallery card: the inline size/availability table opened correctly, with every figure matching desktop and tablet exactly, and — like tablet — showing the color name as its own text label per row." },
+        { text: "Tapped both of the card's entry points into the detail drawer — the price-row icon, and the style's name text: both opened the same correctly-scoped drawer as on desktop and tablet." },
+        { text: "Tapped a color swatch directly (tried twice, with two different colors): unlike desktop and tablet, where a swatch click only toggles the inline table, at 375px tapping a swatch opens the detail drawer directly, pre-scoped to that exact color — confirmed reproducible both times (see Positive observations)." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 4 — The mobile “...” menu lists “Show Favorites” twice",
+      paragraphs: [
+        "Opening the “...” (more options) menu at 375px shows two separate “Show Favorites” toggle rows, one directly under the other, both doing exactly the same thing. Checked in the page's own markup: both rows are genuinely separate elements, sharing the same HTML id — itself invalid markup — and both are wired to the same underlying state, so they never go out of sync with each other; toggling either one toggles both, and the grid filters correctly either way. Nothing is functionally broken, but a user opening this menu sees a redundant, slightly confusing duplicate control.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Consistency and standards; error prevention (a duplicated toggle invites doubt about whether the two controls really are the same, even though they are)." },
+        { label: "Suggested direction", value: "Remove the duplicate row from the mobile dropdown's markup, keeping a single “Show Favorites” entry there." },
+        { label: "Priority note", value: "Low — both toggles stay in sync and the feature works correctly either way; this is a visual/markup cleanup, not a functional defect." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — icon design consistency (cross-width)",
+      items: [
+        { text: "Before closing this case, the UX Assessment Lead flagged two specific icons by eye — the card's drawer-entry icon (next to the price on every card) and the mobile report header's “...” icon — as visually out of step with the rest of the interface: a different color and heavier line weight on the first, a glyph that “feels out of system” on the second. Rather than answering from a visual impression alone, both were inspected directly in the page's own code." },
+        { text: "Drawer icon: found it's rendered via <img src=\"assets/images/icons/style_drawer.svg\"> — a static image reference, not a live vector. Fetched that SVG file directly: its shapes are solid filled geometry (no stroke at all), with the fill color hard-coded inside the file, fill=\"#90807B\". Compared against the card's other icons in the same corner — the favorite star and the fullscreen icon — both inline SVGs using stroke=\"currentColor\" at a thin 1.5 stroke-width, which inherit the app's live icon color, computed as rgb(92, 79, 72) (#5C4F48) wherever checked." },
+        { text: "Mobile “...” icon: found it's <img src=\"assets/images/icons/small_actions.png\" alt=\"Actions\"> inside a circular button — a PNG raster, not a vector at all. For comparison, checked how the rest of the app's real icon system works: a reusable <svg-icon src=\"....svg\"> Angular component that renders inline, resolution-independent vector icons (used for the same panel's close and info icons) — a structurally different, more capable mechanism than a plain <img>." },
+        { text: "Checked whether an equivalent “more options” icon exists anywhere else in the product, to test whether this glyph is unique to this one spot. Navigated to ADMINISTRATION → Manage Reports (Case 05) and inspected its row-level kebab icon: it loads yet another distinct file, context_menu_dots_32x32.png — vertical dots with no circular background, visually different from the mobile “...” icon's horizontal dots in a circle. Case 04 previously documented that Manage Users' own Actions column uses a third, completely different glyph (a single edit pencil) for the same column label." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 5 — Two icons on this screen (and a third documented elsewhere) don't participate in the app's real icon system, with measurable visual consequences",
+      paragraphs: [
+        "Two specific icons the UX Assessment Lead flagged by eye both check out as genuinely inconsistent with the rest of the interface, for a concrete, shared technical reason: both are static image files (one SVG loaded via <img>, one PNG) instead of the inline, currentColor-aware vector icons the rest of the app's icon system uses.",
+        "The card's drawer-entry icon (style_drawer.svg, loaded via <img>) has its fill color hard-coded inside the file itself (#90807B), which does not match the app's actual live icon color (#5C4F48, computed from the neighboring favorite-star and expand icons) — a real, measurable color mismatch, not just a subjective impression. It's also drawn as solid filled shapes rather than the thin stroke-outline style the neighboring icons use, which is what reads as a “heavier line” even though technically there's no stroke at all, just solid fill. Because it's a flat image rather than a live vector, it also can never pick up a hover state, an active-state color, or a future theme change the way the rest of the icon system automatically does.",
+        "The mobile report header's “...” icon (small_actions.png) is a PNG raster inside a circular button, structurally outside the app's <svg-icon>-based icon system used elsewhere on the same screen. Checking whether this same “more options” concept appears elsewhere in the product turned up not one consistent icon but three unrelated ones: this circled-horizontal-dots PNG on mobile, a different vertical-dots PNG with no circle on Manage Reports' row-level Actions column, and a plain edit-pencil icon on Manage Users' own Actions column (Case 04). This isn't one icon that drifted from a shared standard — there's no single shared “more options” icon in the product to drift from in the first place.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Consistency and standards (both the UX Assessment Lead's specific catches, and the broader pattern of three different “more options” glyphs found across screens); recognition over recall (a solid, differently-colored glyph and a uniquely-styled “...” button both ask the user to learn one-off visual meanings rather than recognizing a pattern already established elsewhere in the product)." },
+        { label: "Suggested direction", value: "Bring the drawer-entry icon into the same inline-SVG icon system as the rest of the card (matching its stroke weight and letting it inherit the live icon color via currentColor) rather than loading it as a static image. Separately, standardize on one “more options” icon and reuse it everywhere the product needs that concept — mobile's report header, Manage Reports' row actions, and Manage Users' row actions — instead of the three unrelated glyphs currently in use." },
+        { label: "Priority note", value: "Low — nothing here is broken or blocks a task; this is a visual-consistency and design-system finding, worth fixing as part of a broader icon cleanup rather than urgently." },
+      ],
+    },
+    {
+      type: "list",
+      heading: "Positive observations",
+      items: [
+        "All three View formats work correctly and are each genuinely distinct at every width tested — desktop's Gallery/Standard/Extended, and tablet's Gallery/One column list/Extended — and switching between them, in every direction, correctly updates both the layout and the active-state highlight every time.",
+        "A style's photos across every one of its available colors can be browsed directly from the card at every width — no need to open the drawer just to see what a style looks like in a different color — via desktop's hover arrows, or via the full-screen image gallery on tablet and mobile.",
+        "The full-screen image gallery is a clean, working, and clearly separate feature from the detail drawer at every width, with its own page counter, left/right arrows that correctly cross between colors, and its own visible, working favorite star — including at 375px, where it renders as a complete overlay rather than tablet's partial one.",
+        "Standard view's inline per-color table and Extended view's full table agree exactly on every figure checked — same colors, same per-size quantities, same EXPCT. dates, and the same price — across multiple styles and all three widths, including correctly handling a color with two separate incoming inventory batches as two distinct rows.",
+        "The favorite star and “Show Favorites” filter work correctly together end to end at every width: starring a card immediately reflects as a filled star, the filter narrows the grid to just the favorited item(s), and the filter's own label swaps to describe its next action (“Show Favorites” ↔ “Show All”).",
+        "The small icon next to a card's price, and the card's own name/photo, both reliably open the right-side detail drawer, correctly scoped to the exact product and color the card was displaying — confirmed at all three widths.",
+        "Two touch-appropriate adaptations at 375px stood out as genuine improvements over the wider breakpoints: the fullscreen icon and favorite star show on a card by default (no hover needed), and tapping a color swatch jumps straight into the detail drawer pre-scoped to that color — arguably a better resolution of Finding 2 (swatches not jumping to a color) than either desktop or tablet offer, even though it opens the drawer rather than just updating the card's photo.",
+        "Hiding the “One column list” view button at 375px (leaving only Gallery and Extended) lines up with Gallery already rendering as a single full-width card per row by default there — a sensible simplification rather than a missing feature.",
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Notes / follow-up needed",
+      paragraphs: [
+        "This case's first desktop pass drew two conclusions the UX Assessment Lead corrected after review, both verified and folded into this write-up: “Gallery view” was initially reported as non-functional — in fact it's the default view, so clicking it while already active correctly produces no change, while switching to it from Standard or Extended does change the layout. And a style's other colors were initially reported as unreachable from the card — in fact hovering a card's photo reveals left/right arrows that page through every available color's photos; the swatches themselves just don't drive this (see Finding 2).",
+        "The tablet follow-up itself needed a correction, caught by the UX Assessment Lead. The first tablet pass reported all three View buttons rendering identically at 768px, and the card-hover color arrows and the gallery's favorite star both being invisible/unreachable at this width. On retest, none of that held up: the View buttons genuinely differ (Finding 3); the color-browsing arrows are reachable one click away via the gallery, which itself has a clearly visible, working favorite star. The root cause was methodological — the first pass's clicks on the View buttons weren't reliably registering, silently landing back on whatever view was already active, which produced consistently identical screenshots that read as “no distinction” rather than as a tooling problem. The retest fixed this by checking the page's actual underlying state (via a script) after each click, not just trusting the screenshot, before drawing any conclusion — a lesson worth carrying into future viewport-emulation passes.",
+        "This case deliberately did not evaluate the detail drawer's own content, fields, or behavior once opened — confirming only that the two card-level entry points correctly open it. Full drawer evaluation is Case 07.",
+        "Screenshots could not be saved as evidence for the tablet or mobile follow-ups: the built-in browser pane's screenshot tool doesn't currently support cropping a region to a file (region zoom calls returned the full, uncropped viewport instead), so those two sections rely on the step-by-step written account above, cross-checked against real page state at each step, rather than saved images.",
+        "The mobile (375px) follow-up was done jointly with the UX Assessment Lead per the assessment methodology's documented collaborative approach for this browser's known sub-768px click limitation — the Lead performed the first tap, and dispatching click events through the page's own script console reliably handled the rest of the pass.",
+        "A fourth view-related detail exists that this case didn't test: at wider desktop widths (around 1280px), a fourth View button appears alongside the three tested here. Not necessarily an issue, but worth a dedicated look to document what it does and at what exact width it appears — flagged as a candidate for its own small follow-up case rather than reopening this one.",
+        "This case's three widths (desktop, tablet, mobile) are now all covered for style cards, plus a targeted icon-consistency check the UX Assessment Lead asked for before closing (Finding 5). Case 06 is now closed.",
+      ],
+    },
+  ],
+};
+
+const case07 = {
+  id: "case-07",
+  caseNumber: "07",
+  title: "Adding to cart: quantities by size and color, and cart verification",
+  status: "Issues found — five gaps, none blocking the core flow. The full journey — browsing to a style, opening its drawer, entering different quantities across sizes and colors, adding to cart, and verifying the cart matches exactly — works correctly end to end, confirmed identically at desktop, 768px tablet, and 375px mobile widths. The app also enforces each size's real availability precisely (current stock plus a known incoming batch, right down to the unit) before Add to Cart or Update Quantity can be used — but exceeding it by typing a number gives only a red border, with no message anywhere explaining what happened or what the real maximum is (reproduced at every width). A desktop-only accessibility pass on the same drawer found its color swatches have no keyboard path at all, and its images and two of its most-used controls lack accessible names or a visible focus indicator. Tablet testing surfaced the favorite star's dual role as a cart-membership toggle — confirmed deliberate business logic, not a bug, but with un-favoriting confirmed not to actually persist. A desktop-only follow-up found the header's cart icon is scoped to whichever report is currently open, hiding real, unsubmitted order value the moment a different report is opened.",
+  statusKind: "issue",
+  viewports: ["desktop", "tablet", "mobile"],
+  // Finding 1 (the availability-limit error has no explanation, only a
+  // red border) is a user-control-and-errors gap. Findings 2 and 3
+  // (keyboard-inaccessible color swatches; missing alt text and no
+  // visible focus indicator) are Area 3's accessibility category. Finding
+  // 4 (the favorite star's meaning departs from its near-universal
+  // "bookmark" convention, and un-favoriting doesn't persist) touches
+  // both design-system (match with the real world) and visibility-status
+  // (the visible state after a click doesn't match what's actually
+  // persisted). Finding 5 (the header cart icon hides real pending order
+  // value once a different report is open) is also visibility-status.
+  // Also carries Area 2's Buyer Journeys — this case covers "Adding items
+  // to the cart" — since every buyer-facing journey applies to Sales Reps
+  // acting on a customer's behalf too (see the Key Journeys table's own
+  // footnote). No responsive-specific issue was found (every result
+  // matched exactly across all three widths), so that category isn't
+  // listed here.
+  categories: ["user-control-errors", "accessibility", "design-system", "visibility-status", "buyer-journeys"],
+  categorySummaries: {
+    "user-control-errors": "Typing a quantity above a size's real, precisely-enforced availability limit gives no explanation anywhere — just a red border and a disabled button, with no message saying what happened or what the real maximum is. The drawer's own “+” stepper controls don't share this problem: they simply stop at the true maximum instead of ever producing an invalid number.",
+    "accessibility": "The drawer's five color swatches have no keyboard path at all — a complete dead end for choosing a color without a mouse — and its images have no alt text, while its quantity fields and main action button show no visible focus indicator when tabbed to.",
+    "design-system": "The favorite star departs from its near-universal “bookmark this for later” meaning: tapping it actually adds the item to the cart at quantity 0 — confirmed as deliberate business logic — collapsing two different user intents, curating and transacting, into one icon.",
+    "visibility-status": "Un-favoriting an item doesn't actually persist (the underlying cart line never changes, so the star reverts to marked on refresh), and the header's cart icon disappears the moment a different report is opened, even with real, unsubmitted order value still sitting untouched elsewhere.",
+    "buyer-journeys": "Covers “Adding items to the cart”: browsing to a style, opening its drawer, entering distinct quantities across sizes and colors, adding to cart, and verifying the cart — confirmed working correctly, and identically, across desktop, tablet, and mobile.",
+  },
+  summary: "The full add-to-cart journey works correctly and matches exactly across desktop, tablet, and mobile — but exceeding a size's availability limit gives no explanation, the drawer's color swatches have no keyboard path, and the header's cart icon and the favorite star each hide or misrepresent the cart's real state in specific situations.",
+  scope: [
+    { label: "Area", value: "Cognitive walkthrough of the “Adding items to the cart” journey: browsing the catalog to a style, opening its detail drawer, selecting different quantities across sizes and colors, adding to cart, and verifying the resulting cart line by line — retested at desktop, 768px tablet, and 375px mobile widths. Also includes a desktop-only accessibility spot check of the drawer (image alt text, keyboard reachability and operability, and focus visibility), a desktop-only check of the favorite star's coupling with cart membership, and a desktop-only check of the header cart icon's visibility when switching between reports." },
+    { label: "Screen", value: "/reports/3771 (the Fall 2026 linesheet report, same as Cases 02 and 06) → the style detail drawer for “3/4 Sleeve Boatneck” (PA1136) → /my-account/cart (the “ORDER PREVIEW” cart screen)." },
+    { label: "Interaction boundary", value: "Desktop tested using the user's own real, already-authenticated Chrome session; the tablet (768×1024) and mobile (375×812) follow-ups both used Claude's built-in browser with true viewport emulation, also on an already-authenticated session. Real quantities were added to the real cart for one style across two colors (Black and Dark Navy) at each width, the resulting cart verified line by line, then both lines removed afterward via “Remove Color” (each behind its own confirmation dialog) to leave the shared account as it was found. “Submit Orders” was never clicked — no order was placed at any point, on any width. Deliberately tested entering quantities beyond a size's real availability (up to 99999 on one row) to see how the app responds; these excessive values were always corrected before ever calling Add to Cart." },
+    { label: "Session", value: "Seventh case of this audit round, now closed across all three viewports. Started desktop only, per the UX Assessment Lead's explicit request to start with the desktop version using their own Chrome. The core journey was then retested at 768px tablet width, and finally at 375px mobile width, both using Claude's built-in browser with true viewport emulation. Accessibility and the header cart-icon check were desktop-only by explicit scoping, not oversight." },
+  ],
+  blocks: [
+    {
+      type: "steps",
+      heading: "Steps — browsing to a style and opening the drawer",
+      items: [
+        { text: "Opened the Fall 2026 linesheet report (/reports/3771), the same grid tested in Cases 02 and 06, already showing several styles per row. Clicked the small drawer-entry icon on the “3/4 Sleeve Boatneck” (PA1136) card: opened the right-side detail drawer directly to this style, defaulting to Black, with a “Select Quantity” table (Size / Available / Aug 01 / Quantity) below the photo and color swatches — the same drawer entry point and layout already confirmed working in Case 06." },
+        { text: "The table's columns for Black: XS (0 available, 50 arriving Aug 01), S (200 / 450), M (200 / 250), L (200 / 250), XL (200 / 250) — all quantities starting at 0, with a “SELECT QUANTITY” button, disabled until at least one size has a quantity greater than 0." },
+        { text: "Noticed two extra, full-height “−”/“+” controls flanking the whole table: a bulk stepper that increments or decrements every size row at once by one unit per click — a fast way to build a one-of-each-size selection, confirmed by clicking it once and watching all five rows go from 0 to 1 simultaneously before resetting back to 0 to continue testing normally." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — testing the availability limit",
+      items: [
+        { text: "With Black still selected, typed 250 directly into the S row's quantity field (Available: 200, Aug 01: 450). Accepted with no visible warning — a quantity above the current stock figure alone is allowed, since the Aug 01 column represents real, known incoming stock." },
+        { text: "Typed 99999 into the same field to find the actual ceiling. This time the input's border turned red and “ADD TO CART” became disabled (confirmed via its own `disabled` state, not just its visual color) — but no error text, tooltip, or accessible label appeared anywhere in the drawer explaining why, or what value would be accepted.", image: c07img01, caption: "Typing far beyond a size's real availability produces only a red-bordered field — no message anywhere" },
+        { text: "Narrowed the exact ceiling by testing several values in sequence on the same field: 650 is accepted (no error), 651 immediately shows the red border and disables the button. 650 is exactly Available (200) + Aug 01 (450) for that row — confirming the app validates each size against its true total stock, precisely, right down to the unit." },
+        { text: "Corrected the field back to a normal, valid quantity (3) to continue the main flow." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 1 — Exceeding a size's real availability by typing a number gives no explanation anywhere, only a red border",
+      paragraphs: [
+        "Every size in the drawer's quantity table has a real, enforced maximum equal to its current “Available” figure plus its known future “Aug 01” batch (confirmed precisely: 650 = 200 + 450 is accepted, 651 is not). Typing a number above that maximum is accepted into the field, but the moment it crosses the line, the input's border turns red and both “ADD TO CART” and “UPDATE QUANTITY” become disabled — with no text message, tooltip, or accessible label anywhere in the drawer saying what happened or what the actual maximum is. A user has to notice the color change, then manually add the “Available” and “Aug 01” columns themselves to figure out what number would actually be accepted.",
+        "This is inconsistent with how the drawer's own “+” stepper controls handle the same limit: clicking “+” enough times on a row never produces an invalid number at all — it simply stops incrementing exactly at the true maximum, with no error state ever shown, confirmed directly by driving the bulk “apply to every size” stepper 250 clicks past a size whose real ceiling was only 50. The stepper path prevents the error before it happens; the typing path lets the user hit it, then leaves them to self-diagnose it. Reproduced identically at both 768px tablet and 375px mobile widths.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Visibility of system status (the interface has the exact maximum — it enforces it precisely — but never displays it); recognition, diagnosis, and recovery from errors (there's no explanation to recognize or diagnose, and recovery means doing the subtraction yourself); reliance on color as the only signal (a colorblind user, or anyone not looking closely at the field's border, would have no way to notice the field is even in an error state)." },
+        { label: "Suggested direction", value: "Add an inline message near the field when it's over the limit — for example “Maximum available: 650” — and wire it to the input via aria-describedby (or a role=\"alert\" region) so it's not conveyed by color alone. Since the “+” stepper already knows the exact ceiling and enforces it silently, the same value is available to power an explicit message on the typing path too, rather than building new logic for it." },
+        { label: "Priority note", value: "Medium — the cap is genuinely enforced and no bad data can reach the cart, but this will be hit routinely on a frequent, everyday flow (adding a multi-size order to cart) any time inventory is tight, and currently offers no way to recover from it except guesswork." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — entering different quantities per size and color, and adding to cart",
+      items: [
+        { text: "With Black selected, set distinct quantities across four of the five sizes — S: 3, M: 5, L: 2, XL: 4 (XS left at 0, since it has no current stock) — for a total of 14 units, $532.00.", image: c07img02, caption: "Black — distinct, valid quantities entered across four sizes" },
+        { text: "Clicked “ADD TO CART”: the button relabeled to “ADDED TO CART” (now disabled) and a “GO TO CART” link appeared below the total. A cart icon also appeared in the app's top header for the first time in this session — it isn't shown at all while the cart is empty (see Finding 5)." },
+        { text: "Clicked the Dark Navy swatch next, while Black's quantities were still showing: correctly triggered an “Add to Cart Not Added” confirmation, since Black had already been added by this point with nothing further pending — clicked “Cancel” to continue without adding anything further, which switched the drawer to Dark Navy as expected." },
+        { text: "Dark Navy's table showed only two columns instead of three — “Aug 01” and “Quantity”, no “Available” column at all — because this color currently has zero units in stock in every size. The column disappears rather than showing a column of zeros, a sensible simplification rather than a bug." },
+        { text: "Set different quantities across four of the five sizes again, in a different pattern than Black's — XS: 2, M: 6, L: 1, XL: 3 (S left at 0) — for a total of 12 units, $456.00, and clicked “ADD TO CART” again.", image: c07img03, caption: "Dark Navy — a different distinct quantity pattern, with the “Available” column absent for a zero-stock color" },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — verifying the cart",
+      items: [
+        { text: "Clicked “GO TO CART”: landed on /my-account/cart, an “ORDER PREVIEW” screen grouped by delivery (“Fall 2026: September 9/30 X-Warehouse”), listing “3/4 Sleeve Boatneck” (PA1136) with one row per color.", image: c07img04, caption: "Cart verification — both colors match the drawer exactly, size by size" },
+        { text: "Compared every figure against what was actually entered in the drawer: Black showed XS 0 / S 3 / M 5 / L 2 / XL 4, 14 units, $532.00; Dark Navy showed XS 2 / S 0 / M 6 / L 1 / XL 3, 12 units, $456.00 — an exact match, with no rounding or drift. The style subtotal read $988.00, and the cart's own Total showed 26 units and $988.00 — both correct." },
+        { text: "Opened each row's “⋮” menu: “Move To Another Delivery”, “Duplicate”, “Edit Quantity”, and “Remove Color” were all present. Used “Edit Quantity” on the Black row: it reopened the same drawer, on Black, correctly pre-filled with the saved values (0, 3, 5, 2, 4), with the button shown disabled (“SELECT QUANTITY”) until something actually changes — confirmed by editing S to 7, which relabeled it to “UPDATE QUANTITY” and enabled it. Reverted S back to 3." },
+        { text: "Used the bulk “+” stepper 250 times in a row from the saved (0, 3, 5, 2, 4) state, to check whether the same per-row availability ceiling found earlier also applies to the stepper controls, not just to typing. XS — whose true ceiling is only 50 — stopped exactly at 50 instead of reaching 250, while the other sizes (each with a much higher ceiling) simply added 250 as expected. None of the fields turned red and “UPDATE QUANTITY” stayed enabled throughout — the stepper clamps silently at the true maximum instead of ever allowing an invalid value.", image: c07img05, caption: "Bulk stepper clamps silently at each size's true maximum — never an error state" },
+        { text: "Closed the drawer without saving this stress-test change: a “Quantity Changes Not Applied” guard dialog appeared, and “Cancel” correctly discarded it, confirmed by reopening the cart page and seeing Black's row unchanged." },
+        { text: "Removed both colors from the cart via “Remove Color” (each behind its own “Are you sure?” confirmation) to restore the shared test account to its original, empty-cart state." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — accessibility spot check on the drawer (images and keyboard navigation, desktop only)",
+      items: [
+        { text: "Inspected every img element inside the drawer (7 total): the main garment photo and 5 color-swatch thumbnails all have no alt attribute at all — not even an empty alt=\"\" marking them as decorative. Screen readers fall back to reading the image filename or announcing “image” with no useful content." },
+        { text: "Inspected the 5 color swatches: each is a plain div with the color name only in a title attribute (a hover tooltip, not a reliable accessible name) — no role=\"button\", no tabindex, no aria-label. Confirmed via tabIndex inspection that none of the 5 are keyboard-focusable at all." },
+        { text: "Drove a live Tab-key trace through the drawer, reading document.activeElement after each press: close → info → favorite → a small unlabeled icon button → XS quantity → S → M → L → XL → action button. The 5 color swatches are never visited — a keyboard-only user cannot change the drawer's color at all.", image: c07img08, caption: "The color swatches are plain, non-focusable divs — completely skipped by the keyboard" },
+        { text: "Confirmed the quantity itself can still be set without a mouse: typing a number directly into a focused field works exactly as with a mouse, and the field also responds to the native Up/Down arrow-key spinner behavior — so quantities can be set via keyboard, just not via the custom stepper buttons themselves (excluded from the tab order, tabindex=\"-1\")." },
+        { text: "Checked focus visibility by reading each focused element's computed outline/box-shadow. The three header icon buttons (close, info, favorite) keep the browser's own default focus ring, clearly visible.", image: c07img06, caption: "Header icon buttons keep a visible default focus ring" },
+        { text: "The 5 quantity input fields and, notably, the main action button itself all have outline: none with no alternative focus style — focusing them produces no visible change at all.", image: c07img07, caption: "The main action button has no visible focus indicator at all, even while focused and enabled" },
+        { text: "All values were reset to 0 before any Add to Cart call in this part of testing, so no cart line was created and no cleanup was needed." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 2 — The color swatches in the drawer cannot be reached or operated with the keyboard at all",
+      paragraphs: [
+        "The 5 color swatches in the drawer are plain div elements with no tabindex, no role=\"button\", and no aria-label — confirmed by inspecting every swatch's properties and by a live Tab-key trace through the whole drawer, which skips straight from the header icon buttons to the first quantity field without ever landing on a swatch. There is no keyboard equivalent offered anywhere else in the drawer for switching color. A keyboard-only user can open the drawer, read the default color's photo and price, and set quantities for that one color, but cannot reach any of the style's other colors from the drawer at all.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Accessibility / keyboard operability (a core interactive control has no keyboard path); this also affects anyone who simply prefers keyboard navigation for speed, not only assistive-technology users." },
+        { label: "Suggested direction", value: "Give each swatch a real interactive role — either a native button or a div role=\"button\" tabindex=\"0\" with an aria-label built from the color name already available in the existing title attribute — and wire Enter/Space to the same click handler already in place." },
+        { label: "Priority note", value: "High — this isn't a rough edge on an already-reachable control, it's a complete keyboard dead end on a control with no alternative path, blocking a core action (choosing which color to order) for anyone who can't use a mouse." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 3 — The drawer's images have no alt text, and its two most-used controls show no visible focus indicator",
+      paragraphs: [
+        "All 7 img elements inside the drawer — the main garment photo and the 5 color-swatch thumbnails — have no alt attribute at all, confirmed by inspecting the DOM directly. A screen reader has nothing to announce for the garment photo itself, the one image in the drawer that actually carries information — the swatches are a smaller loss on this specific point, since their color name is already exposed via title, but title is not a dependable substitute for alt or aria-label either.",
+        "Separately, focus visibility is inconsistent across the drawer's 10 keyboard-focusable elements. The 3 header icon buttons keep the browser's default focus outline, so a keyboard user can see where they are. But the 5 quantity input fields and — more importantly — the main action button all have outline: none with no replacement focus style. A keyboard user typing quantities and tabbing to submit has no visual confirmation of where their focus is for the two things they're actually doing in this drawer.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Accessibility (missing accessible names for informative images; visibility of system status for keyboard focus, which the WCAG “Focus Visible” criterion treats as a baseline requirement, not a nice-to-have)." },
+        { label: "Suggested direction", value: "Add a descriptive alt (e.g. “3/4 Sleeve Boatneck, Black”) to the garment photo, and either alt=\"\" or a matching descriptive alt to each swatch thumbnail. Restore a visible :focus-visible style to the quantity inputs and the action button, consistent with what the header icon buttons already show." },
+        { label: "Priority note", value: "Medium — neither issue blocks a sighted mouse user, but together they make the drawer meaningfully harder to use with a screen reader or keyboard alone, on top of Finding 2's complete color-switching dead end." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — retesting the core flow at tablet width (768px)",
+      items: [
+        { text: "Retested the same journey — browsing to PA1136, opening its drawer, testing the availability limit, entering distinct quantities per size and color, adding to cart, and verifying the cart — at a 768px tablet viewport, using Claude's built-in browser with true viewport emulation. Accessibility was not re-checked at this width, only the core journey already covered on desktop." },
+        { text: "Every result matched desktop exactly: the same drawer-entry behavior (a color swatch tap on the card still only expands the inline table, not the drawer), the same 99999-over-limit red-border/no-message gap reproduced on the S field, the same Black (14 units/$532.00) and Dark Navy (12 units/$456.00) quantities producing the same $988.00/26-unit cart total, and the same “⋮” menu and Edit Quantity round-trip." },
+        { text: "One observation turned into a real finding: Dark Navy's favorite star switched on by itself right after “ADD TO CART” was clicked, with no click on the star itself — confirmed via the DOM (class=\"selected favorite fav-row\"). The UX Assessment Lead explained this directly afterward: the star doubles as a cart-membership toggle (see Finding 4)." },
+        { text: "Removed both colors via “Remove Color” to restore the cart to empty. “Submit Orders” was never clicked at any point during this pass." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 4 — The favorite star doubles as a cart-membership toggle, and un-favoriting doesn't actually persist",
+      paragraphs: [
+        "This isn't a bug in its core design — it's a deliberate business decision, explained directly by the UX Assessment Lead after this case surfaced it as an unexplained observation during tablet testing: the star icon doesn't only mark a style or SKU as a favorite. Tapping it adds the item to the cart (creating an empty cart first if none exists) at quantity 0, and there's no separate, independent place a “favorite” is recorded — the star's state is entirely derived from whether the item currently has a line in the cart. Entering real quantities manually has the same underlying effect, which is why doing so also fills in the star automatically.",
+        "Testing confirmed that un-starring an item does not remove it from the cart — the cart line stays exactly as it was, which is also why no confirmation dialog appears when un-starring: nothing is actually being removed. The visible effect is that the star appears to un-mark in the moment, but since favorite status has no home other than cart presence, and the cart presence never actually changed, refreshing the report shows the star back to marked.",
+        "From a usability standpoint, two issues are worth flagging independent of whether reusing the cart as the storage mechanism for favorites is a reasonable engineering shortcut. First, a conceptual one: a star is one of the most standardized icons in software — it almost always means “save this for later,” a lightweight, purely personal curation action, deliberately separate from actually acquiring the item. Here it means something functionally different: “this item now has a presence in your cart.” Collapsing browsing/curating and transacting into one icon means a Sales Rep can't do the first without triggering the second, and is likely to make “Show Favorites” (Case 06) less useful over time as a curation tool. Second, a confirmed functional one: un-favoriting doesn't persist — a broken feedback loop where the interface shows one state right after the click and a different, contradicting state on the next visit. What still hasn't been tested is the case with real stakes: un-starring an item that already has non-zero quantities entered.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Match between system and the real world (the star's meaning departs from the near-universal convention it borrows its icon from, and now also from what un-starring visibly appears to do); visibility of system status (the UI shows a state change on click that doesn't match the persisted state, discoverable only by refreshing); user control and freedom (a rep has no working way to remove a style from their favorites once a corresponding cart line — even an empty one — exists)." },
+        { label: "Suggested direction", value: "Decide whether un-favoriting an empty (quantity-0) cart line is supposed to remove that line — if so, this is a straightforward functional bug to fix; if favorite lines are meant to persist in the cart regardless of the star's state, then the star's on/off affordance is misleading and shouldn't visually promise a toggle it can't deliver. Separately, if favoriting and cart-membership need to stay technically linked, consider giving them visually distinct affordances so a rep can tell, at a glance, whether a control touches their real order." },
+        { label: "Priority note", value: "Medium. A favorite toggle that silently fails to persist is a real, confirmed, user-facing defect, but no order quantities are at risk in the case actually tested — the untested real-quantity scenario could still turn out to matter more once checked." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — investigating the header cart icon (desktop only)",
+      items: [
+        { text: "Prompted by the UX Assessment Lead's own observation: added 2 units of PA1136 Black/S to the Fall 2026 cart ($76.00), confirming the header cart icon appeared. Switched to the Spring 2027 report without touching the cart: the icon disappeared from the DOM entirely (document.querySelector('.cart-icon-button') returned null, not merely hidden by CSS), even though the $76.00 line was still sitting untouched in Fall 2026's cart. Switched back to Fall 2026: the icon reappeared." },
+        { text: "Checked “MY ACCOUNT” → “Carts list” as a global, report-independent fallback: it correctly listed “Fall 2026” as an active cart while the header icon was hidden on Spring 2027 — but its own “TOTALS” column read $0.00, and the expanded delivery row showed “Amount: -”, for a cart the real Order Preview screen, moments apart, correctly totaled at $76.00." },
+        { text: "Along the way, found a pre-existing, unrelated entry already in the Fall 2026 cart — “Long Sleeve Crew” (PA1182) favorited in all 5 colors at quantity 0 (25 zero-value rows, $0.00) — almost certainly residue from Case 06's own favorite-star testing. Flagged for the UX Assessment Lead rather than removed unilaterally; confirmed afterward as expected, harmless leftover, not something to clean up." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 5 — The header cart icon is scoped to whichever report is currently open, not to whether there's anything pending anywhere in the account",
+      paragraphs: [
+        "The small cart icon next to the search icon in the header isn't a simple “cart has items” indicator — it's scoped to the specific report/season currently being viewed. Confirmed step by step: with the cart genuinely empty, the icon is absent from the page entirely. Adding real quantities makes it appear while still on that report; switching to a different report makes it disappear completely, even though the original order is still sitting there, untouched. Switching back brings it straight back. The underlying cart data never changes across any of this — only the icon's presence does.",
+        "There is a second, global way to check for pending cart activity: “MY ACCOUNT” → “Carts list”, which correctly detects an active cart regardless of which report is open — but its own totals are unreliable ($0.00 and “-” for a cart the real Order Preview screen correctly totaled at $76.00), so even the one fallback designed to answer “do I have anything pending elsewhere” gets the dollar figure wrong.",
+        "A cart icon's whole job, in essentially every ordering interface a wholesale buyer has used, is to give a persistent, always-visible answer to “do I have anything pending right now” — reinforced here by the fact that this icon does show live cart content, not a generic notification. Scoping its visibility to the currently-open report undermines that job in exactly the situation this kind of tool is used most: a rep working across several seasons in one sitting. Someone who builds a real order under one report, then moves on to browse another, gets no reminder that the first order is still open — the header doesn't stay silent about it, it actively signals “nothing pending,” which is false.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Visibility of system status (the true state — real money pending in a cart — doesn't change when switching reports, but the interface's only persistent signal for that state does, flipping to imply the opposite of what's true); consistency (the same fact is shown accurately in the Order Preview itself, and inconsistently or wrongly in the two others that exist to summarize it — the header icon and Carts List's totals)." },
+        { label: "Suggested direction", value: "Make the header cart icon reflect the account's cart state globally — present whenever any report/season has a pending cart, the same way “Carts list” already correctly detects it. If the architecture genuinely ties a cart to a single report, a secondary, lightweight signal belongs somewhere in the persistent chrome (a badge on “MY ACCOUNT,” or on the linesheet switcher) so a rep browsing one report can tell they left something in another. Separately, Carts List's totals should be fixed to match what Order Preview already computes correctly for the same data." },
+        { label: "Priority note", value: "High. This isn't a rough edge inside one drawer — it's a gap in the primary, sitewide indicator for “you have an open order,” for what looks like the normal way this product gets used. A missed or forgotten cart is the kind of thing that turns into a real business cost — an order that should have shipped and didn't — not just an inconvenience." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — retesting the core flow at mobile width (375px)",
+      items: [
+        { text: "Retested the same journey a third time at a 375px mobile viewport, using Claude's built-in browser. Neither accessibility nor the header cart-icon check was repeated here — only the core journey." },
+        { text: "The built-in browser's click action reliably timed out at this width, a previously-seen limitation below tablet width. Every interaction was instead driven via direct JavaScript clicks on the page's own elements, with screenshots used throughout to visually confirm each result — a testing-tool workaround, not a product issue." },
+        { text: "Confirmed a mobile-specific, positive difference: tapping a color swatch directly on the catalog card opens the drawer immediately, pre-scoped to that exact color — unlike desktop and tablet, where the same tap only expands the card's inline color/size table. Consistent with the same swatch-driven pattern Case 06 documented for mobile." },
+        { text: "Re-ran the availability-limit test: typed 99999 into a quantity field. Same result as desktop and tablet — a red-bordered field, a disabled button, no explanatory text anywhere." },
+        { text: "Set Black to S 3 / M 5 / L 2 / XL 4 (14 units/$532.00) and Dark Navy to XS 2 / M 6 / L 1 / XL 3 (12 units/$456.00), adding both to cart with no guard dialog needed, since nothing was left pending between switches." },
+        { text: "Navigated to the cart via the drawer's “GO TO CART” button: the cart's single-column mobile layout matched desktop and tablet's data exactly — $988.00 / 26 units total, both colors' quantities correct." },
+        { text: "Disambiguated the mobile cart's “⋮” menu — rendered with a different icon than desktop/tablet's, and with several instances on the page (delivery-level, style-level, and one per color row) — by matching each icon to its nearby row text. Used “Edit Quantity” on the Dark Navy row: the drawer reopened correctly pre-filled with the saved values, same behavior as desktop and tablet." },
+        { text: "Removed both colors via “Remove Color” (each behind its own confirmation) to restore the cart to empty for this delivery. “Submit Orders” was never clicked. Reset the viewport and closed the browser tab once testing was complete." },
+      ],
+    },
+    {
+      type: "list",
+      heading: "Positive observations",
+      items: [
+        "The full journey — browse the catalog, open a style's drawer, enter different quantities across multiple sizes and multiple colors, add to cart, and verify — worked correctly end to end at every width tested, with the cart matching the drawer exactly on every figure checked: per-size quantities, per-color subtotals, and the cart's own grand total (26 units, $988.00 across the two colors tested, identical on desktop, tablet, and mobile).",
+        "The app enforces each size's real availability precisely — current stock plus a known future batch, right down to the unit (650 accepted, 651 rejected) — a meaningful, correctly-implemented business rule, reproduced identically at all three widths.",
+        "Two separate guard dialogs (“Add to Cart Not Added” when switching color with a pending, unsaved quantity; “Quantity Changes Not Applied” when closing the drawer mid-edit) proactively protect against silently losing entered quantities.",
+        "The bulk stepper (increment or decrement every size in the table by one, in a single click) is a fast, well-built shortcut for a common wholesale pattern, and correctly respects each size's own individual cap even when applied in bulk, never producing an invalid value.",
+        "The cart's per-line “⋮” menu (Move To Another Delivery, Duplicate, Edit Quantity, Remove Color) is a complete, sensible set of controls; Edit Quantity correctly reloads the exact saved quantities at every width, and Remove Color asks for confirmation before deleting a line.",
+        "The action button's label changes contextually and correctly through the whole lifecycle of one interaction — “SELECT QUANTITY” → “ADD TO CART” → “ADDED TO CART” → “UPDATE QUANTITY” — a small but genuinely helpful bit of status communication.",
+        "A color with zero current stock in every size simply drops the “Available” column from its table entirely rather than showing a column full of zeros — a sensible adaptation consistent with the adaptive-column pattern already seen in Case 06.",
+        "Quantities can be set entirely by keyboard even though the custom “+”/“−” steppers themselves aren't focusable: typing a number directly into a field works exactly as with a mouse, and the field also responds to the native Up/Down arrow-key spinner behavior.",
+        "The entire core journey behaves identically at 768px and 375px as it does on desktop — same numbers, same guard behavior, same adaptive-column pattern — and mobile adds a genuine, touch-appropriate improvement of its own: a swatch tap opens the drawer directly, pre-scoped to that color, rather than requiring a separate drawer-entry tap.",
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Notes / follow-up needed",
+      paragraphs: [
+        "“Move To Another Delivery” and “Duplicate” (seen in the cart's per-line menu) were not tested here — outside this case's scope, but worth their own look if a future case covers multi-delivery cart management.",
+        "Only one style (PA1136, “3/4 Sleeve Boatneck”) and two colors were used for this case's evidence. The underlying behavior (drawer, quantities, cart math, availability cap) is a shared component used across every style in the catalog per Case 06's own findings, so this case's findings are expected to generalize, but weren't independently re-confirmed on a second style.",
+        "No order was submitted at any point across any of the three widths (“Submit Orders” was never clicked), and the cart was restored to empty after every pass via “Remove Color,” consistent with this audit's standing practice of leaving the shared test account as it was found.",
+        "The accessibility spot check covered only this same drawer, on this same style and color (PA1136, Black), on desktop — not the cart page, not other drawers, and not screen-reader software itself (findings are based on DOM/ARIA inspection and real keyboard-only interaction, not an actual screen reader run). A screen-reader pass (e.g. VoiceOver or NVDA) would give a more complete picture.",
+        "Residual test data found in the shared account, not created by this case: the Fall 2026 cart contains “Long Sleeve Crew” (PA1182) favorited in all 5 colors at quantity 0, almost certainly leftover from Case 06's own favorite-star testing. Confirmed by the UX Assessment Lead as expected, harmless leftover — not cleaned up, since it predates this case and wasn't part of its scope.",
+        "“Carts list” (MY ACCOUNT → Carts list) is a useful global summary of open carts across every report for future cases touching cart or checkout behavior, but its own totals are unreliable (see Finding 5), so it wasn't relied on for this case's core verification, which used the actual “ORDER PREVIEW” screen throughout.",
+        "At 375px mobile width, the built-in browser's click action reliably timed out on every attempt — a previously-seen limitation below tablet width. Every mobile interaction in this case was instead driven via direct JavaScript clicks on the relevant DOM elements, with screenshots used to visually confirm each result. This is a testing-tool limitation of this audit's own tooling, not a defect in the site.",
+        "Case 07 is now closed across desktop, tablet (768px), and mobile (375px).",
+      ],
+    },
+  ],
+};
+
 export default [
   {
     id: "heuristic-evaluation",
@@ -905,7 +1362,7 @@ export default [
       body: "Establishing a shared design system would provide the foundation for a more consistent, scalable, and maintainable B2B experience. It would align visual decisions across navigation, forms, tables, dialogs, states, and responsive behaviors, while giving design and development teams a common source of truth. Beyond improving coherence for users, a design system would reduce duplicated decisions, accelerate future delivery, support accessibility, and make it easier to evolve the application as new modules are introduced.",
       categoryId: "design-system",
     },
-    findings: [case01, case02, case03, case04, case05],
+    findings: [case01, case02, case03, case04, case05, case06, case07],
   },
   {
     id: "cognitive-walkthrough",
@@ -1018,7 +1475,7 @@ export default [
         description: "Journeys specific to admin users managing accounts, reports, and platform configuration.",
       },
     ],
-    findings: [case01, case02, case03, case04, case05],
+    findings: [case01, case02, case03, case04, case05, case06, case07],
   },
   {
     id: "responsive-accessibility",
@@ -1074,6 +1531,6 @@ export default [
         description: "Targeted accessibility checks against high-risk patterns — not an exhaustive review against the WCAG guidelines.",
       },
     ],
-    findings: [case01, case02, case03, case04, case05],
+    findings: [case01, case02, case03, case04, case05, case06, case07],
   },
 ];

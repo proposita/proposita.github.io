@@ -18,6 +18,23 @@ function caseLabel(f) {
   return f.caseNumber ? `Case ${f.caseNumber} — ` : "";
 }
 
+// The findings-list row's status-tag (the colored, uppercase label —
+// e.g. "Issues found — five gaps, ...") uses each case's full `status`
+// text, which for some cases (e.g. Case 07) runs several sentences long
+// — meant as the case's opening summary on its own detail page, not as
+// a short label. That was blowing up row height in the table. Truncated
+// here to a short preview; the full text is still shown in full on the
+// case's own detail page (see the finding-detail status-tag below,
+// which does not go through this helper). Cuts at the last whole word
+// at or before `max` chars (never mid-word) and appends a single
+// ellipsis; text already at or under `max` is returned unchanged.
+function truncateStatus(text, max = 120) {
+  if (!text || text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`;
+}
+
 function topbar(backHref, backLabel, title) {
   return `
     <div class="chapter__topbar">
@@ -229,7 +246,7 @@ function renderFindingsListPage({ backHref, backLabel, eyebrow, title, intro, fi
         .map(
           (f) => `
         <a class="phase-finding-row" data-kind="${f.statusKind}" data-reveal-item href="${findingHref(f)}">
-          <span class="status-tag" data-kind="${f.statusKind}">${f.status}</span>
+          <span class="status-tag" data-kind="${f.statusKind}">${truncateStatus(f.status)}</span>
           <div class="phase-finding-row__body">
             <h4>${caseLabel(f)}${f.title}</h4>
             <p>${summaryFor(f)}</p>

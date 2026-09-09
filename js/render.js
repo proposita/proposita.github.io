@@ -2,6 +2,113 @@
 // Cada función corresponde a un "type" de sección. Para agregar un tipo
 // nuevo: sumar el case en renderSection() y su función acá.
 
+import phases from "../data/phases.js";
+
+// Short, human label for a case's overall statusKind, used in the
+// compact cases table below (renderCasesTable) — a case's own `status`
+// field is a full sentence-or-more write-up (fine for its detail page,
+// see js/pages.js), so the table shows this short form instead.
+const CASE_STATUS_LABEL = {
+  pass: "No issues",
+  issue: "Issues found",
+  "issue-high": "High priority",
+  pending: "In progress",
+};
+
+// Short label per entry in a case's `viewports` array (see phases.js —
+// every case declares this explicitly; it's all three widths unless the
+// case is desktop-only by design, currently just the two admin-journeys
+// cases). Rendered as small stacked chips, one per width, each with its
+// own color (--viewport-* tokens in css/tokens.css) — a palette kept
+// separate from the category chips used elsewhere.
+const VIEWPORT_LABEL = { desktop: "Desktop", tablet: "Tablet", mobile: "Mobile" };
+function renderViewportChips(viewports) {
+  if (!viewports || !viewports.length) return "—";
+  const chips = viewports
+    .map((v) => `<span class="viewport-chip" data-viewport="${v}">${VIEWPORT_LABEL[v] ?? v}</span>`)
+    .join("");
+  return `<div class="viewport-chips">${chips}</div>`;
+}
+
+// Cuts `text` to the last whole word at or before `max` chars (never
+// mid-word) and appends a single ellipsis; text already at or under
+// `max` is returned unchanged. Used for the cases table's per-case
+// description, which otherwise runs long enough to blow up row height.
+function truncate(text, max) {
+  if (!text || text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`;
+}
+
+// A case's findings live as "richtext" blocks headed "Finding N — ..."
+// inside its own `blocks` array (see any case in phases.js). Counts only
+// those that carry a "Priority note" in their `meta` — i.e. findings
+// with a reported High/Medium/Low priority, per the cases table's
+// Findings column. Every finding across all 7 cases has one as of this
+// writing; a future case's finding without one simply won't count here
+// until its priority is filled in.
+function countFindings(f) {
+  return (f.blocks || []).filter(
+    (b) =>
+      b.type === "richtext" &&
+      typeof b.heading === "string" &&
+      /^Finding \d+ —/.test(b.heading) &&
+      (b.meta || []).some((m) => m.label === "Priority note")
+  ).length;
+}
+
+// Compact table of every case completed so far, for Chapter 1's closing
+// slide (see chapter1.js section 4, `casesTable: true`). Reads straight
+// from /data/phases.js at render time — the same source the phase/
+// category/finding pages use — so this table grows on its own as new
+// cases are promoted there; nothing here needs to change when a case is
+// added.
+//
+// A case object is listed once per phase it belongs to (see phases.js's
+// file header) — usually all three — so this dedupes by id first, then
+// sorts by case number. Each row links to the case's own detail page;
+// any phase that includes the case works as the link's phase segment,
+// since the finding-detail route doesn't depend on which one.
+function renderCasesTable() {
+  const byId = new Map();
+  phases.forEach((phase) => {
+    (phase.findings || []).forEach((f) => {
+      if (!byId.has(f.id)) byId.set(f.id, { finding: f, phase });
+    });
+  });
+  const rows = Array.from(byId.values()).sort((a, b) =>
+    (a.finding.caseNumber ?? "").localeCompare(b.finding.caseNumber ?? "")
+  );
+
+  const trs = rows
+    .map(({ finding: f, phase }) => {
+      const href = `#/chapter/${phase.chapterIndex}/phase/${phase.id}/finding/${f.id}`;
+      const statusLabel = CASE_STATUS_LABEL[f.statusKind] ?? f.statusKind;
+      return `
+        <tr>
+          <td class="cases-table__num">${f.caseNumber ?? "—"}</td>
+          <td class="cases-table__title">
+            <a href="${href}"><strong>${f.title}</strong></a>
+            <p class="cases-table__desc">${truncate(f.summary ?? "", 200)}</p>
+          </td>
+          <td class="cases-table__status"><span class="status-tag" data-kind="${f.statusKind}">${statusLabel}</span></td>
+          <td class="cases-table__viewports">${renderViewportChips(f.viewports)}</td>
+          <td class="cases-table__findings">${countFindings(f)}</td>
+        </tr>`;
+    })
+    .join("");
+
+  return `
+    <div class="evidence-table-wrap cases-table-wrap" data-reveal-item>
+      <table class="evidence-table cases-table">
+        <thead><tr><th>Case</th><th>What was tested</th><th>Status</th><th>Viewports</th><th>Findings</th></tr></thead>
+        <tbody>${trs}</tbody>
+      </table>
+    </div>
+  `;
+}
+
 function sectionShell(inner, { index, total, eyebrow }) {
   return `
     <section class="chapter__section" data-reveal id="section-${index}">
@@ -210,6 +317,7 @@ function renderClosing(s) {
     <div class="s-closing">
       <h2 class="s-closing__title" data-reveal-item>${s.title}</h2>
       <p class="s-closing__body" data-reveal-item>${s.body}</p>
+      ${s.casesTable ? renderCasesTable() : ""}
       <div class="cta-row" data-reveal-item>
         <a class="btn btn--primary" href="${s.cta.href}">${s.cta.label} →</a>
         <a class="btn btn--ghost" href="#/">Back to home</a>

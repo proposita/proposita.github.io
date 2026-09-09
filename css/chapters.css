@@ -868,6 +868,109 @@
   color: var(--ink-faint);
 }
 
+/* Chapter 1's closing slide: compact table of every case completed so
+   far (see js/render.js's renderCasesTable), built on .evidence-table.
+   A bit more breathing room above it than the base table gets, since it
+   follows a larger --fs-h3 paragraph rather than a heading. Overrides
+   below drop .evidence-table's header fill and vertical borders for
+   this table specifically — horizontal rules only, between rows. */
+.cases-table-wrap {
+  margin-top: var(--space-4);
+}
+.cases-table th,
+.cases-table td {
+  border: none;
+  border-bottom: 1px solid var(--line-strong);
+  vertical-align: top;
+}
+.cases-table thead th {
+  background: none;
+}
+.cases-table thead th:nth-last-child(-n+2) {
+  text-align: center;
+}
+.cases-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.cases-table__num {
+  white-space: nowrap;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.cases-table__title a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity var(--dur-s) var(--ease);
+}
+.cases-table__title a:hover {
+  opacity: 0.72;
+  text-decoration: underline;
+}
+.cases-table__title a strong {
+  font-weight: 700;
+}
+.cases-table__desc {
+  margin-top: 0.3em;
+  color: var(--ink-soft);
+  font-size: 0.9em;
+}
+/* Status reads as a single, short unit per row (a pill) rather than a
+   paragraph like the title/description column next to it, so it
+   centers on the row instead of pinning to its top. Viewports and
+   Findings (the table's last two columns) also center horizontally in
+   their column, not just vertically. */
+.cases-table__status {
+  vertical-align: middle;
+}
+.cases-table__viewports {
+  vertical-align: middle;
+  text-align: center;
+}
+.cases-table__findings {
+  text-align: center;
+  vertical-align: middle;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+
+/* Viewport chips: one small pill per width a case was tested at,
+   stacked vertically (not run side by side) in the table's fourth
+   column. Each width gets its own color via --viewport-* (tokens.css),
+   a palette kept separate from the category chips used elsewhere. */
+.viewport-chips {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3em;
+}
+.viewport-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15em 0.65em;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.viewport-chip[data-viewport="desktop"] {
+  background: var(--viewport-desktop-soft);
+  color: var(--viewport-desktop);
+}
+.viewport-chip[data-viewport="tablet"] {
+  background: var(--viewport-tablet-soft);
+  color: var(--viewport-tablet);
+}
+.viewport-chip[data-viewport="mobile"] {
+  background: var(--viewport-mobile-soft);
+  color: var(--viewport-mobile);
+}
+
 .page__back-crumb {
   margin-top: var(--space-5);
   padding-top: var(--space-3);
