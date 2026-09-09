@@ -91,7 +91,7 @@ export default {
       type: "closing",
       eyebrow: "UX Audit Cases",
       title: "The cases behind these <em>findings</em>",
-      body: "Every finding in this chapter traces back to a documented test case — a specific journey walked through step by step, with evidence captured along the way. Seven cases are complete so far, listed below; more will be added as the audit continues.",
+      body: "Every finding in this chapter traces back to a documented test case — a specific journey walked through step by step, with evidence captured along the way. Eight cases are complete so far, listed below; more will be added as the audit continues.",
       // Renders a compact, always-current table of every case in
       // /data/phases.js — see js/render.js's renderCasesTable. No case
       // list to maintain here: this stays accurate as cases are added.

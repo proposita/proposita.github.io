@@ -42,7 +42,7 @@
 // coverage, not findings.) A separate table listing every case's overall
 // Pass/No-Pass status may be added later; not part of this file yet.
 //
-// This currently covers the seven cases completed so far in this audit
+// This currently covers the eight cases completed so far in this audit
 // round (see /ux-audit-log/cases). Earlier cases from the previous
 // round (`ux-audit-log-v1/`) are not part of this file.
 
@@ -100,6 +100,24 @@ import c07img05 from "../assets/ux-audit/add-to-cart/05-bulk-stepper-clamps-at-m
 import c07img06 from "../assets/ux-audit/add-to-cart/06-drawer-close-button-visible-focus-ring.png";
 import c07img07 from "../assets/ux-audit/add-to-cart/07-add-to-cart-button-no-visible-focus-indicator.png";
 import c07img08 from "../assets/ux-audit/add-to-cart/08-color-swatches-plain-divs-not-focusable.png";
+
+// Case 08's screenshot numbering keeps the original filenames from the
+// desktop pass's full 01-17 sequence (see /ux-audit-log/screenshots/
+// case-08-cart-editing-order-placement) — only a representative subset
+// (05-13) is promoted here, skipping 01-04 and 14-17, which document the
+// delivery-date typed-input symptom that was ultimately retracted (see
+// case08's Notes). No screenshots exist for the tablet retest (768px):
+// this session's built-in browser has no save-to-disk mechanism for
+// screenshots, unlike the Chrome extension tool used for desktop.
+import c08img05 from "../assets/ux-audit/cart-editing-order-placement/05-add-delivery-creates-new-empty-group.jpg";
+import c08img06 from "../assets/ux-audit/cart-editing-order-placement/06-valid-calendar-date-change-persists.jpg";
+import c08img07 from "../assets/ux-audit/cart-editing-order-placement/07-move-to-delivery-blocked-30-day-window.jpg";
+import c08img08 from "../assets/ux-audit/cart-editing-order-placement/08-move-guided-flow-immediately-fails.jpg";
+import c08img09 from "../assets/ux-audit/cart-editing-order-placement/09-edit-quantity-persists-to-cart-row.jpg";
+import c08img10 from "../assets/ux-audit/cart-editing-order-placement/10-remove-color-confirmation-dialog.jpg";
+import c08img11 from "../assets/ux-audit/cart-editing-order-placement/11-duplicate-creates-second-delivery-line.jpg";
+import c08img12 from "../assets/ux-audit/cart-editing-order-placement/12-duplicate-blocks-checkout-hidden-tooltip.jpg";
+import c08img13 from "../assets/ux-audit/cart-editing-order-placement/13-checkout-season-minimum-validation.jpg";
 
 const case01 = {
   id: "case-01",
@@ -921,17 +939,18 @@ const case06 = {
   // gap. Findings 3 (tablet: no hover arrows, gallery needed) and 4
   // (mobile: duplicated "Show Favorites") are Area 3's "responsive"
   // category, the second per the UX Assessment Lead's own request. Also
-  // carries Area 2's Buyer Journeys — this case covers "Linesheet /
-  // catalog browsing" — since every buyer-facing journey applies to
-  // Sales Reps acting on a customer's behalf too (see the Key Journeys
-  // table's own footnote). No accessibility-specific issue was found, so
-  // that category isn't listed here.
-  categories: ["design-system", "visibility-status", "responsive", "buyer-journeys"],
+  // carries both of Area 2's Buyer Journeys and Sales Rep Journeys — this
+  // case covers "Linesheet / catalog browsing", and every buyer-facing
+  // journey applies equally to Sales Reps acting on a customer's behalf
+  // (see the Key Journeys table). No accessibility-specific issue was
+  // found, so that category isn't listed here.
+  categories: ["design-system", "visibility-status", "responsive", "buyer-journeys", "sales-rep-journeys"],
   categorySummaries: {
     "design-system": "Clicking a color swatch doesn't jump to that color's photo the way it visually implies, and two icons — the card's drawer-entry icon and mobile's “...” menu icon — turn out to be static images outside the app's real icon system, with a measurable color mismatch and, across the wider product, three unrelated “more options” glyphs rather than one shared standard.",
     "visibility-status": "The color-swatch row never reflects which color is currently showing as a card's photos are paged through with the hover arrows or the lightbox.",
     "responsive": "At 768px, browsing between colors from the grid takes one extra click (opening the image gallery) since the card's hover arrows don't appear at this width; at 375px, the “...” menu lists “Show Favorites” twice, though both stay correctly in sync.",
     "buyer-journeys": "Covers “Linesheet / catalog browsing”: all three View formats, and a style's full color/size/price data, work correctly and agree exactly across desktop, tablet, and mobile — the gaps found are all small efficiency or consistency issues, not blockers.",
+    "sales-rep-journeys": "Covers “Linesheet / catalog browsing” performed by a Sales Rep on behalf of a selected customer — the same screens, controls, and findings as the Buyer Journeys entry above, since a Sales Rep browses the identical catalog.",
   },
   summary: "All three View formats, and a style's full color range, work correctly and agree exactly across desktop, tablet, and mobile — but color swatches don't track or jump to the color being browsed, tablet needs one extra click to browse colors, and two of the card's icons turn out to sit outside the app's real icon system.",
   scope: [
@@ -1115,19 +1134,20 @@ const case07 = {
   // (the visible state after a click doesn't match what's actually
   // persisted). Finding 5 (the header cart icon hides real pending order
   // value once a different report is open) is also visibility-status.
-  // Also carries Area 2's Buyer Journeys — this case covers "Adding items
-  // to the cart" — since every buyer-facing journey applies to Sales Reps
-  // acting on a customer's behalf too (see the Key Journeys table's own
-  // footnote). No responsive-specific issue was found (every result
-  // matched exactly across all three widths), so that category isn't
-  // listed here.
-  categories: ["user-control-errors", "accessibility", "design-system", "visibility-status", "buyer-journeys"],
+  // Also carries both of Area 2's Buyer Journeys and Sales Rep Journeys —
+  // this case covers "Adding items to the cart", and every buyer-facing
+  // journey applies equally to Sales Reps acting on a customer's behalf
+  // (see the Key Journeys table). No responsive-specific issue was found
+  // (every result matched exactly across all three widths), so that
+  // category isn't listed here.
+  categories: ["user-control-errors", "accessibility", "design-system", "visibility-status", "buyer-journeys", "sales-rep-journeys"],
   categorySummaries: {
     "user-control-errors": "Typing a quantity above a size's real, precisely-enforced availability limit gives no explanation anywhere — just a red border and a disabled button, with no message saying what happened or what the real maximum is. The drawer's own “+” stepper controls don't share this problem: they simply stop at the true maximum instead of ever producing an invalid number.",
     "accessibility": "The drawer's five color swatches have no keyboard path at all — a complete dead end for choosing a color without a mouse — and its images have no alt text, while its quantity fields and main action button show no visible focus indicator when tabbed to.",
     "design-system": "The favorite star departs from its near-universal “bookmark this for later” meaning: tapping it actually adds the item to the cart at quantity 0 — confirmed as deliberate business logic — collapsing two different user intents, curating and transacting, into one icon.",
     "visibility-status": "Un-favoriting an item doesn't actually persist (the underlying cart line never changes, so the star reverts to marked on refresh), and the header's cart icon disappears the moment a different report is opened, even with real, unsubmitted order value still sitting untouched elsewhere.",
     "buyer-journeys": "Covers “Adding items to the cart”: browsing to a style, opening its drawer, entering distinct quantities across sizes and colors, adding to cart, and verifying the cart — confirmed working correctly, and identically, across desktop, tablet, and mobile.",
+    "sales-rep-journeys": "Covers “Adding items to the cart” performed by a Sales Rep on behalf of a selected customer — the same drawer, quantity entry, and cart verification as the Buyer Journeys entry above, since a Sales Rep uses the identical add-to-cart flow.",
   },
   summary: "The full add-to-cart journey works correctly and matches exactly across desktop, tablet, and mobile — but exceeding a size's availability limit gives no explanation, the drawer's color swatches have no keyboard path, and the header's cart icon and the favorite star each hide or misrepresent the cart's real state in specific situations.",
   scope: [
@@ -1323,6 +1343,196 @@ const case07 = {
   ],
 };
 
+const case08 = {
+  id: "case-08",
+  caseNumber: "08",
+  title: "Cart editing and order placement: quantities, line removal, and delivery-date management",
+  status: "Issues found — two confirmed findings, one high-priority. Built real, multi-style, multi-color, multi-size cart test data (PA1136 in Black and Dark Navy, plus PA1142 in Dark Navy on desktop; PA1136 in Black alone at tablet width) to exercise the “ORDER PREVIEW” cart page itself: quantity editing, line removal, and — the main focus — how the app manages multiple delivery dates (Add Delivery, Edit Delivery Dates, Move To Another Delivery, Duplicate, Remove Delivery), through to the checkout validation step. An initially-reported defect in the delivery-date typed-input path was retracted after the UX Assessment Lead could not reproduce it under real keyboard input, despite repeated automated reproduction — most likely a testing-tool artifact rather than a real product defect (see Notes). The tablet retest (768px) confirmed every remaining desktop finding and positive observation carries over unchanged, and additionally resolved the per-color minimum-quantity indicator (Finding 2) from incomplete to fully confirmed. A mobile retest (375px) was attempted but could not be completed: interactions began timing out in a way that also affected the UX Assessment Lead's own direct click on the same element, pointing to a genuine site or environment condition rather than a testing-tool limitation — the case is closed with desktop and tablet coverage only.",
+  statusKind: "issue-high",
+  viewports: ["desktop", "tablet"],
+  // Finding 1 (Duplicate's guided flow can silently create an invalid,
+  // checkout-blocking cart state that the equivalent Move flow correctly
+  // prevents) touches design-system (two parallel actions enforcing
+  // different validation levels), user-control-errors (the invalid state
+  // is allowed to be created at all), and visibility-status (the only
+  // feedback is a small icon that must be actively discovered). Finding 2
+  // (the per-color minimum-quantity indicator, now confirmed: threshold 4,
+  // advisory-only) is also visibility-status. Also carries both of Area
+  // 2's Buyer Journeys and Sales Rep Journeys — this case covers "Placing
+  // an order", and every buyer-facing journey applies equally to Sales
+  // Reps acting on a customer's behalf. No responsive-specific issue was
+  // found (every result matched exactly between desktop and tablet), so
+  // that category isn't listed here; no accessibility check was in this
+  // case's scope.
+  categories: ["design-system", "user-control-errors", "visibility-status", "buyer-journeys", "sales-rep-journeys"],
+  categorySummaries: {
+    "design-system": "“Move To Another Delivery” and “Duplicate” share the exact same guided menu path and the same auto-suggested default date, yet enforce completely different levels of validation — Move blocks the 30-day-window violation with a clear toast, Duplicate lets the identical invalid state through with no check at all.",
+    "user-control-errors": "“Duplicate”'s guided flow lets a user create an invalid, checkout-blocking cart state simply by accepting its own suggested default date — the exact situation “Move To Another Delivery” prevents outright via the identical guided path.",
+    "visibility-status": "Duplicate's invalid, checkout-blocking result is only ever signaled by a small orange icon a user has to notice and hover — nothing on the page proactively explains why “Submit Orders” is disabled. By contrast, the per-color minimum-quantity indicator (now confirmed: a 4-unit threshold, advisory only) communicates its own constraint clearly and correctly.",
+    "buyer-journeys": "Covers “Placing an order”: editing cart quantities, removing lines, and managing multiple delivery dates (adding, editing, moving, duplicating, and removing them) through to the checkout validation step. Confirmed working correctly at desktop and 768px tablet widths, aside from the two findings above; a mobile (375px) retest was attempted but blocked by an apparent site/environment issue and was not completed.",
+    "sales-rep-journeys": "Covers “Placing an order” performed by a Sales Rep on behalf of a selected customer — the same cart, delivery-management, and checkout-validation controls as the Buyer Journeys entry above, since a Sales Rep uses the identical order-placement flow.",
+  },
+  summary: "Editing cart quantities and removing lines both work correctly and predictably — but “Duplicate” can silently create an invalid, checkout-blocking cart state that the near-identical “Move To Another Delivery” correctly prevents, and a per-color minimum-quantity indicator (now fully confirmed as advisory-only) was initially left unresolved on desktop. Confirmed identically at 768px tablet width; a mobile retest was attempted but blocked by a site/environment issue and not completed.",
+  scope: [
+    { label: "Area", value: "Cognitive walkthrough of the “Cart Editing / Order Placement” journey: building cart test data across different styles, sizes, and colors, then testing quantity editing, line removal, and — the primary focus — every delivery-date management action available from the delivery group's and each line's “⋮” menus (Add Delivery, Edit Delivery Dates, Move To Another Delivery, Duplicate, Remove Delivery), through to the checkout validation step. The add-to-cart drawer's own functionality was not re-tested — it was used only as a means of getting real data into the cart, and is already covered by Case 07." },
+    { label: "Screen", value: "/reports/3771 (the Fall 2026 linesheet report) → the style detail drawer for “3/4 Sleeve Boatneck” (PA1136) and a second style, PA1142 → /my-account/cart (the “ORDER PREVIEW” cart screen), including its “Edit Delivery Dates” side panel → the “Submit Orders” checkout validation dialog." },
+    { label: "Interaction boundary", value: "Desktop tested using the user's own real, already-authenticated Chrome session; the tablet (768px) follow-up used this session's built-in browser with true viewport emulation, also on an already-authenticated session. Real quantities were added across two styles and three color lines, plus a temporary second delivery group, then the cart's own editing, delivery-management, and checkout-validation controls were exercised directly. “Submit Orders” was clicked once on each pass, deliberately, as an explicitly approved checkpoint to observe checkout validation — never confirmed or finalized, and exited via “Go back”/“Cancel” both times. All test-added lines and the extra delivery group were removed afterward, restoring the cart to empty." },
+    { label: "Session", value: "Eighth case of this audit round, closed after desktop and tablet (768px) coverage. A mobile (375px) retest was attempted using this session's built-in browser, including a collaborative pass with the UX Assessment Lead performing clicks directly — but interactions began timing out in a way that also affected the UX Assessment Lead's own direct click on the same element, pointing to a genuine site or environment condition rather than a testing-tool limitation. The mobile retest was abandoned at that point and the case closed with desktop and tablet coverage only." },
+  ],
+  blocks: [
+    {
+      type: "steps",
+      heading: "Steps — building cart test data across styles, colors, and sizes",
+      items: [
+        { text: "Used the “3/4 Sleeve Boatneck” (PA1136) drawer to add Black and Dark Navy, then added a second style, PA1142, in Dark Navy — deliberately spreading test data across two styles, three color lines, and a mix of sizes and quantities, so the cart page itself would have enough real structure to exercise its own editing and delivery-grouping behavior. The drawer's own entry, quantity, and add-to-cart mechanics were not re-examined here — see Case 07." },
+        { text: "Landed on /my-account/cart, confirming all three color lines appeared correctly grouped under one delivery header (“Fall 2026: September 9/30 X-Warehouse”), each with its own per-line “⋮” menu (Move To Another Delivery, Duplicate, Edit Quantity, Remove Color) and the delivery group's own “⋮” menu (Add Delivery, Edit Delivery Dates)." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — delivery-date management: calendar selection vs. typed input",
+      items: [
+        {
+          text: "Opened the delivery group's “⋮” menu → “Edit Delivery Dates”: a right-side panel with “Start date” and “X-Warehouse date” fields, each with a calendar-icon toggle and an inline datepicker. Selecting a date via an actual calendar-cell click, then Save, persisted correctly every time — confirmed immediately by the cart's delivery header updating, and again by reopening the panel.",
+          image: c08img06,
+          caption: "A valid calendar-cell date change persists correctly, confirmed on reopening the panel",
+        },
+        { text: "Typing a date directly into either field, then clicking Save, repeatedly appeared to fail silently under this session's own automated browser testing — the typed text was accepted with no validation error, but reopening the panel showed the original value unchanged, and network inspection showed no save request was ever sent to the server. This was reproduced again on a dedicated re-verification pass, run specifically because the UX Assessment Lead could not reproduce it on a first attempt." },
+        { text: "The UX Assessment Lead then tested the identical interaction manually, more than once, with a real keyboard, and reports it works correctly: a valid typed date saves, and an actually invalid one shows a clear “Invalid Date” message — neither of which this session's automated testing ever observed. Given that direct, repeated conflict between automated and manual results, this is retracted as a confirmed product defect rather than merely downgraded, and treated instead as a likely artifact of how this session's automated typing differs from a real keyboard (full account in Notes)." },
+        { text: "Separately confirmed a genuine, working business rule while exploring the calendar: the Start Date calendar disables Saturdays and Sundays outright, preventing a delivery window from ever starting on a weekend." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — Add Delivery, Move To Another Delivery, and Duplicate",
+      items: [
+        {
+          text: "Used the delivery group's “⋮” menu → “Add Delivery”: a second, empty delivery group appeared, its dates auto-suggested as the day after the first delivery's X-Warehouse date, spanning 15 days.",
+          image: c08img05,
+          caption: "“Add Delivery” creates a new, empty delivery group with a sensible auto-suggested default",
+        },
+        {
+          text: "Tested “Move To Another Delivery” on a color line by dragging it onto the new delivery: blocked immediately with a red toast reading “The item cannot be moved to a delivery date greater than 30 days from its original date.”",
+          image: c08img07,
+          caption: "Move To Another Delivery correctly blocks a date more than 30 days out, with a clear toast",
+        },
+        {
+          text: "Reproduced the identical block via the guided, non-drag path instead: per-color “⋮” → “Move To Another Delivery” → “Add Delivery” (the only target available with one existing delivery) — its own auto-suggested default, computed 36 days out, fails the same rule on the very first try.",
+          image: c08img08,
+          caption: "The guided flow's own suggested default already fails Move's 30-day rule",
+        },
+        {
+          text: "Tested the same guided path with “Duplicate” instead, using the identical 36-days-out default: this succeeded with no block, warning, or toast of any kind, creating a new delivery group and a duplicated color line immediately.",
+          image: c08img11,
+          caption: "The identical guided flow, via “Duplicate,” succeeds with no check at all",
+        },
+        {
+          text: "The only sign anything was wrong appeared back on the main cart list: a small orange “!” icon on the duplicated line, whose tooltip read “This item cannot belong to the delivery you are currently in because the item's date is prior to the delivery date. Please relocate the item to continue.” Confirmed this state also disabled “Submit Orders” entirely, checked directly via the button's disabled attribute, not just visually.",
+          image: c08img12,
+          caption: "The only feedback for Duplicate's invalid state: a small icon, discoverable only on hover",
+        },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 1 — “Duplicate”'s guided flow can create an invalid, checkout-blocking cart state with no front-end warning, unlike the equivalent “Move” flow",
+      paragraphs: [
+        "“Move To Another Delivery” and “Duplicate” share the same guided per-color “⋮” menu path when only one delivery exists: choosing either one offers “Add Delivery” as the only target, which auto-suggests a new delivery date well outside the 30-day window most tested. For “Move,” this default immediately fails the app's own 30-day move-eligibility rule, with a clear red toast explaining why — confirmed via both the guided menu path and an equivalent drag-and-drop attempt, so the enforcement is real and consistent, not just tied to drag interactions specifically.",
+        "“Duplicate,” walked through the identical guided path with the identical default date, has no equivalent check. It succeeds outright — creating a new delivery group and a duplicated color line with no block, warning, or confirmation of any kind. The only trace that something is wrong appears back on the main cart list, as a small orange “!” icon on the affected line, whose tooltip explains the item's date conflicts with its delivery's date. This state was confirmed to disable “Submit Orders” entirely, so the practical consequence isn't cosmetic — it silently prevents checkout — but nothing on the page proactively tells the user that, or why, unless they notice and hover a small icon among what could be a much longer cart.",
+        "Because both actions route through the exact same guided flow with the exact same auto-suggested default date, this isn't an edge case reachable only through unusual input — it's the natural result of following Duplicate's own suggested default without changing it, which is very plausibly what most users would do the first time.",
+        "Confirmed at tablet width (768px): re-ran both guided flows using an identical 15-days-out default for both actions (rather than desktop's 36-days-out default) — Move was blocked immediately with the same red toast, Duplicate succeeded with no block of any kind. Same asymmetry, same silent checkout-blocking consequence, at a different offset — reinforcing that the missing check in Duplicate isn't tied to any particular date gap.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Consistency and standards (two visually and structurally parallel actions, reached through the same menu shape and the same default-date logic, enforce completely different levels of validation); error prevention (Duplicate lets an invalid state get created at all, rather than preventing it at the point of action the way Move does); visibility of system status (the checkout-blocking consequence is real and immediate, but the only feedback is a small icon that must be actively discovered)." },
+        { label: "Suggested direction", value: "Apply the same 30-day-window validation already implemented for “Move” to “Duplicate”'s equivalent guided flow, ideally by having both actions share the same underlying date-eligibility check rather than maintaining two separate implementations that can drift, as they clearly already have. At minimum, surface a toast identical to Move's immediately when Duplicate's guided flow would create the same invalid relationship, rather than allowing the action to complete silently and surfacing the problem only via a small icon discovered later." },
+        { label: "Priority note", value: "High. This directly parallels a rule the app already enforces correctly elsewhere, so the fix is largely a matter of applying existing logic consistently rather than designing something new — and until then, it's a checkout-blocking dead end that's easy to trigger by simply accepting Duplicate's own suggested default." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — quantity editing, the per-color minimum indicator, and line removal",
+      items: [
+        {
+          text: "Used “Edit Quantity” on a color line: the same right-side drawer used for adding items reopened, pre-filled correctly with the row's current per-size quantities. The action button correctly relabeled from “SELECT QUANTITY” (disabled) to “UPDATE QUANTITY” (enabled) the moment a value changed, and the update persisted to the cart row immediately, confirmed after closing and reopening the drawer.",
+          image: c08img09,
+          caption: "Edit Quantity round-trips correctly and persists immediately to the cart row",
+        },
+        {
+          text: "Used “Remove Color” on a test line: a native confirmation dialog appeared (“Remove item — Are you sure you want to remove this item from your order?”), and confirming it removed the line correctly. Confirmed “Remove Color” and “Remove Delivery” both work identically even on an item already in an invalid or errored state — used directly on the invalid duplicated line from the previous section with no special handling needed.",
+          image: c08img10,
+          caption: "Remove Color asks for confirmation before deleting a line",
+        },
+        { text: "Noted a separate per-color minimum-order-quantity indicator: a small orange “!” icon near a style's price range, tied to a circled quantity value on a color row below some threshold — observed at “3” units on two unrelated styles, consistently enough to read as a general business rule rather than something style-specific. Left the exact threshold and tooltip text unconfirmed on this desktop pass — see Finding 2 and its tablet resolution below." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 2 — A per-color minimum-quantity indicator (confirmed at tablet width: threshold 4, advisory-only)",
+      paragraphs: [
+        "An orange “!” icon appears near a style's price range in the cart, tied to a circled value on a specific color row, whenever that color's total quantity falls below the required minimum. Desktop testing observed this at “3” units on two unrelated styles but left the exact tooltip text and threshold unconfirmed. The tablet retest (768px) resolved both: stepping a color line's quantity up one unit at a time, the icon was present at 3 units and gone at 4, pinning the threshold at exactly 4 units per color. Its tooltip reads, in full: “One or more colors are below the required color minimum.” Checked directly against the “Submit Orders” button's disabled property (not just visually) at 3 units: the button remained enabled throughout — this indicator is advisory only and does not block checkout, unlike Finding 1's icon.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Visibility of system status — the business rule (a 4-unit-per-color minimum) is now clearly confirmed and its messaging, while generic (“one or more colors,” rather than naming which one when there are several lines), correctly and non-disruptively surfaces a real constraint without blocking the user's ability to proceed." },
+        { label: "Suggested direction", value: "Minor: consider having the tooltip or icon identify which specific color(s) are under the minimum when a style has multiple color rows, rather than the generic “one or more colors” phrasing — a small clarity improvement, not a defect fix." },
+        { label: "Priority note", value: "Low. Originally flagged Medium on desktop specifically because it was unconfirmed whether this indicator blocked checkout; now that tablet testing has confirmed it does not, and that its threshold and messaging are both clear and correct, this is closer to a positive observation than an outstanding finding — kept as a Finding rather than moved to Positive observations only because the “which color” ambiguity noted above is a genuine, if minor, opportunity." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — reaching checkout",
+      items: [
+        {
+          text: "With the cart back in a clean, valid state, and after explicit approval from the UX Assessment Lead per the standing rule that “Submit Orders” is never clicked without a specific go-ahead, clicked “Submit Orders”: triggered an “Opening Order Below Season Minimum” dialog, stating the exact dollar amount needed to meet the minimum and explaining that orders below it require sales-management approval before confirmation.",
+          image: c08img13,
+          caption: "The Season Minimum checkout validation is clear, specific, and explains the consequence",
+        },
+        { text: "Attempting to click “Continue” (intending only to observe the next screen, within the scope of the approval given) was blocked by this session's own automated safety guardrail before it reached the page; “Go back” was used instead to exit with no state change — see Notes." },
+        { text: "Removed all test-added lines and the extra delivery group afterward, confirming the cart returned to its original, empty state. “Submit Orders” was never actually confirmed or finalized at any point across this case." },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — retesting at tablet width (768px)",
+      items: [
+        { text: "Repeated the same journey at a 768px tablet viewport, using this session's built-in browser with true viewport emulation: added PA1136 in Black to the cart and confirmed the same delivery header as desktop (“Fall 2026: September 9/30 X-Warehouse”)." },
+        { text: "Calendar-click date editing behaved exactly as on desktop and persisted correctly. A coordinate-mapping quirk specific to this session's own browser tool briefly looked like a silent click failure until recalibrated — its screenshot-to-CSS-pixel ratio at this preset measured empirically at ~1.094×, not the ~1.042× a naive calculation from the nominal viewport size would suggest. This is a testing-tool artifact, not a product issue, recorded here as a caution for future retests with this tool." },
+        { text: "Confirmed a genuine, stricter business rule at this width: the X-Warehouse date field disables every day of its own current month except the one already committed, in addition to the weekend-blocking rule already confirmed for Start Date." },
+        { text: "Re-ran the Duplicate-vs-Move guided-flow comparison using an identical 15-days-out default for both actions (rather than desktop's 36-days-out default): Move was blocked immediately with the same toast, Duplicate again succeeded with no block of any kind — the same asymmetry at a different offset. See Finding 1." },
+        { text: "Resolved Finding 2: stepping a color line's quantity up one unit at a time pinned the minimum-quantity threshold at exactly 4 units per color, with the tooltip confirmed in full. Confirmed directly via the Submit button's disabled property that this state never blocks checkout." },
+        { text: "At the checkout checkpoint, clicking “Submit Orders” surfaced a different dialog than desktop's: a “SELECT CUSTOMER — Customer must be selected for this action” prompt. This is very likely a session/account-context difference (no active customer selected in this particular browser tab) rather than a tablet-specific behavior, and was not investigated further — exited via “CANCEL” with no state change." },
+        { text: "No screenshots were saved for this tablet pass: this session's built-in browser returns screenshots inline only, with no save-to-disk mechanism equivalent to the Chrome extension tool used for desktop — this section is written from direct observation and DOM/network verification instead." },
+      ],
+    },
+    {
+      type: "list",
+      heading: "Positive observations",
+      items: [
+        "The Start Date calendar correctly disables Saturdays and Sundays outright, preventing a delivery window from ever being set to start on a weekend — a genuine, correctly-implemented business rule.",
+        "“Add Delivery”'s auto-suggested default (the day after the prior delivery's X-Warehouse date) is a sensible, low-friction default for the common case of adding a straightforward next delivery window.",
+        "“Move To Another Delivery” enforces its 30-day window rule consistently and clearly across two different interaction paths tested (drag-and-drop and the guided per-color menu), with the same specific, understandable toast message both times.",
+        "“Edit Quantity” round-trips correctly: it reopens pre-filled with the row's real saved per-size values, correctly toggles its action button's label and enabled state only once something actually changes, and the update persists to the cart row immediately and durably.",
+        "“Remove Color” and “Remove Delivery” both show clear native confirmation dialogs before acting, and both work correctly and predictably even when the specific item or delivery being removed is already in an invalid or errored state — a good, consistent safety net.",
+        "The checkout “Opening Order Below Season Minimum” validation is clear, specific (it states the exact dollar amount needed to meet the minimum), and correctly explains the consequence (sales-management approval required) rather than just blocking with no context.",
+        "A real, valid calendar-cell date selection in “Edit Delivery Dates” works exactly as expected — the change is immediate, visible on the cart header, and durable across reopening the panel. Per the UX Assessment Lead's own manual testing, typing a date directly also works correctly under real keyboard input: a valid typed date saves, and an invalid one shows a clear “Invalid Date” message (see Notes for the discrepancy with what this session's automated testing observed).",
+        "Confirmed at tablet width (768px): every desktop finding and positive observation in this list carries over unchanged at 768px — delivery-date calendar-click editing, the Move/Duplicate asymmetry (Finding 1), Edit Quantity's round-trip behavior, and both confirmation dialogs (Remove Color, Remove Delivery) all behaved identically. The X-Warehouse date field additionally disables every day of its own current month except the already-committed one, a stricter but sensible extension of the same pattern.",
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Notes / follow-up needed",
+      paragraphs: [
+        "Retracted: “Edit Delivery Dates” typed-input save failure. This case originally reported, as a High-priority finding, that typing a date directly into the Start Date or X-Warehouse Date field and clicking Save silently fails to persist the change. That symptom was reproduced multiple times through this session's own browser automation, including a dedicated re-verification pass with DOM-level evidence (the field picking up Angular's ng-invalid class with no visible sign of it, and network inspection confirming no save request is sent on that path). That re-verification pass was itself prompted by the UX Assessment Lead reporting they could not reproduce the symptom on a first attempt. Rather than settling the question, the automated re-check reproduced the same symptom again — at which point the UX Assessment Lead tested manually, more than once, with a real keyboard, and reports the field behaves correctly: a validly-typed date saves, and an actually invalid one shows a clear “Invalid Date” message. Neither of those behaviors was ever observed through this session's automated testing. Given that direct, repeated conflict, and no way to make the symptom appear under real human interaction, this is retracted as a confirmed product defect rather than merely downgraded. The most likely explanation is that this session's browser-automation tool injects text into the field in a way a real keyboard doesn't — for example, without the same per-keystroke key events or the same focus/blur timing — enough to desync the form control from the picker's internal state in a way an actual user typing would never trigger.",
+        "Session interruption during re-verification: partway through investigating the discrepancy above, the authenticated Chrome session unexpectedly landed on the login screen. Rather than attempting to sign back in on the user's behalf, automated testing was stopped at that point.",
+        "Testing-methodology limitation, not a product finding: after receiving explicit approval to click “Submit Orders” and then “Continue” on the resulting Season Minimum dialog (with instructions to cancel rather than finalize), the “Continue” click specifically was blocked by this session's own automated safety guardrail, independent of the approval already given. No workaround was attempted, per that guardrail's own instruction; “Go back” was used instead to exit safely with no state change. This means checkout testing in this case stops one screen short of wherever “Continue” would have led (very likely a final confirm/place-order screen) — that next screen remains unobserved and would need to be evaluated some other way (for example, a live walkthrough with the UX Assessment Lead directly) rather than through this tool's own automated browsing.",
+        "The X-Warehouse date calendar's enabled-day range appeared, across a few attempts, to stay anchored near the current date rather than reactively updating after a Start Date change made earlier in the same panel/reopen cycle — flagged with lower confidence, since it may be an artifact of this session's own JS-driven test interaction rather than genuine end-user behavior. Not pursued to a fully conclusive resolution, to avoid over-spending time on an ambiguous, hard-to-reproduce thread; worth a dedicated re-check using only real mouse-driven interaction before treating it as a confirmed bug.",
+        "As in Case 07, “Long Sleeve Crew” (PA1182) remains favorited in all 5 colors at quantity 0 in the shared Fall 2026 cart — pre-existing residual test data from Case 06/07, not created or touched in this case, and still not cleaned up pending a decision with the UX Assessment Lead.",
+        "Tablet retest (768px) completed using this session's built-in browser (Claude in Chrome was unavailable after a desktop-testing logout incident). All desktop findings and positive observations were confirmed to carry over unchanged; Finding 2 was additionally resolved from incomplete to confirmed. One tooling-only artifact was found and resolved during this pass — the built-in browser's screenshot-to-CSS-pixel coordinate ratio at this tablet preset measured empirically at ~1.094×, not the ~1.042× a naive calculation would suggest — recorded above as a caution for future retests with this tool. One new, unresolved question surfaced at the checkout checkpoint: clicking “Submit Orders” triggered a “SELECT CUSTOMER” prompt that never appeared on desktop, most likely a session/account-context difference rather than a tablet-specific behavior — not investigated further. No screenshots were saved for this tablet pass, for the tooling reason noted above.",
+        "Mobile retest (375px) attempted, not completed. With a customer now selected, a mobile retest was attempted first in this session's built-in browser directly, then — after that browser proved unresponsive to clicks at this width — via a collaborative workflow with the UX Assessment Lead performing each click directly on their own machine. The drawer for a test style opened successfully this way, surfacing a new “Delivery” dropdown not seen on desktop or tablet, but the next click — on that dropdown, attempted both by this session's tooling and, separately, by the UX Assessment Lead directly — did not respond either way. Because the UX Assessment Lead's own direct click also failed, this points to a genuine site or environment condition at the time of testing (possibly related to network conditions flagged elsewhere in this session, or an unrelated site issue) rather than a limitation of any specific testing tool. No cart test data was added at mobile width beyond opening the one drawer, so no cleanup was needed. The case is closed here, with desktop and tablet (768px) coverage confirmed and mobile (375px) not completed.",
+      ],
+    },
+  ],
+};
+
 export default [
   {
     id: "heuristic-evaluation",
@@ -1431,7 +1641,7 @@ export default [
       body: "Establishing a shared design system would provide the foundation for a more consistent, scalable, and maintainable B2B experience. It would align visual decisions across navigation, forms, tables, dialogs, states, and responsive behaviors, while giving design and development teams a common source of truth. Beyond improving coherence for users, a design system would reduce duplicated decisions, accelerate future delivery, support accessibility, and make it easier to evolve the application as new modules are introduced.",
       categoryId: "design-system",
     },
-    findings: [case01, case02, case03, case04, case05, case06, case07],
+    findings: [case01, case02, case03, case04, case05, case06, case07, case08],
   },
   {
     id: "cognitive-walkthrough",
@@ -1485,13 +1695,19 @@ export default [
           ["", "Order tracking"],
           ["", "Payments"],
           ["", "Account preferences"],
-          ["<b>Sales Rep Journeys (1)</b>", "Select a customer"],
+          ["<b>Sales Rep Journeys</b>", "Select a customer"],
+          ["", "Linesheet / catalog browsing (1)"],
+          ["", "Adding items to the cart (1)"],
+          ["", "Placing an order (1)"],
+          ["", "Order tracking (1)"],
+          ["", "Payments (1)"],
+          ["", "Account preferences (1)"],
           ["", "Create and share custom linesheets/reports"],
           ["<b>Admin Journeys</b>", "Manage users"],
           ["", "Manage reports"],
           ["", "Activity audit"],
         ],
-        footnote: "(1) Every Buyer journey above also applies to Sales Reps, performed on behalf of the selected customer. (2) In Lilla P's underlying NetSuite customer model, a Buyer's app account belongs to a contact, not a customer directly — a contact tied to a single customer (the common case) has that customer selected automatically, but a contact tied to more than one customer (e.g. a buyer who works across multiple brands) must choose which one to act on, the same selection flow a Sales Rep uses on a customer's behalf.",
+        footnote: "(1) The same journey as the matching Buyer Journeys row above, performed by a Sales Rep on behalf of the selected customer — listed here explicitly, and classified under both categories on this area's Finding Summary, rather than left as a footnote-only note. (2) In Lilla P's underlying NetSuite customer model, a Buyer's app account belongs to a contact, not a customer directly — a contact tied to a single customer (the common case) has that customer selected automatically, but a contact tied to more than one customer (e.g. a buyer who works across multiple brands) must choose which one to act on, the same selection flow a Sales Rep uses on a customer's behalf.",
       },
       {
         type: "list",
@@ -1536,7 +1752,7 @@ export default [
       {
         id: "sales-rep-journeys",
         title: "Sales Rep Journeys",
-        description: "Journeys specific to a Sales Rep acting on behalf of a buyer account — for example, selecting a customer before placing an order.",
+        description: "Every Buyer journey, performed by a Sales Rep on behalf of a selected customer, plus journeys unique to the role — for example, selecting which customer to act on before doing anything else. A case classified under Buyer Journeys is also classified here, since Sales Reps use the same screens and controls a Buyer would.",
       },
       {
         id: "admin-journeys",
@@ -1544,7 +1760,7 @@ export default [
         description: "Journeys specific to admin users managing accounts, reports, and platform configuration.",
       },
     ],
-    findings: [case01, case02, case03, case04, case05, case06, case07],
+    findings: [case01, case02, case03, case04, case05, case06, case07, case08],
   },
   {
     id: "responsive-accessibility",
@@ -1600,6 +1816,6 @@ export default [
         description: "Targeted accessibility checks against high-risk patterns — not an exhaustive review against the WCAG guidelines.",
       },
     ],
-    findings: [case01, case02, case03, case04, case05, case06, case07],
+    findings: [case01, case02, case03, case04, case05, case06, case07, case08],
   },
 ];

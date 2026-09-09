@@ -45,7 +45,7 @@ function truncate(text, max) {
 // inside its own `blocks` array (see any case in phases.js). Counts only
 // those that carry a "Priority note" in their `meta` — i.e. findings
 // with a reported High/Medium/Low priority, per the cases table's
-// Findings column. Every finding across all 7 cases has one as of this
+// Findings column. Every finding across all 8 cases has one as of this
 // writing; a future case's finding without one simply won't count here
 // until its priority is filled in.
 function countFindings(f) {
