@@ -65,6 +65,11 @@ import c03img07 from "../assets/ux-audit/navigation-structure/07-user-menu-close
 import c03img08 from "../assets/ux-audit/navigation-structure/08-recent-customers-loading-spinner.jpg";
 import c03img09 from "../assets/ux-audit/navigation-structure/09-my-account-stale-customer-data-after-switch.jpg";
 import c03img10 from "../assets/ux-audit/navigation-structure/10-my-account-correct-data-after-reload.jpg";
+import c03img11 from "../assets/ux-audit/navigation-structure/11-administration-manage-users-keyboard-focus.jpg";
+import c03img12 from "../assets/ux-audit/navigation-structure/12-linesheets-expanded-season-list-unreachable.jpg";
+import c03img13 from "../assets/ux-audit/navigation-structure/13-user-drawer-open-recent-customers.jpg";
+import c03img14 from "../assets/ux-audit/navigation-structure/14-user-drawer-log-out-focused.jpg";
+import c03img15 from "../assets/ux-audit/navigation-structure/15-focus-leaked-behind-open-drawer.jpg";
 
 import c04img01 from "../assets/ux-audit/manage-users/01-manage-users-list-default-state.jpg";
 import c04img02 from "../assets/ux-audit/manage-users/02-manage-users-employee-sales-rep-search-results.jpg";
@@ -361,7 +366,7 @@ const case03 = {
   id: "case-03",
   caseNumber: "03",
   title: "Navigation structure: left panel & user menu",
-  status: "Issues found — a misleading section label, a data-accuracy bug on the customer-account screen, and three lower-priority consistency issues. Confirmed consistent across desktop, tablet, and mobile.",
+  status: "Issues found — a misleading section label, a data-accuracy bug on the customer-account screen, three lower-priority consistency issues, and — from a keyboard-only follow-up — a hard dead end where a keyboard-only user can't change either the selected season/lineheet or the selected customer. Original pass confirmed consistent across desktop, tablet, and mobile; the keyboard follow-up was desktop-only.",
   statusKind: "issue-high",
   viewports: ["desktop", "tablet", "mobile"],
   // Finding 1 (MY ACCOUNT mislabeling) and Finding 4 (avatar/icon identity
@@ -378,21 +383,24 @@ const case03 = {
   // must select which one to act on too — see the Key Journeys table's own
   // footnote below. Area 3's tablet/mobile follow-up found no
   // viewport-specific issues, so per the summary-page rule this case isn't
-  // tagged with "responsive" or "accessibility" here.
-  categories: ["design-system", "visibility-status", "user-control-errors", "sales-rep-journeys", "buyer-journeys"],
+  // tagged with "responsive" here. It IS tagged with Area 3's
+  // "accessibility" category, added once the later keyboard-navigation
+  // follow-up (Findings 6-8) turned up real, No-Pass issues there.
+  categories: ["design-system", "visibility-status", "user-control-errors", "sales-rep-journeys", "buyer-journeys", "accessibility"],
   categorySummaries: {
     "design-system": "“MY ACCOUNT” in the left panel is actually the selected customer's account, not the Sales Rep's own, and the top-right user control changes its own visual identity between its open and closed states.",
     "visibility-status": "Switching the selected customer can leave the MY ACCOUNT screen showing the previous customer's real address and orders under the new customer's name — the “Recent customers” list also loads behind a loading spinner that's easy to miss.",
     "user-control-errors": "The user drawer's own close control sits at the opposite corner from where the drawer was opened, and re-clicking the trigger doesn't close it — though clicking the dimmed backdrop does, so a working fallback exists.",
     "sales-rep-journeys": "Covers “Select a customer”: picking a customer via the search box works correctly and searches the full customer base, but switching customers can leave the MY ACCOUNT screen showing the previous customer's real data under the new customer's name until the page is reloaded.",
     "buyer-journeys": "Covers “Select a customer” for a Buyer contact linked to more than one customer: the same search-box selection was tested here, and works correctly, but switching customers can leave the MY ACCOUNT screen showing the previous customer's real data under the newly selected one's name until the page is reloaded.",
+    "accessibility": "A keyboard-only user can never change which season/lineheet is being viewed, and can't select a different customer from the user menu at all — neither the default “Recent customers” list nor a typed search's results can be reached by keyboard, the menu has no focus trap, and Escape doesn't close it.",
   },
   summary: "“MY ACCOUNT” opens the selected customer's account, not the Sales Rep's own, and switching customers can leave that same screen showing the previous customer's real address and orders under the new customer's name.",
   scope: [
     { label: "Area", value: "Targeted heuristic evaluation of the left navigation panel (present app-wide) and the top-right user menu: structure, grouping, label clarity, and customer-switching behavior, both expanded and collapsed, across desktop, tablet, and mobile." },
     { label: "Screen", value: "App-wide — the left navigation panel and the “Alan Jalife” user menu are present on every authenticated screen; evaluated from the Fall 2026 report and the Administration and MY ACCOUNT pages it links to." },
-    { label: "Interaction boundary", value: "Desktop pass tested using the user's own real, already-authenticated Chrome session. Expanded every left-panel section and opened every sub-item that was safe to open read-only, including selecting test customers (starting with “A Line (CA)”) to confirm what “MY ACCOUNT” actually shows. A later follow-up retested customer selection via the search box specifically (not just “Recent customers”), and repeatedly switched between customers to check whether MY ACCOUNT's content refreshed correctly. No user was created, edited, or deleted in Manage users; no report or asset was modified in Manage reports / Manage assets; no order or payment was placed. Every customer selected during testing was deselected afterward." },
-    { label: "Session", value: "Third case of this audit round. Tablet (768×1024) via Claude's built-in browser with viewport emulation, and mobile (375×812) jointly with the UX Assessment Lead due to a known click-timeout limitation, both closed out the same session; the customer-search and data-refresh follow-up was a later session, back on desktop." },
+    { label: "Interaction boundary", value: "Desktop pass tested using the user's own real, already-authenticated Chrome session. Expanded every left-panel section and opened every sub-item that was safe to open read-only, including selecting test customers (starting with “A Line (CA)”) to confirm what “MY ACCOUNT” actually shows. A later follow-up retested customer selection via the search box specifically (not just “Recent customers”), and repeatedly switched between customers to check whether MY ACCOUNT's content refreshed correctly. A further, separate follow-up re-tested the left panel and the user menu again, desktop only, using the real browser's native Tab/Enter/Escape key handling instead of mouse clicks, to check whether both panels are actually operable without a mouse. No user was created, edited, or deleted in Manage users; no report or asset was modified in Manage reports / Manage assets; no order or payment was placed. Every customer selected during testing was deselected afterward." },
+    { label: "Session", value: "Third case of this audit round. Tablet (768×1024) via Claude's built-in browser with viewport emulation, and mobile (375×812) jointly with the UX Assessment Lead due to a known click-timeout limitation, both closed out the same session; the customer-search and data-refresh follow-up was a later session, back on desktop, and the keyboard-navigation follow-up (Findings 6-8) a later session still, after this case had already been closed." },
   ],
   blocks: [
     {
@@ -439,6 +447,20 @@ const case03 = {
         { text: "Opened MY ACCOUNT → Open orders for the newly selected “Ameline Shoppe”: the page briefly showed the previous customer's address and order list under “Ameline Shoppe”'s own name and heading, before settling a couple of seconds later on the correct data. This first read as a loading-transition flash — until it was retested and didn't always self-correct (see Finding 2)." },
         { text: "Repeated the customer switch three times in a row (via both Recent Customers and search), checking Open Orders each time: the previous customer's address carried over as stale content in all three attempts, and in one of those the previous customer's actual order numbers, dates, and dollar totals carried over too, incorrectly labeled under the new customer's name.", image: c03img09, caption: "MY ACCOUNT: “Ameline Shoppe” heading, but the previous customer's stale address and orders" },
         { text: "Confirmed a fresh page reload (not just re-selecting the customer) reliably shows the correct data for whichever customer is currently selected — used as the “ground truth” to compare each stale-state capture against. Deselected the test customer afterward.", image: c03img10, caption: "Same account, correct, immediately after a reload" },
+      ],
+    },
+    {
+      type: "steps",
+      heading: "Steps — keyboard navigation (left panel and user menu, desktop)",
+      items: [
+        { text: "Traced the first 20 Tab stops from a fresh page load using genuine key presses (Tab, Enter, Escape), reading document.activeElement after each one rather than assuming: hamburger icon → header search box → the “Alan Jalife” user-menu trigger → three breadcrumb dropdowns → “Show Favorites” → two view-mode buttons → all seven left-panel accordion buttons in the correct order → the panel's own collapse control → a “Log out” button that also lives in the left panel → main content. Every accordion button showed a visible focus outline and correct aria-controls/aria-expanded attributes." },
+        { text: "Pressed Enter on the ADMINISTRATION button: it expanded correctly, exactly as a click would.", image: c03img11, caption: "ADMINISTRATION expanded via keyboard, “Manage users” reachable and focused" },
+        { text: "Checked LINESHEETS — expanded by default on page load — the same way: tabbing from its button skips straight to CUSTOM LINESHEETS, so none of its four items (Spring 2027, Holiday 2026, Fall 2026, In Stock) ever receive keyboard focus.", image: c03img12, caption: "LINESHEETS expanded; its four items are visible but unreachable by Tab" },
+        { text: "Opened the user menu with a real Enter press on the trigger: the drawer opened correctly, but focus stayed on the trigger button rather than moving into the drawer.", image: c03img13, caption: "User menu open, “Recent customers” populated" },
+        { text: "Traced forward from there: 15 Tab presses from the trigger pass through the rest of the page header and the whole left panel before finally reaching the drawer's own close button, then its search box, its customer list, and a “Log out” button inside the drawer.", image: c03img14, caption: "Last reachable stop inside the open drawer, “Log out” focused" },
+        { text: "Typed a query into “Search by name”: the filtered results use the same non-interactive row markup as the default list, and pressing Tab from the input skips the results entirely and lands on the page's own <body> element." },
+        { text: "Pressed Escape while the drawer was open: no effect. Continued tabbing past “Log out”: focus left the drawer entirely and landed on a product's own control in the grid behind it, with the drawer still visibly open.", image: c03img15, caption: "Drawer still open, focus now on the page behind it" },
+        { text: "Closed the drawer with a real click to reset state cleanly, and confirmed the test account was left as found: no customer left selected, nothing added to any cart, no user/report/asset data changed." },
       ],
     },
     {
@@ -512,6 +534,49 @@ const case03 = {
       ],
     },
     {
+      type: "richtext",
+      heading: "Finding 6 — A keyboard-only user can never change which season/lineheet is being viewed",
+      paragraphs: [
+        "The left panel's seven top-level sections are, on their own, fully keyboard-operable: all seven accordion buttons are real elements, reachable via Tab in the correct top-to-bottom order, each carrying correct aria-controls and aria-expanded attributes, each showing a visible focus outline, and each toggling open/closed correctly on a real Enter key press — confirmed live on ADMINISTRATION.",
+        "But whether a section's contents are reachable once expanded turns out to depend entirely on which section it is, and the one that's open by default — LINESHEETS — is one of the ones that fails. Its four items (Spring 2027, Holiday 2026, Fall 2026, In Stock) are plain list rows with no tabindex, role, or href at all; tabbing from the LINESHEETS button skips straight past all four and lands on the CUSTOM LINESHEETS button next, confirmed live via a real Tab trace. A mouse user can click any of the four freely; a keyboard-only user can never reach any of them — meaning they can never change which season or lineheet they're looking at, only ever view whichever one the report happened to load with.",
+        "This isn't a blanket failure of the accordion pattern itself: ADMINISTRATION's own three items (Manage users, Manage reports, Manage assets) use tabindex=\"0\" on the same kind of list row, are genuinely reachable via Tab right after their section's button, and activate correctly on Enter — confirmed live. The fix pattern already exists elsewhere in this same panel; it just wasn't applied to LINESHEETS' own list.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "User control and freedom; accessibility (WCAG 2.1.1 Keyboard — all functionality operable through a keyboard interface)." },
+        { label: "Suggested direction", value: "Add tabindex=\"0\" (and ideally a role such as option or menuitem, with a keydown handler for Enter/Space) to each item inside LINESHEETS' season list, matching the pattern ADMINISTRATION's own sub-items already use. Worth a quick audit of the other four sections too, since this case only directly tested LINESHEETS and ADMINISTRATION's contents against each other." },
+        { label: "Priority note", value: "High — this is a genuine, reproducible dead end for a core task (choosing which season/lineheet to view), not just added friction, and it affects the one section that's open on every fresh page load." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 7 — Opening the user menu doesn't move focus into it, and reaching its own controls means tabbing through the page behind it first",
+      paragraphs: [
+        "The “Alan Jalife” trigger that opens the top-right user menu is itself reachable early and cleanly — the 3rd Tab stop from a fresh page load — and opens the drawer correctly on a real Enter press. From there, though, keyboard behavior diverges from what a dialog-like panel would normally do.",
+        "Confirmed live: pressing Enter on the trigger opens the drawer but leaves focus exactly where it was, on the trigger button itself — it does not move into the drawer's own content (e.g., its search box), which is the behavior a screen-reader or keyboard user would expect from a panel that just took over part of the screen. Pressing Tab from there goes to “Fall 2026”, one of the breadcrumb dropdowns in the main page header — a control that has nothing to do with the drawer and sits behind/beside it. Continuing the trace, 15 Tab presses from the trigger pass through the rest of the header and the whole left panel before finally reaching the drawer's own close button, and only then its search box.",
+        "In other words, a keyboard user who opens this menu meaning to search for or select a customer has to tab past most of the page's other controls first, none of which are visually inside the drawer, several of which the drawer now sits in front of. The trigger button also carries no aria-expanded or aria-haspopup attribute, so a screen reader gives no indication in advance that activating it opens anything at all.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "Visibility of system status; user control and freedom; accessibility (focus order should follow a logical, predictable sequence — WCAG 2.4.3)." },
+        { label: "Suggested direction", value: "When the drawer opens, move focus to its first focusable element (the search box) rather than leaving it on the trigger. Add aria-expanded and aria-haspopup=\"dialog\" (or similar) to the trigger button so its behavior is announced in advance." },
+        { label: "Priority note", value: "Medium — a real, confirmed friction and focus-order problem, and inconsistent with how a panel like this is expected to behave, but a patient keyboard user can still eventually reach the drawer's own controls by continuing to tab forward." },
+      ],
+    },
+    {
+      type: "richtext",
+      heading: "Finding 8 — Inside the open user menu, no customer can actually be selected by keyboard, and the panel has no focus trap or Escape support",
+      paragraphs: [
+        "Once a keyboard user does reach the drawer's own content (see Finding 7), the core task it exists for — picking a different customer — turns out to be unreachable by keyboard entirely, and the panel itself doesn't behave like a modal/dialog in several other ways that compound the problem.",
+        "Confirmed live, in order: the “Recent customers” list receives focus as a whole (Chrome does this automatically for any scrollable region, to support arrow-key scrolling), but none of its individual customer rows do — each is a plain list row with no tabindex, role, or href, so tabbing once more from the list skips every customer name and lands directly on “Log out”. The “Search by name” box works correctly by keyboard as a text input, but its filtered results use the exact same non-interactive row markup — worse, pressing Tab while a result list is open doesn't even reach the list container: focus leaves the input and lands on the page's own <body> element, so a keyboard user who searched for a customer has no way to Tab into any of the matches at all.",
+        "Together, this means a keyboard-only Sales Rep cannot select a different customer from this panel by any path — not from Recent Customers, and not from a search — even though both paths work correctly and are genuinely useful for a mouse user. Pressing Escape while the drawer is open has no effect — it doesn't close, and focus doesn't move; there's no keyboard equivalent of the backdrop click that Finding 5 already confirmed closes the drawer correctly with a mouse. Continuing to Tab forward past “Log out” moves focus out of the drawer entirely and into the product grid behind it, confirmed via a screenshot showing the drawer still visibly open while a product's own control, partially behind/beside it, now carries the visible focus ring — the drawer has no focus trap.",
+        "The drawer's container has no role=\"dialog\" or aria-modal=\"true\", and its own close (“X”) button has no accessible label — the same “unlabeled icon control” gap Finding 4 already flagged on this drawer's trigger extends to its close control too. Together, these missing semantics likely explain why none of the keyboard behaviors above work the way a properly-marked-up dialog's would.",
+      ],
+      meta: [
+        { label: "Heuristic relevance", value: "User control and freedom; accessibility (WCAG 2.1.1 Keyboard, 2.1.2 No Keyboard Trap, 2.4.3 Focus Order, 4.1.2 Name, Role, Value)." },
+        { label: "Suggested direction", value: "Give each customer row (in both the default list and search results) a tabindex=\"0\" and a real interactive role, with an Enter/Space handler that mirrors the existing click handler. Mark the drawer container role=\"dialog\" and aria-modal=\"true\", label its close button, trap Tab/Shift+Tab within it while open, and wire Escape to close it — the same set of fixes a standard accessible-dialog pattern would already cover." },
+        { label: "Priority note", value: "High — combined with Finding 6, this means a keyboard-only user has no way to change either of the two things this app's whole navigation model revolves around (which season/lineheet, and which customer), with no error message or alternative path offered in either case." },
+      ],
+    },
+    {
       type: "list",
       heading: "Positive observations",
       items: [
@@ -524,6 +589,7 @@ const case03 = {
         "The underlying customer data itself is correct in every case checked — a fresh page reload after selecting any customer always shows that customer's own correct address and orders. Finding 2's bug is specifically about the screen not refreshing reliably on a plain customer switch, not about wrong data being stored anywhere.",
         "Tablet (768×1024), fully verified: the left panel, the MY ACCOUNT customer-select modal, ADMINISTRATION, and the user menu all reproduce desktop's behavior exactly, with no tablet-specific regressions. Panel collapse/reopen behaves the same as Case 02 found for this same control (whole panel disappears, report reflows to 2 columns).",
         "Mobile (375×812), fully verified via joint testing: the left panel opens as a full-screen overlay instead of a sidebar — a sensible, deliberate adaptation for the width, not a bug — but still surfaces the same seven sections in the same order. The MY ACCOUNT modal and ADMINISTRATION both reproduce cleanly.",
+        "Keyboard navigation (desktop): the left panel's seven accordion headers are a genuinely well-built keyboard pattern — real buttons, correct Tab order matching the visual layout, correct aria-controls/aria-expanded, visible focus outlines, and correct Enter-key activation, confirmed live. ADMINISTRATION's three sub-items go a step further and are themselves properly keyboard-reachable and operable — proof the fully-accessible version of this pattern already exists in the app and just needs to be applied consistently (see Finding 6). The “Search by name” box in the user menu also remains a normal, fully keyboard-operable text input even under this stricter test.",
       ],
     },
     {
@@ -536,6 +602,9 @@ const case03 = {
         "During the tablet pass, one early attempt to close the MY ACCOUNT customer-select modal (via CANCEL, the X, and Escape) silently failed to do anything, despite each click reporting success. A page reload immediately resolved it, and the same modal opened and closed normally on every other attempt at every width tested — this reads as a one-off stale-state glitch in the same testing session, not a reproducible tablet-width bug, but it's noted here in case it recurs in a future case.",
         "While re-capturing evidence for Finding 1 on desktop, selecting “A Line (CA)” from the customer picker triggered an “IN PROGRESS CART” dialog reading “A Line Boutique has an in-progress Fall 2026 cart” — i.e. picking one named account surfaced cart state under a different customer name, echoing the same “MY ACCOUNT” naming inconsistency from a different angle. Neither this dialog nor the “OUTDATED CART” dialog that followed it was part of this case's original test plan, and neither was investigated further — worth its own case later.",
         "Worth checking later: does Manage users (ADMINISTRATION) also list internal/Sales Rep accounts like Alan Jalife's own, or only customer-side logins? The page viewed here showed only rows with USER TYPE “Customer” before pagination was explored further.",
+        "The keyboard-navigation follow-up (Findings 6-8) was requested separately from this case's original close, once the audit noticed keyboard operability of the left panel and user menu hadn't been directly tested — desktop only, per that request; tablet/mobile keyboard behavior (e.g. an external keyboard paired with a tablet) is out of scope here and untested.",
+        "A methodology note for future keyboard-navigation testing on this app: calling .blur() on the active element does not reliably reset the browser's own Tab-sequence starting point back to the top of the page — a subsequent Tab press can resume from wherever the previous trace left off internally, even though nothing visibly has focus. A full page reload before each fresh Tab trace was the only reliable way found to get a consistent, reproducible starting point.",
+        "Not investigated further, but noticed in passing while tracing focus order: an earlier interaction that opened a product's quick-view panel and then closed it left that panel's own header buttons (close, favorite) still present in the page's Tab order, positioned far outside the visible viewport rather than removed or hidden from it. This is a different panel from the two this case was scoped to test, so it wasn't pursued as its own finding here, but it points at the same underlying gap as Finding 8 (panels not fully removing themselves from the accessibility tree when closed) and may be worth a dedicated look in a future case.",
       ],
     },
   ],
